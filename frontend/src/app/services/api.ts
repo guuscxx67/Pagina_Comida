@@ -1,62 +1,47 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ApiService {
   private apiUrl = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) {}
 
-  // Health Check
-  healthCheck(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/health`);
+  register(datos: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, datos);
   }
 
-  // Menu Endpoints
-  getMenu(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/menu`);
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
 
-  getMenuItem(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/menu/${id}`);
+  crearPedido(pedido: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/pedidos`, pedido);
   }
 
-  getMenuByCategory(category: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/menu/category/${category}`);
+  obtenerPedido(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/pedidos/${id}`);
   }
 
-  // User Endpoints
-  getUser(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}`);
+  actualizarPedido(id: number, datos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/pedidos/${id}`, datos);
   }
 
-  getUserProfile(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}/profile`);
+  obtenerPedidosUsuario(usuarioId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/pedidos/usuario/${usuarioId}`);
   }
 
-  updateUserProfile(userId: string, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/user/${userId}/profile`, data);
+  obtenerPedidosAdmin(adminId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/pedidos`, { params: { admin_id: adminId } });
   }
 
-  // Order Endpoints
-  getUserOrders(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}/orders`);
-  }
-
-  createOrder(userId: string, data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/user/${userId}/orders`, data);
-  }
-
-  // Reservation Endpoints
-  createReservation(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reservations`, data);
-  }
-
-  // Contact Endpoints
-  sendContact(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/contact`, data);
+  actualizarEstadoPedidoAdmin(adminId: number, pedidoId: number, estado: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/pedidos/${pedidoId}/estado`, {
+      admin_id: adminId,
+      estado
+    });
   }
 }

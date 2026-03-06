@@ -1,0 +1,95 @@
+<div class="pedido-page">
+
+  <div class="pedido-header" [class.header-reserva]="tipo === 'reserva'" [class.header-recoger]="tipo === 'recoger'">
+    <button class="btn-back" (click)="volver()">← Volver</button>
+    <div class="header-text">
+      <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : 'Ordenar para Recoger' }}</h1>
+      <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : 'Listo cuando tú llegues' }}</p>
+    </div>
+    <div class="header-user" *ngIf="usuario">
+      Hola, <strong>{{ usuario.nombre }}</strong>
+    </div>
+  </div>
+
+  <div class="pedido-body">
+
+    <div class="menu-section">
+      <h2 class="section-title">Selecciona tus platillos</h2>
+      <div class="menu-grid">
+        <div
+          class="menu-item"
+          *ngFor="let item of menu"
+          [class.item-selected]="item.cantidad > 0"
+        >
+          <div class="item-info">
+            <span class="item-nombre">{{ item.nombre }}</span>
+            <span class="item-precio">${{ item.precio }}</span>
+          </div>
+          <div class="item-controls">
+            <button class="ctrl-btn" (click)="decrementar(item)" [disabled]="item.cantidad === 0">−</button>
+            <span class="item-qty">{{ item.cantidad }}</span>
+            <button class="ctrl-btn ctrl-add" (click)="incrementar(item)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="summary-section">
+
+      <h2 class="section-title">Tu pedido</h2>
+
+      <div class="summary-empty" *ngIf="itemsSeleccionados.length === 0">
+        <p>Aún no has seleccionado ningún platillo</p>
+      </div>
+
+      <div class="summary-list" *ngIf="itemsSeleccionados.length > 0">
+        <div class="summary-row" *ngFor="let item of itemsSeleccionados">
+          <span class="row-name">{{ item.nombre }} <span class="row-qty">×{{ item.cantidad }}</span></span>
+          <span class="row-price">${{ item.precio * item.cantidad }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-total">
+          <span>TOTAL</span>
+          <span class="total-amount">${{ total }}</span>
+        </div>
+      </div>
+
+      <div class="reserva-fields" *ngIf="tipo === 'reserva'">
+        <h3>Fecha y hora de la reserva</h3>
+        <div class="date-row">
+          <div class="field-group">
+            <label>Fecha</label>
+            <input type="date" [(ngModel)]="fechaRecogida" [min]="hoyISO" />
+          </div>
+          <div class="field-group">
+            <label>Hora</label>
+            <input type="time" [(ngModel)]="horaRecogida" />
+          </div>
+        </div>
+      </div>
+
+      <div class="notes-field">
+        <h3>Notas especiales <span class="optional">(opcional)</span></h3>
+        <textarea
+          [(ngModel)]="notas"
+          placeholder="Alergias, preferencias, instrucciones de entrega..."
+          rows="3"
+        ></textarea>
+      </div>
+
+      <button
+        class="btn-confirmar"
+        [class.btn-reserva]="tipo === 'reserva'"
+        [class.btn-recoger]="tipo === 'recoger'"
+        (click)="confirmarPedido()"
+        [disabled]="enviando || total === 0"
+      >
+        <span *ngIf="!enviando">
+          {{ tipo === 'reserva' ? 'Confirmar Reserva' : 'Confirmar Pedido' }}
+        </span>
+        <span *ngIf="enviando">Enviando...</span>
+      </button>
+
+    </div>
+  </div>
+
+</div>

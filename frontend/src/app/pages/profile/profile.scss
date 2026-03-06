@@ -1,0 +1,28 @@
+.profile-container {
+  max-width: 480px;
+  margin: 30px auto;
+  padding: 0 16px;
+}
+
+.login-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-box input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pedido-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+}
