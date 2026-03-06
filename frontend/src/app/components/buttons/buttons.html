@@ -1,16 +1,26 @@
-<section class="buttons-section">
+<section class="options-section">
   <div class="container-fluid">
-    <div class="buttons-container">
-      <button class="btn-custom btn-primary-custom">
-        <span class="btn-icon">📅</span>
-        <span class="btn-text">RESERVA TU PLATILLO</span>
-      </button>
-      <button class="btn-custom btn-secondary-custom">
-        <span class="btn-icon">🛒</span>
-        <span class="btn-text">RECOGER</span>
-      </button>
+    <h2 class="options-title">¿QUÉ SE TE ANTOJA HOY?</h2>
+    <div class="options-grid">
+
+      <div class="option-card card-reserva" (click)="reservarPedido()">
+        <div class="card-body-content">
+          <h3 class="card-heading">RESERVA TU PLATILLO</h3>
+          <p class="card-desc">Aparta tu lugar y llega sin esperas. Tu comida te estará esperando lista y caliente.</p>
+          <span class="card-cta">Reservar ahora →</span>
+        </div>
+      </div>
+
+      <div class="option-card card-recoger" (click)="recogerPedido()">
+        <div class="card-body-content">
+          <h3 class="card-heading">ORDENAR PARA RECOGER</h3>
+          <p class="card-desc">Ordena en línea y recoge tu comida caliente cuando gustes, sin tiempo de espera.</p>
+          <span class="card-cta">Ordenar ahora →</span>
+        </div>
+      </div>
+
     </div>
-    <div class="molcajete-base"></div>
   </div>
 </section>
+
 

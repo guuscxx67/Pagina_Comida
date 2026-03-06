@@ -1,0 +1,15 @@
+<div class="register-container">
+  <h2>Registro</h2>
+
+  <input [(ngModel)]="nombre" placeholder="Nombre" />
+  <input [(ngModel)]="email" placeholder="Correo" type="email" />
+  <input [(ngModel)]="password" placeholder="Contraseña" type="password" />
+  <input [(ngModel)]="telefono" placeholder="Teléfono" />
+
+  <label>
+    <input type="checkbox" [(ngModel)]="es_admin" />
+    Registrar como administrador
+  </label>
+
+  <button (click)="registrar()">Crear cuenta</button>
+</div>

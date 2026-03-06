@@ -1,0 +1,12 @@
+<div class="admin-container">
+  <h2>Panel Administrador</h2>
+
+  <div *ngFor="let p of pedidos" class="card">
+    <p><b>ID:</b> {{ p.id }} | <b>Tipo:</b> {{ p.tipo }} | <b>Estado:</b> {{ p.estado }}</p>
+    <p><b>Total:</b> ${{ p.total }} | <b>Usuario:</b> {{ p.usuario_id }}</p>
+
+    <button (click)="cambiarEstado(p.id, 'confirmado')">Confirmar</button>
+    <button (click)="cambiarEstado(p.id, 'completado')">Completar</button>
+    <button (click)="cambiarEstado(p.id, 'cancelado')">Cancelar</button>
+  </div>
+</div>

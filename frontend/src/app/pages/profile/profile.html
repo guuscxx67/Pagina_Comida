@@ -1,1 +1,25 @@
-<p>profile works!</p>
+<div class="profile-container">
+
+  <div *ngIf="!usuario" class="login-box">
+    <h2>Iniciar Sesión</h2>
+    <input [(ngModel)]="email" placeholder="Correo" type="email" />
+    <input [(ngModel)]="password" placeholder="Contraseña" type="password" />
+    <button (click)="login()">Entrar</button>
+    <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+  </div>
+
+  <div *ngIf="usuario">
+    <h2>Mi Perfil</h2>
+    <p><b>Nombre:</b> {{ usuario.nombre }}</p>
+    <p><b>Email:</b> {{ usuario.email }}</p>
+    <button (click)="cerrarSesion()">Cerrar sesión</button>
+
+    <h3>Mis Pedidos</h3>
+    <div *ngFor="let p of pedidos" class="pedido-card">
+      <p><b>Pedido #{{ p.id }}</b> &mdash; {{ p.tipo }} &mdash; <span>{{ p.estado }}</span></p>
+      <p>Total: ${{ p.total }}</p>
+    </div>
+    <p *ngIf="pedidos.length === 0">No tienes pedidos aún.</p>
+  </div>
+
+</div>
