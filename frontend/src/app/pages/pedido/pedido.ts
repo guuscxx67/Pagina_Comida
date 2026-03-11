@@ -5,8 +5,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api';
 
 interface MenuItem {
+  id: number;
   nombre: string;
+  descripcion: string;
   precio: number;
+  categoria: string;
   cantidad: number;
 }
 
@@ -15,7 +18,7 @@ interface MenuItem {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './pedido.html',
-  styleUrls: ['./pedido.scss'],
+  styleUrls: ['./pedido.css'],
 })
 export class PedidoComponent implements OnInit {
   private api = inject(ApiService);
@@ -28,17 +31,18 @@ export class PedidoComponent implements OnInit {
   fechaRecogida = '';
   horaRecogida = '';
   enviando = false;
+  cargandoMenu = true;
 
-  menu: MenuItem[] = [
-    { nombre: 'Comida Completa del Día',  precio: 110, cantidad: 0 },
-    { nombre: 'Pollo en Mole',            precio: 95,  cantidad: 0 },
-    { nombre: 'Enchiladas Verdes',        precio: 85,  cantidad: 0 },
-    { nombre: 'Tamales (3 pzas)',         precio: 75,  cantidad: 0 },
-    { nombre: 'Caldo de Res',             precio: 90,  cantidad: 0 },
-    { nombre: 'Sopa de Lima',             precio: 80,  cantidad: 0 },
-    { nombre: 'Agua Fresca',              precio: 25,  cantidad: 0 },
-    { nombre: 'Tortillas (10 pzas)',      precio: 20,  cantidad: 0 },
-  ];
+  menu: MenuItem[] = [];
+
+  get categorias(): string[] {
+    const cats = [...new Set(this.menu.map(i => i.categoria))];
+    return cats;
+  }
+
+  itemsPorCategoria(cat: string): MenuItem[] {
+    return this.menu.filter(i => i.categoria === cat);
+  }
 
   ngOnInit() {
     const u = localStorage.getItem('usuario');
@@ -49,6 +53,17 @@ export class PedidoComponent implements OnInit {
     this.usuario = JSON.parse(u);
     const param = this.route.snapshot.paramMap.get('tipo');
     this.tipo = param === 'reserva' ? 'reserva' : 'recoger';
+
+    this.api.obtenerRecetas().subscribe({
+      next: (recetas: any[]) => {
+        this.menu = recetas.map(r => ({ ...r, cantidad: 0 }));
+        this.cargandoMenu = false;
+      },
+      error: () => {
+        alert('No se pudo cargar el menú. Verifica que el servidor esté activo.');
+        this.cargandoMenu = false;
+      }
+    });
   }
 
   get hoyISO(): string {

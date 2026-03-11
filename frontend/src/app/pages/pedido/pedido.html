@@ -15,24 +15,38 @@
 
     <div class="menu-section">
       <h2 class="section-title">Selecciona tus platillos</h2>
-      <div class="menu-grid">
-        <div
-          class="menu-item"
-          *ngFor="let item of menu"
-          [class.item-selected]="item.cantidad > 0"
-        >
-          <div class="item-info">
-            <span class="item-nombre">{{ item.nombre }}</span>
-            <span class="item-precio">${{ item.precio }}</span>
-          </div>
-          <div class="item-controls">
-            <button class="ctrl-btn" (click)="decrementar(item)" [disabled]="item.cantidad === 0">−</button>
-            <span class="item-qty">{{ item.cantidad }}</span>
-            <button class="ctrl-btn ctrl-add" (click)="incrementar(item)">+</button>
+
+      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menú...</div>
+
+      <div *ngIf="!cargandoMenu && menu.length === 0" class="loading-msg">
+        No hay platillos disponibles por el momento.
+      </div>
+
+      <ng-container *ngFor="let cat of categorias">
+        <h3 class="categoria-titulo">{{ cat }}</h3>
+        <div class="menu-grid">
+          <div
+            class="menu-item"
+            *ngFor="let item of itemsPorCategoria(cat)"
+            [class.item-selected]="item.cantidad > 0"
+          >
+            <div class="item-info">
+              <div class="item-text">
+                <span class="item-nombre">{{ item.nombre }}</span>
+                <span class="item-desc" *ngIf="item.descripcion">{{ item.descripcion }}</span>
+              </div>
+              <span class="item-precio">${{ item.precio }}</span>
+            </div>
+            <div class="item-controls">
+              <button class="ctrl-btn" (click)="decrementar(item)" [disabled]="item.cantidad === 0">−</button>
+              <span class="item-qty">{{ item.cantidad }}</span>
+              <button class="ctrl-btn ctrl-add" (click)="incrementar(item)">+</button>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
+
     <div class="summary-section">
 
       <h2 class="section-title">Tu pedido</h2>
@@ -81,7 +95,7 @@
         [class.btn-reserva]="tipo === 'reserva'"
         [class.btn-recoger]="tipo === 'recoger'"
         (click)="confirmarPedido()"
-        [disabled]="enviando || total === 0"
+        [disabled]="enviando || total === 0 || cargandoMenu"
       >
         <span *ngIf="!enviando">
           {{ tipo === 'reserva' ? 'Confirmar Reserva' : 'Confirmar Pedido' }}

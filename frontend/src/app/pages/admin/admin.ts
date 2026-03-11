@@ -1,21 +1,31 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin.html',
-  styleUrls: ['./admin.scss']
+  styleUrls: ['./admin.css']
 })
 export class AdminComponent implements OnInit {
   private api = inject(ApiService);
   private router = inject(Router);
 
   pedidos: any[] = [];
+  recetas: any[] = [];
   adminId: number | null = null;
+  activeTab: 'pedidos' | 'recetas' = 'pedidos';
+
+  // Formulario receta
+  formVisible = false;
+  editandoId: number | null = null;
+  form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true };
+
+  readonly categorias = ['Menú del Día', 'Antojitos', 'Caldos y Sopas', 'Especialidades', 'Bebidas', 'Postres', 'General'];
 
   ngOnInit(): void {
     const user = localStorage.getItem('usuario');
@@ -32,8 +42,10 @@ export class AdminComponent implements OnInit {
 
     this.adminId = u.id;
     this.cargarPedidos();
+    this.cargarRecetas();
   }
 
+  // ── PEDIDOS ─────────────────────────────────────────────
   cargarPedidos() {
     if (!this.adminId) return;
     this.api.obtenerPedidosAdmin(this.adminId).subscribe({
@@ -48,5 +60,67 @@ export class AdminComponent implements OnInit {
       next: () => this.cargarPedidos(),
       error: () => alert('No se pudo actualizar el estado')
     });
+  }
+
+  // ── RECETAS ──────────────────────────────────────────────
+  cargarRecetas() {
+    if (!this.adminId) return;
+    this.api.obtenerRecetasAdmin(this.adminId).subscribe({
+      next: (res: any) => (this.recetas = res),
+      error: () => alert('No se pudieron cargar las recetas')
+    });
+  }
+
+  abrirFormNuevo() {
+    this.editandoId = null;
+    this.form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true };
+    this.formVisible = true;
+  }
+
+  editarReceta(r: any) {
+    this.editandoId = r.id;
+    this.form = { nombre: r.nombre, descripcion: r.descripcion, precio: r.precio, categoria: r.categoria, disponible: r.disponible };
+    this.formVisible = true;
+  }
+
+  guardarReceta() {
+    if (!this.adminId) return;
+    if (!this.form.nombre.trim() || this.form.precio <= 0) {
+      alert('Nombre y precio son obligatorios y precio debe ser mayor a 0');
+      return;
+    }
+
+    const accion = this.editandoId
+      ? this.api.actualizarReceta(this.adminId, this.editandoId, this.form)
+      : this.api.crearReceta(this.adminId, this.form);
+
+    accion.subscribe({
+      next: () => {
+        this.formVisible = false;
+        this.cargarRecetas();
+      },
+      error: () => alert('Error al guardar la receta')
+    });
+  }
+
+  eliminarReceta(id: number) {
+    if (!this.adminId) return;
+    if (!confirm('¿Eliminar esta receta?')) return;
+    this.api.eliminarReceta(this.adminId, id).subscribe({
+      next: () => this.cargarRecetas(),
+      error: () => alert('Error al eliminar la receta')
+    });
+  }
+
+  toggleDisponible(r: any) {
+    if (!this.adminId) return;
+    this.api.actualizarReceta(this.adminId, r.id, { disponible: !r.disponible }).subscribe({
+      next: () => this.cargarRecetas(),
+      error: () => alert('Error al actualizar disponibilidad')
+    });
+  }
+
+  cancelarForm() {
+    this.formVisible = false;
   }
 }

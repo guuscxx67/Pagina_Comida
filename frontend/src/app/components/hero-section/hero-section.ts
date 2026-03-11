@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './hero-section.html',
-  styleUrls: ['./hero-section.scss'],
+  styleUrls: ['./hero-section.css'],
 })
 export class HeroSectionComponent {}

@@ -44,4 +44,26 @@ export class ApiService {
       estado
     });
   }
+
+  // Recetas — público
+  obtenerRecetas(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/recetas`);
+  }
+
+  // Recetas — admin
+  obtenerRecetasAdmin(adminId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/recetas`, { params: { admin_id: adminId } });
+  }
+
+  crearReceta(adminId: number, receta: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/recetas`, { admin_id: adminId, ...receta });
+  }
+
+  actualizarReceta(adminId: number, id: number, receta: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/recetas/${id}`, { admin_id: adminId, ...receta });
+  }
+
+  eliminarReceta(adminId: number, id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/recetas/${id}`, { params: { admin_id: adminId } });
+  }
 }

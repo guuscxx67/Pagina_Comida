@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './header.html',
-  styleUrls: ['./header.scss'],
+  styleUrls: ['./header.css'],
 })
 export class HeaderComponent implements OnInit {
   usuario: any = null;
