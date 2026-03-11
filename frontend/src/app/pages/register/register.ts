@@ -9,7 +9,7 @@ import { ApiService } from '../../services/api';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './register.html',
-  styleUrls: ['./register.scss']
+  styleUrls: ['./register.css']
 })
 export class RegisterComponent {
   private api = inject(ApiService);

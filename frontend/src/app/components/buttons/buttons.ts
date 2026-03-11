@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './buttons.html',
-  styleUrls: ['./buttons.scss'],
+  styleUrls: ['./buttons.css'],
 })
 export class ButtonsComponent implements OnInit {
   private router = inject(Router);

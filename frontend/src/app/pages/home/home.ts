@@ -10,6 +10,6 @@ import { FooterComponent } from '../../components/footer/footer';
   standalone: true,
   imports: [HeaderComponent, HeroSectionComponent, ButtonsComponent, MenuPreviewComponent, FooterComponent],
   templateUrl: './home.html',
-  styleUrls: ['./home.scss'],
+  styleUrls: ['./home.css'],
 })
 export class HomeComponent {}

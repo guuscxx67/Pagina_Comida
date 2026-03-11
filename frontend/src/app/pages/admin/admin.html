@@ -1,12 +1,101 @@
 <div class="admin-container">
   <h2>Panel Administrador</h2>
 
-  <div *ngFor="let p of pedidos" class="card">
-    <p><b>ID:</b> {{ p.id }} | <b>Tipo:</b> {{ p.tipo }} | <b>Estado:</b> {{ p.estado }}</p>
-    <p><b>Total:</b> ${{ p.total }} | <b>Usuario:</b> {{ p.usuario_id }}</p>
-
-    <button (click)="cambiarEstado(p.id, 'confirmado')">Confirmar</button>
-    <button (click)="cambiarEstado(p.id, 'completado')">Completar</button>
-    <button (click)="cambiarEstado(p.id, 'cancelado')">Cancelar</button>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'pedidos'" (click)="activeTab = 'pedidos'">
+      Pedidos <span class="badge">{{ pedidos.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'recetas'" (click)="activeTab = 'recetas'">
+      Recetas <span class="badge">{{ recetas.length }}</span>
+    </button>
   </div>
+
+  <!-- ── SECCIÓN PEDIDOS ──────────────────────────── -->
+  <section *ngIf="activeTab === 'pedidos'">
+    <div class="section-header">
+      <h3>Pedidos</h3>
+      <button class="btn-refresh" (click)="cargarPedidos()">↺ Actualizar</button>
+    </div>
+
+    <p *ngIf="pedidos.length === 0" class="empty-msg">No hay pedidos aún.</p>
+
+    <div *ngFor="let p of pedidos" class="card pedido-card" [class]="'estado-' + p.estado">
+      <div class="card-header">
+        <span class="pedido-id">#{{ p.id }}</span>
+        <span class="tipo-badge">{{ p.tipo }}</span>
+        <span class="estado-badge">{{ p.estado }}</span>
+      </div>
+      <div class="card-body">
+        <p><b>Total:</b> ${{ p.total }} &nbsp;|&nbsp; <b>Usuario ID:</b> {{ p.usuario_id }}</p>
+        <p><b>Fecha:</b> {{ p.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</p>
+        <div *ngIf="p.items && p.items.length > 0" class="items-list">
+          <span *ngFor="let item of p.items">{{ item.nombre }} x{{ item.cantidad }}</span>
+        </div>
+        <p *ngIf="p.notas"><b>Notas:</b> {{ p.notas }}</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-confirmar" (click)="cambiarEstado(p.id, 'confirmado')" [disabled]="p.estado === 'confirmado'">Confirmar</button>
+        <button class="btn btn-completar" (click)="cambiarEstado(p.id, 'completado')" [disabled]="p.estado === 'completado'">Completar</button>
+        <button class="btn btn-cancelar" (click)="cambiarEstado(p.id, 'cancelado')" [disabled]="p.estado === 'cancelado'">Cancelar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN RECETAS ──────────────────────────── -->
+  <section *ngIf="activeTab === 'recetas'">
+    <div class="section-header">
+      <h3>Recetas del Menú</h3>
+      <button class="btn-nuevo" (click)="abrirFormNuevo()">+ Nueva Receta</button>
+    </div>
+
+    <!-- Formulario crear / editar -->
+    <div *ngIf="formVisible" class="form-card">
+      <h4>{{ editandoId ? 'Editar Receta' : 'Nueva Receta' }}</h4>
+
+      <label>Nombre *</label>
+      <input type="text" [(ngModel)]="form.nombre" placeholder="Ej. Enchiladas Verdes" />
+
+      <label>Descripción</label>
+      <input type="text" [(ngModel)]="form.descripcion" placeholder="Breve descripción del platillo" />
+
+      <label>Precio (MXN) *</label>
+      <input type="number" [(ngModel)]="form.precio" min="1" step="0.5" />
+
+      <label>Categoría</label>
+      <select [(ngModel)]="form.categoria">
+        <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+      </select>
+
+      <label class="check-label">
+        <input type="checkbox" [(ngModel)]="form.disponible" />
+        Disponible para ordenar
+      </label>
+
+      <div class="form-actions">
+        <button class="btn btn-guardar" (click)="guardarReceta()">Guardar</button>
+        <button class="btn btn-cancelar-form" (click)="cancelarForm()">Cancelar</button>
+      </div>
+    </div>
+
+    <p *ngIf="recetas.length === 0" class="empty-msg">No hay recetas. Agrega la primera.</p>
+
+    <div class="recetas-grid">
+      <div *ngFor="let r of recetas" class="card receta-card" [class.no-disponible]="!r.disponible">
+        <div class="receta-header">
+          <span class="receta-cat">{{ r.categoria }}</span>
+          <span class="receta-precio">${{ r.precio }}</span>
+        </div>
+        <h4>{{ r.nombre }}</h4>
+        <p class="receta-desc">{{ r.descripcion }}</p>
+        <div class="receta-actions">
+          <button class="btn btn-editar" (click)="editarReceta(r)">Editar</button>
+          <button class="btn btn-toggle" (click)="toggleDisponible(r)">
+            {{ r.disponible ? 'Deshabilitar' : 'Habilitar' }}
+          </button>
+          <button class="btn btn-eliminar" (click)="eliminarReceta(r.id)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

@@ -1,0 +1,307 @@
+.admin-container {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.admin-container h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2d2d2d;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e5e5e5;
+  padding-bottom: 0;
+}
+
+.tabs .tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tabs .tab-btn.active {
+  color: #c0392b;
+  border-bottom-color: #c0392b;
+}
+
+.tabs .tab-btn:hover:not(.active) {
+  color: #333;
+}
+
+.tabs .badge {
+  background: #e0e0e0;
+  color: #555;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+  margin-left: 6px;
+}
+
+/* ── Section header ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.btn-refresh, .btn-nuevo {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.btn-refresh {
+  background: #f0f0f0;
+  color: #444;
+}
+
+.btn-refresh:hover {
+  background: #e0e0e0;
+}
+
+.btn-nuevo {
+  background: #c0392b;
+  color: #fff;
+}
+
+.btn-nuevo:hover {
+  background: #a93226;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #999;
+  padding: 30px 0;
+}
+
+/* ── Pedido card ── */
+.pedido-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.pedido-card.estado-pendiente  { border-left: 4px solid #f39c12; }
+.pedido-card.estado-confirmado { border-left: 4px solid #2980b9; }
+.pedido-card.estado-completado { border-left: 4px solid #27ae60; }
+.pedido-card.estado-cancelado  { border-left: 4px solid #bbb; opacity: 0.7; }
+
+.pedido-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.pedido-card .pedido-id {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.pedido-card .tipo-badge,
+.pedido-card .estado-badge {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.pedido-card .tipo-badge  { background: #eaf0fb; color: #2471a3; }
+.pedido-card .estado-badge { background: #fdebd0; color: #a04000; }
+
+.pedido-card .card-body p { margin: 3px 0; font-size: 0.9rem; color: #444; }
+
+.pedido-card .items-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.pedido-card .items-list span {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.82rem;
+  color: #555;
+}
+
+/* ── Receta form card ── */
+.form-card {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.form-card h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.form-card label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.form-card label.check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.form-card input[type=text],
+.form-card input[type=number],
+.form-card select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.93rem;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.form-card input[type=text]:focus,
+.form-card input[type=number]:focus,
+.form-card select:focus {
+  outline: none;
+  border-color: #c0392b;
+}
+
+.form-card .form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* ── Recetas grid ── */
+.recetas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.receta-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 14px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.receta-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.receta-card.no-disponible {
+  opacity: 0.55;
+  background: #f9f9f9;
+}
+
+.receta-card .receta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.receta-card .receta-cat {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #c0392b;
+  letter-spacing: 0.03em;
+}
+
+.receta-card .receta-precio {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.receta-card h4 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 4px;
+}
+
+.receta-card .receta-desc {
+  font-size: 0.83rem;
+  color: #777;
+  margin-bottom: 12px;
+  min-height: 36px;
+}
+
+.receta-card .receta-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Botones ── */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn:hover    { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+
+.btn-confirmar   { background: #d6eaf8; color: #1a5276; }
+.btn-completar   { background: #d5f5e3; color: #145a32; }
+.btn-cancelar    { background: #f9ebea; color: #922b21; }
+.btn-editar      { background: #eaf0fb; color: #1a5276; }
+.btn-toggle      { background: #f0f0f0; color: #444; }
+.btn-eliminar    { background: #f9ebea; color: #922b21; }
+.btn-guardar     { background: #c0392b; color: #fff; padding: 8px 20px; }
+.btn-cancelar-form { background: #e0e0e0; color: #444; padding: 8px 16px; }
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}

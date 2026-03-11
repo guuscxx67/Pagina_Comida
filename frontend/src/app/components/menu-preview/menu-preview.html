@@ -2,7 +2,19 @@
   <div class="mp-inner">
 
     <!-- ── Banner oferta destacada ─────────────────────── -->
-    <div class="oferta-banner">
+    <div class="oferta-banner" *ngIf="ofertaDelDia">
+      <div class="oferta-badge">OFERTA DEL DÍA</div>
+      <div class="oferta-content">
+        <h3>{{ ofertaDelDia.nombre }}</h3>
+        <p>{{ ofertaDelDia.descripcion }}</p>
+      </div>
+      <div class="oferta-precio">
+        <span class="precio-ahora">${{ ofertaDelDia.precio }}</span>
+      </div>
+    </div>
+
+    <!-- Banner estático de respaldo si la API no cargó -->
+    <div class="oferta-banner" *ngIf="!ofertaDelDia">
       <div class="oferta-badge">OFERTA DEL DÍA</div>
       <div class="oferta-content">
         <h3>Comida Completa + Agua Fresca</h3>
@@ -18,7 +30,19 @@
       <p>Comida hecha con amor y tradición familiar</p>
     </div>
 
-    <div class="categorias-grid">
+    <!-- Categorías dinámicas desde la API -->
+    <div class="categorias-grid" *ngIf="categorias.length > 0">
+      <div class="categoria-card" *ngFor="let cat of categorias">
+        <div class="cat-info">
+          <h3>{{ cat.nombre }}</h3>
+          <p>{{ cat.descripcion }}</p>
+          <span class="cat-precio">Desde ${{ cat.precioMinimo }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categorías estáticas de respaldo -->
+    <div class="categorias-grid" *ngIf="categorias.length === 0">
 
       <div class="categoria-card">
         <div class="cat-info">

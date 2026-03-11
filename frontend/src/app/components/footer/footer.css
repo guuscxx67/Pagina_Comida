@@ -1,0 +1,181 @@
+.footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  margin-top: 60px;
+}
+
+.footer .footer-cookie-banner {
+  background-color: #1a252f;
+  padding: 16px 0;
+  border-bottom: 1px solid #34495e;
+}
+
+.footer .footer-cookie-banner .cookie-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-text {
+  flex: 1;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-text p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-text p .cookie-link {
+  color: #d4a574;
+  text-decoration: none;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-text p .cookie-link:hover {
+  text-decoration: underline;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions {
+  display: flex;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie:hover {
+  transform: translateY(-2px);
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie-more {
+  background-color: transparent;
+  color: #d4a574;
+  border: 1px solid #d4a574;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie-more:hover {
+  background-color: rgba(212, 165, 116, 0.1);
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie-accept {
+  background-color: #2d5016;
+  color: white;
+}
+
+.footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie-accept:hover {
+  background-color: #1f3a10;
+}
+
+.footer .footer-main {
+  padding: 40px 0 20px;
+}
+
+.footer .footer-main .footer-content {
+  margin-bottom: 30px;
+}
+
+.footer .footer-main .footer-content .footer-section {
+  margin-bottom: 20px;
+}
+
+.footer .footer-main .footer-content .footer-section h5 {
+  color: #d4a574;
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.footer .footer-main .footer-content .footer-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+}
+
+.footer .footer-main .footer-content .footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer .footer-main .footer-content .footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer .footer-main .footer-content .footer-section ul li a {
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer .footer-main .footer-content .footer-section ul li a:hover {
+  color: #d4a574;
+}
+
+.footer .footer-main .footer-content .footer-section .social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.footer .footer-main .footer-content .footer-section .social-links .social-link {
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer .footer-main .footer-content .footer-section .social-links .social-link:hover {
+  color: #d4a574;
+}
+
+.footer .footer-main .footer-bottom {
+  border-top: 1px solid #34495e;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer .footer-main .footer-bottom p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #95a5a6;
+}
+
+@media (max-width: 768px) {
+  .footer .footer-cookie-banner .cookie-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-text p {
+    font-size: 0.85rem;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie {
+    width: 100%;
+  }
+
+  .footer .footer-main {
+    padding: 30px 0 15px;
+  }
+
+  .footer .footer-main .footer-content .footer-section {
+    margin-bottom: 15px;
+  }
+
+  .footer .footer-main .footer-content .footer-section h5 {
+    font-size: 1rem;
+  }
+}

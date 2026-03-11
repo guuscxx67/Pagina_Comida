@@ -9,7 +9,7 @@ import { ApiService } from '../../services/api';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './profile.html',
-  styleUrls: ['./profile.scss'],
+  styleUrls: ['./profile.css'],
 })
 export class ProfileComponent implements OnInit {
   private api = inject(ApiService);
