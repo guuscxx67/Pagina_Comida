@@ -49,6 +49,7 @@ class Receta(db.Model):
     precio = db.Column(db.Float, nullable=False)
     categoria = db.Column(db.String(50), default='General')
     disponible = db.Column(db.Boolean, default=True)
+    imagen = db.Column(db.String(500), default='')
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
 
 # Helpers
@@ -73,6 +74,7 @@ def receta_to_dict(r: Receta):
         'precio': r.precio,
         'categoria': r.categoria or 'General',
         'disponible': r.disponible,
+        'imagen': r.imagen or '',
     }
 
 RECETAS_INICIALES = [
@@ -249,6 +251,7 @@ def admin_crear_receta():
         precio=float(data['precio']),
         categoria=data.get('categoria', 'General'),
         disponible=bool(data.get('disponible', True)),
+        imagen=data.get('imagen', ''),
     )
     db.session.add(receta)
     db.session.commit()
@@ -277,6 +280,8 @@ def admin_actualizar_receta(receta_id):
         receta.categoria = data['categoria']
     if data.get('disponible') is not None:
         receta.disponible = bool(data['disponible'])
+    if data.get('imagen') is not None:
+        receta.imagen = data['imagen']
 
     db.session.commit()
     return jsonify(receta_to_dict(receta)), 200
