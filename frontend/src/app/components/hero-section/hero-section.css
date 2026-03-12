@@ -135,8 +135,18 @@
 .hero-section .hero-content .hero-right .dish-container .dish-image {
   width: 290px;
   height: 290px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   animation: float 3s ease-in-out infinite;
   filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.35));
+}
+
+.hero-section .hero-content .hero-right .dish-container .dish-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 .hero-section .hero-content .hero-right .dish-container .dish-image.with-photo {
