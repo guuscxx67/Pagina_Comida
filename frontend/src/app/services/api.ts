@@ -22,23 +22,23 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/pedidos`, pedido);
   }
 
-  obtenerPedido(id: number): Observable<any> {
+  obtenerPedido(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/pedidos/${id}`);
   }
 
-  actualizarPedido(id: number, datos: any): Observable<any> {
+  actualizarPedido(id: string, datos: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/pedidos/${id}`, datos);
   }
 
-  obtenerPedidosUsuario(usuarioId: number): Observable<any> {
+  obtenerPedidosUsuario(usuarioId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/pedidos/usuario/${usuarioId}`);
   }
 
-  obtenerPedidosAdmin(adminId: number): Observable<any> {
+  obtenerPedidosAdmin(adminId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/pedidos`, { params: { admin_id: adminId } });
   }
 
-  actualizarEstadoPedidoAdmin(adminId: number, pedidoId: number, estado: string): Observable<any> {
+  actualizarEstadoPedidoAdmin(adminId: string, pedidoId: string, estado: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/admin/pedidos/${pedidoId}/estado`, {
       admin_id: adminId,
       estado
@@ -51,19 +51,19 @@ export class ApiService {
   }
 
   // Recetas — admin
-  obtenerRecetasAdmin(adminId: number): Observable<any> {
+  obtenerRecetasAdmin(adminId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/recetas`, { params: { admin_id: adminId } });
   }
 
-  crearReceta(adminId: number, receta: any): Observable<any> {
+  crearReceta(adminId: string, receta: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/admin/recetas`, { admin_id: adminId, ...receta });
   }
 
-  actualizarReceta(adminId: number, id: number, receta: any): Observable<any> {
+  actualizarReceta(adminId: string, id: string, receta: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/admin/recetas/${id}`, { admin_id: adminId, ...receta });
   }
 
-  eliminarReceta(adminId: number, id: number): Observable<any> {
+  eliminarReceta(adminId: string, id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin/recetas/${id}`, { params: { admin_id: adminId } });
   }
 }

@@ -1,10 +1,12 @@
 """
-Backend Flask para Comida Casera
+Backend Flask para Comida Casera - Con MongoDB
 """
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from pymongo import MongoClient
+from pymongo.errors import PyMongoError
+from bson.objectid import ObjectId
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -15,80 +17,96 @@ app = Flask(__name__)
 CORS(app)
 
 # Config
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///comida.db')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'tu-clave-secreta')
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017')
+MONGO_DB = os.getenv('MONGO_DB', 'pagina_comida')
 
-db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# Models
-class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    telefono = db.Column(db.String(20))
-    es_admin = db.Column(db.Boolean, default=False)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+# MongoDB Connection
+try:
+    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    mongo_client.admin.command('ping')
+    db = mongo_client[MONGO_DB]
+    print(f"✓ Conectado a MongoDB: {MONGO_DB}")
+except PyMongoError as e:
+    print(f"✗ Error conectando a MongoDB: {e}")
+    db = None
 
-class Pedido(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    tipo = db.Column(db.String(20), nullable=False)  # 'recogida' o 'reserva'
-    estado = db.Column(db.String(20), default='pendiente')  # pendiente, confirmado, completado
-    total = db.Column(db.Float, nullable=False)
-    fecha_pedido = db.Column(db.DateTime, default=datetime.utcnow)
-    fecha_recogida = db.Column(db.DateTime)
-    items = db.Column(db.JSON)
-    notas = db.Column(db.String(500))
+# Collections
+usuarios_col = db['usuarios'] if db is not None else None
+pedidos_col = db['pedidos'] if db is not None else None
+recetas_col = db['recetas'] if db is not None else None
 
-class Receta(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    descripcion = db.Column(db.String(300), default='')
-    precio = db.Column(db.Float, nullable=False)
-    categoria = db.Column(db.String(50), default='General')
-    disponible = db.Column(db.Boolean, default=True)
-    imagen = db.Column(db.String(500), default='')
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+# Create indexes
+if usuarios_col is not None:
+    usuarios_col.create_index('email', unique=True)
 
-# Helpers
-def pedido_to_dict(p: Pedido):
+# Helper functions
+def usuario_to_dict(u):
+    """Convierte un documento Usuario de MongoDB a dict"""
+    if not u:
+        return None
     return {
-        'id': p.id,
-        'usuario_id': p.usuario_id,
-        'tipo': p.tipo,
-        'estado': p.estado,
-        'total': p.total,
-        'fecha_pedido': p.fecha_pedido.isoformat() if p.fecha_pedido else None,
-        'fecha_recogida': p.fecha_recogida.isoformat() if p.fecha_recogida else None,
-        'items': p.items or [],
-        'notas': p.notas or ''
+        'id': str(u['_id']) if '_id' in u else str(u.get('id')),
+        'nombre': u.get('nombre', ''),
+        'email': u.get('email', ''),
+        'telefono': u.get('telefono', ''),
+        'es_admin': u.get('es_admin', False),
     }
 
-def receta_to_dict(r: Receta):
+def pedido_to_dict(p):
+    """Convierte un documento Pedido de MongoDB a dict"""
+    if not p:
+        return None
+    fecha_pedido = p.get('fecha_pedido')
+    if isinstance(fecha_pedido, datetime):
+        fecha_pedido = fecha_pedido.isoformat()
+
+    fecha_recogida = p.get('fecha_recogida')
+    if isinstance(fecha_recogida, datetime):
+        fecha_recogida = fecha_recogida.isoformat()
+
     return {
-        'id': r.id,
-        'nombre': r.nombre,
-        'descripcion': r.descripcion or '',
-        'precio': r.precio,
-        'categoria': r.categoria or 'General',
-        'disponible': r.disponible,
-        'imagen': r.imagen or '',
+        'id': str(p['_id']) if '_id' in p else str(p.get('id')),
+        'usuario_id': p.get('usuario_id'),
+        'tipo': p.get('tipo', ''),
+        'estado': p.get('estado', 'pendiente'),
+        'total': p.get('total', 0),
+        'fecha_pedido': fecha_pedido,
+        'fecha_recogida': fecha_recogida,
+        'items': p.get('items', []),
+        'notas': p.get('notas', ''),
     }
 
+def receta_to_dict(r):
+    """Convierte un documento Receta de MongoDB a dict"""
+    if not r:
+        return None
+    return {
+        'id': str(r['_id']) if '_id' in r else str(r.get('id')),
+        'nombre': r.get('nombre', ''),
+        'descripcion': r.get('descripcion', ''),
+        'precio': r.get('precio', 0),
+        'categoria': r.get('categoria', 'General'),
+        'disponible': r.get('disponible', True),
+        'imagen': r.get('imagen', ''),
+    }
+
+# Data inicial
 RECETAS_INICIALES = [
-    {'nombre': 'Comida Completa del Día',  'descripcion': 'Sopa, guiso, arroz, frijoles y tortillas', 'precio': 110, 'categoria': 'Menú del Día'},
-    {'nombre': 'Pollo en Mole',            'descripcion': 'Mole casero con pollo, arroz y tortillas', 'precio': 95,  'categoria': 'Especialidades'},
-    {'nombre': 'Enchiladas Verdes',        'descripcion': 'Enchiladas con salsa verde, crema y queso', 'precio': 85,  'categoria': 'Especialidades'},
-    {'nombre': 'Tamales (3 pzas)',         'descripcion': 'Tamales de rajas, pollo o dulce', 'precio': 75,  'categoria': 'Antojitos'},
-    {'nombre': 'Caldo de Res',             'descripcion': 'Caldo de res con verduras y tortillas', 'precio': 90,  'categoria': 'Caldos y Sopas'},
-    {'nombre': 'Sopa de Lima',             'descripcion': 'Sopa yucateca con pollo y tostadas', 'precio': 80,  'categoria': 'Caldos y Sopas'},
-    {'nombre': 'Agua Fresca',              'descripcion': 'Jamaica, horchata o fruta de temporada', 'precio': 25,  'categoria': 'Bebidas'},
-    {'nombre': 'Tortillas (10 pzas)',      'descripcion': 'Tortillas de maíz hechas a mano', 'precio': 20,  'categoria': 'Antojitos'},
+    {'nombre': 'Comida Completa del Día',  'descripcion': 'Sopa, guiso, arroz, frijoles y tortillas', 'precio': 110, 'categoria': 'Menú del Día', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Pollo en Mole',            'descripcion': 'Mole casero con pollo, arroz y tortillas', 'precio': 95,  'categoria': 'Especialidades', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Enchiladas Verdes',        'descripcion': 'Enchiladas con salsa verde, crema y queso', 'precio': 85,  'categoria': 'Especialidades', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Tamales (3 pzas)',         'descripcion': 'Tamales de rajas, pollo o dulce', 'precio': 75,  'categoria': 'Antojitos', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Caldo de Res',             'descripcion': 'Caldo de res con verduras y tortillas', 'precio': 90,  'categoria': 'Caldos y Sopas', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Sopa de Lima',             'descripcion': 'Sopa yucateca con pollo y tostadas', 'precio': 80,  'categoria': 'Caldos y Sopas', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Agua Fresca',              'descripcion': 'Jamaica, horchata o fruta de temporada', 'precio': 25,  'categoria': 'Bebidas', 'disponible': True, 'imagen': ''},
+    {'nombre': 'Tortillas (10 pzas)',      'descripcion': 'Tortillas de maíz hechas a mano', 'precio': 20,  'categoria': 'Antojitos', 'disponible': True, 'imagen': ''},
 ]
 
-# Routes — Auth
+# ============ Routes — Auth ============
+
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json or {}
@@ -97,43 +115,45 @@ def register():
     if any(not data.get(k) for k in required):
         return jsonify({'error': 'nombre, email y password son obligatorios'}), 400
 
-    if Usuario.query.filter_by(email=data['email']).first():
+    # Verificar si el email ya existe
+    if usuarios_col.find_one({'email': data['email']}):
         return jsonify({'error': 'Email ya registrado'}), 400
 
-    usuario = Usuario(
-        nombre=data['nombre'],
-        email=data['email'],
-        password=bcrypt.generate_password_hash(data['password']).decode(),
-        telefono=data.get('telefono', ''),
-        es_admin=bool(data.get('es_admin', False))
-    )
+    usuario = {
+        'nombre': data['nombre'],
+        'email': data['email'],
+        'password': bcrypt.generate_password_hash(data['password']).decode(),
+        'telefono': data.get('telefono', ''),
+        'es_admin': bool(data.get('es_admin', False)),
+        'fecha_creacion': datetime.utcnow()
+    }
 
-    db.session.add(usuario)
-    db.session.commit()
+    result = usuarios_col.insert_one(usuario)
 
     return jsonify({
-        'id': usuario.id,
-        'nombre': usuario.nombre,
-        'email': usuario.email,
-        'es_admin': usuario.es_admin
+        'id': str(result.inserted_id),
+        'nombre': usuario['nombre'],
+        'email': usuario['email'],
+        'es_admin': usuario['es_admin']
     }), 201
 
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json or {}
-    usuario = Usuario.query.filter_by(email=data.get('email')).first()
+    usuario = usuarios_col.find_one({'email': data.get('email')})
 
-    if not usuario or not bcrypt.check_password_hash(usuario.password, data.get('password', '')):
+    if not usuario or not bcrypt.check_password_hash(usuario['password'], data.get('password', '')):
         return jsonify({'error': 'Credenciales inválidas'}), 401
 
     return jsonify({
-        'id': usuario.id,
-        'nombre': usuario.nombre,
-        'email': usuario.email,
-        'es_admin': usuario.es_admin
+        'id': str(usuario['_id']),
+        'nombre': usuario['nombre'],
+        'email': usuario['email'],
+        'es_admin': usuario['es_admin']
     }), 200
 
-# Routes — Pedidos
+# ============ Routes — Pedidos ============
+
 @app.route('/api/pedidos', methods=['POST'])
 def crear_pedido():
     data = request.json or {}
@@ -151,31 +171,40 @@ def crear_pedido():
         except ValueError:
             return jsonify({'error': 'fecha_recogida inválida'}), 400
 
-    pedido = Pedido(
-        usuario_id=data['usuario_id'],
-        tipo=data['tipo'],
-        total=float(data['total']),
-        fecha_recogida=fecha_recogida,
-        items=data.get('items', []),
-        notas=data.get('notas', '')
-    )
+    pedido = {
+        'usuario_id': int(data['usuario_id']),
+        'tipo': data['tipo'],
+        'estado': 'pendiente',
+        'total': float(data['total']),
+        'fecha_pedido': datetime.utcnow(),
+        'fecha_recogida': fecha_recogida,
+        'items': data.get('items', []),
+        'notas': data.get('notas', '')
+    }
 
-    db.session.add(pedido)
-    db.session.commit()
+    result = pedidos_col.insert_one(pedido)
 
-    return jsonify({'id': pedido.id, 'estado': pedido.estado}), 201
+    return jsonify({'id': str(result.inserted_id), 'estado': pedido['estado']}), 201
 
-@app.route('/api/pedidos/<int:pedido_id>', methods=['GET'])
+@app.route('/api/pedidos/<pedido_id>', methods=['GET'])
 def obtener_pedido(pedido_id):
-    pedido = db.session.get(Pedido, pedido_id)
+    try:
+        pedido = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    except:
+        return jsonify({'error': 'ID de pedido inválido'}), 400
+
     if not pedido:
         return jsonify({'error': 'Pedido no encontrado'}), 404
     return jsonify(pedido_to_dict(pedido)), 200
 
-@app.route('/api/pedidos/<int:pedido_id>', methods=['PUT'])
+@app.route('/api/pedidos/<pedido_id>', methods=['PUT'])
 def actualizar_pedido(pedido_id):
     data = request.json or {}
-    pedido = db.session.get(Pedido, pedido_id)
+
+    try:
+        pedido = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    except:
+        return jsonify({'error': 'ID de pedido inválido'}), 400
 
     if not pedido:
         return jsonify({'error': 'Pedido no encontrado'}), 404
@@ -184,139 +213,213 @@ def actualizar_pedido(pedido_id):
     if estado and estado not in ['pendiente', 'confirmado', 'completado', 'cancelado']:
         return jsonify({'error': 'Estado inválido'}), 400
 
-    pedido.estado = estado or pedido.estado
-    db.session.commit()
+    update_data = {}
+    if estado:
+        update_data['estado'] = estado
 
-    return jsonify({'id': pedido.id, 'estado': pedido.estado}), 200
+    if update_data:
+        pedidos_col.update_one({'_id': ObjectId(pedido_id)}, {'$set': update_data})
 
-@app.route('/api/pedidos/usuario/<int:usuario_id>', methods=['GET'])
+    pedido_actualizado = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    return jsonify({'id': str(pedido_actualizado['_id']), 'estado': pedido_actualizado['estado']}), 200
+
+@app.route('/api/pedidos/usuario/<usuario_id>', methods=['GET'])
 def obtener_pedidos_usuario(usuario_id):
-    pedidos = Pedido.query.filter_by(usuario_id=usuario_id).order_by(Pedido.fecha_pedido.desc()).all()
+    try:
+        usuario_id = int(usuario_id)
+    except ValueError:
+        return jsonify({'error': 'ID de usuario inválido'}), 400
+
+    pedidos = list(pedidos_col.find({'usuario_id': usuario_id}).sort('fecha_pedido', -1))
     return jsonify([pedido_to_dict(p) for p in pedidos]), 200
 
-# Routes — Recetas (público)
+# ============ Routes — Recetas (público) ============
+
 @app.route('/api/recetas', methods=['GET'])
 def listar_recetas():
-    recetas = Receta.query.filter_by(disponible=True).order_by(Receta.categoria, Receta.nombre).all()
+    recetas = list(recetas_col.find({'disponible': True}).sort([('categoria', 1), ('nombre', 1)]))
     return jsonify([receta_to_dict(r) for r in recetas]), 200
 
-# Routes — Admin pedidos
+# ============ Routes — Admin Pedidos ============
+
 @app.route('/api/admin/pedidos', methods=['GET'])
 def admin_listar_pedidos():
-    admin_id = request.args.get('admin_id', type=int)
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    admin_id = request.args.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        admin = None
+
+    if not admin or not admin.get('es_admin', False):
         return jsonify({'error': 'No autorizado'}), 403
 
-    pedidos = Pedido.query.order_by(Pedido.fecha_pedido.desc()).all()
+    pedidos = list(pedidos_col.find().sort('fecha_pedido', -1))
     return jsonify([pedido_to_dict(p) for p in pedidos]), 200
 
-@app.route('/api/admin/pedidos/<int:pedido_id>/estado', methods=['PUT'])
+@app.route('/api/admin/pedidos/<pedido_id>/estado', methods=['PUT'])
 def admin_actualizar_estado(pedido_id):
     data = request.json or {}
     admin_id = data.get('admin_id')
     nuevo_estado = data.get('estado')
 
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+
+    if not admin or not admin.get('es_admin', False):
         return jsonify({'error': 'No autorizado'}), 403
 
     if nuevo_estado not in ['pendiente', 'confirmado', 'completado', 'cancelado']:
         return jsonify({'error': 'Estado inválido'}), 400
 
-    pedido = db.session.get(Pedido, pedido_id)
+    try:
+        pedido = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    except:
+        return jsonify({'error': 'ID de pedido inválido'}), 400
+
     if not pedido:
         return jsonify({'error': 'Pedido no encontrado'}), 404
 
-    pedido.estado = nuevo_estado
-    db.session.commit()
-    return jsonify({'id': pedido.id, 'estado': pedido.estado}), 200
+    pedidos_col.update_one({'_id': ObjectId(pedido_id)}, {'$set': {'estado': nuevo_estado}})
+    return jsonify({'id': pedido_id, 'estado': nuevo_estado}), 200
 
-# Routes — Admin recetas
+# ============ Routes — Admin Recetas ============
+
 @app.route('/api/admin/recetas', methods=['POST'])
 def admin_crear_receta():
     data = request.json or {}
     admin_id = data.get('admin_id')
 
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+
+    if not admin or not admin.get('es_admin', False):
         return jsonify({'error': 'No autorizado'}), 403
 
     if not data.get('nombre') or data.get('precio') is None:
         return jsonify({'error': 'nombre y precio son obligatorios'}), 400
 
-    receta = Receta(
-        nombre=data['nombre'],
-        descripcion=data.get('descripcion', ''),
-        precio=float(data['precio']),
-        categoria=data.get('categoria', 'General'),
-        disponible=bool(data.get('disponible', True)),
-        imagen=data.get('imagen', ''),
-    )
-    db.session.add(receta)
-    db.session.commit()
-    return jsonify(receta_to_dict(receta)), 201
+    receta = {
+        'nombre': data['nombre'],
+        'descripcion': data.get('descripcion', ''),
+        'precio': float(data['precio']),
+        'categoria': data.get('categoria', 'General'),
+        'disponible': bool(data.get('disponible', True)),
+        'imagen': data.get('imagen', ''),
+        'fecha_creacion': datetime.utcnow()
+    }
 
-@app.route('/api/admin/recetas/<int:receta_id>', methods=['PUT'])
+    result = recetas_col.insert_one(receta)
+
+    return jsonify(receta_to_dict({**receta, '_id': result.inserted_id})), 201
+
+@app.route('/api/admin/recetas/<receta_id>', methods=['PUT'])
 def admin_actualizar_receta(receta_id):
     data = request.json or {}
     admin_id = data.get('admin_id')
 
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
         return jsonify({'error': 'No autorizado'}), 403
 
-    receta = db.session.get(Receta, receta_id)
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    try:
+        receta = recetas_col.find_one({'_id': ObjectId(receta_id)})
+    except:
+        return jsonify({'error': 'ID de receta inválido'}), 400
+
     if not receta:
         return jsonify({'error': 'Receta no encontrada'}), 404
 
+    update_data = {}
     if data.get('nombre') is not None:
-        receta.nombre = data['nombre']
+        update_data['nombre'] = data['nombre']
     if data.get('descripcion') is not None:
-        receta.descripcion = data['descripcion']
+        update_data['descripcion'] = data['descripcion']
     if data.get('precio') is not None:
-        receta.precio = float(data['precio'])
+        update_data['precio'] = float(data['precio'])
     if data.get('categoria') is not None:
-        receta.categoria = data['categoria']
+        update_data['categoria'] = data['categoria']
     if data.get('disponible') is not None:
-        receta.disponible = bool(data['disponible'])
+        update_data['disponible'] = bool(data['disponible'])
     if data.get('imagen') is not None:
-        receta.imagen = data['imagen']
+        update_data['imagen'] = data['imagen']
 
-    db.session.commit()
-    return jsonify(receta_to_dict(receta)), 200
+    if update_data:
+        recetas_col.update_one({'_id': ObjectId(receta_id)}, {'$set': update_data})
 
-@app.route('/api/admin/recetas/<int:receta_id>', methods=['DELETE'])
+    receta_actualizada = recetas_col.find_one({'_id': ObjectId(receta_id)})
+    return jsonify(receta_to_dict(receta_actualizada)), 200
+
+@app.route('/api/admin/recetas/<receta_id>', methods=['DELETE'])
 def admin_eliminar_receta(receta_id):
-    admin_id = request.args.get('admin_id', type=int)
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    admin_id = request.args.get('admin_id')
+
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
         return jsonify({'error': 'No autorizado'}), 403
 
-    receta = db.session.get(Receta, receta_id)
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    try:
+        receta = recetas_col.find_one({'_id': ObjectId(receta_id)})
+    except:
+        return jsonify({'error': 'ID de receta inválido'}), 400
+
     if not receta:
         return jsonify({'error': 'Receta no encontrada'}), 404
 
-    db.session.delete(receta)
-    db.session.commit()
+    recetas_col.delete_one({'_id': ObjectId(receta_id)})
     return jsonify({'ok': True}), 200
 
 @app.route('/api/admin/recetas', methods=['GET'])
 def admin_listar_recetas():
-    admin_id = request.args.get('admin_id', type=int)
-    admin = db.session.get(Usuario, admin_id) if admin_id else None
-    if not admin or not admin.es_admin:
+    admin_id = request.args.get('admin_id')
+
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
         return jsonify({'error': 'No autorizado'}), 403
 
-    recetas = Receta.query.order_by(Receta.categoria, Receta.nombre).all()
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    recetas = list(recetas_col.find().sort([('categoria', 1), ('nombre', 1)]))
     return jsonify([receta_to_dict(r) for r in recetas]), 200
 
+# ============ Health Check ============
+
+@app.route('/api/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok', 'database': 'mongodb'}), 200
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        # Seed recetas iniciales si la tabla está vacía
-        if Receta.query.count() == 0:
-            for r in RECETAS_INICIALES:
-                db.session.add(Receta(**r))
-            db.session.commit()
+    if db is not None:
+        # Inicializar colecciones con datos si están vacías
+        if recetas_col.count_documents({}) == 0:
+            recetas_col.insert_many(RECETAS_INICIALES)
+            print(f"✓ Insertadas {len(RECETAS_INICIALES)} recetas iniciales")
+
+        # Crear admin por defecto si no existe
+        if usuarios_col.count_documents({'email': 'admin@test.com'}) == 0:
+            admin = {
+                'nombre': 'Admin',
+                'email': 'admin@test.com',
+                'password': bcrypt.generate_password_hash('123456').decode(),
+                'telefono': '',
+                'es_admin': True,
+                'fecha_creacion': datetime.utcnow()
+            }
+            usuarios_col.insert_one(admin)
+            print("✓ Admin por defecto creado: admin@test.com / 123456")
+
+    print(f"🚀 Backend ejecutándose en http://localhost:5000")
     app.run(debug=True, port=5000)

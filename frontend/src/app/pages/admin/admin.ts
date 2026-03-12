@@ -17,12 +17,12 @@ export class AdminComponent implements OnInit {
 
   pedidos: any[] = [];
   recetas: any[] = [];
-  adminId: number | null = null;
+  adminId: string | null = null;
   activeTab: 'pedidos' | 'recetas' = 'pedidos';
 
   // Formulario receta
   formVisible = false;
-  editandoId: number | null = null;
+  editandoId: string | null = null;
   form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
 
   readonly categorias = ['Menú del Día', 'Antojitos', 'Caldos y Sopas', 'Especialidades', 'Bebidas', 'Postres', 'General'];
@@ -54,7 +54,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  cambiarEstado(pedidoId: number, estado: string) {
+  cambiarEstado(pedidoId: string, estado: string) {
     if (!this.adminId) return;
     this.api.actualizarEstadoPedidoAdmin(this.adminId, pedidoId, estado).subscribe({
       next: () => this.cargarPedidos(),
@@ -106,7 +106,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  eliminarReceta(id: number) {
+  eliminarReceta(id: string) {
     if (!this.adminId) return;
     if (!confirm('¿Eliminar esta receta?')) return;
     this.api.eliminarReceta(this.adminId, id).subscribe({
