@@ -198,11 +198,28 @@
   background: #fff;
 }
 
+.form-card input[type=url] {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.93rem;
+  box-sizing: border-box;
+  background: #fff;
+}
+
 .form-card input[type=text]:focus,
 .form-card input[type=number]:focus,
+.form-card input[type=url]:focus,
 .form-card select:focus {
   outline: none;
   border-color: #c0392b;
+}
+
+.form-card small {
+  display: block;
+  margin-top: 3px;
+  margin-bottom: 10px;
 }
 
 .form-card .form-actions {
@@ -228,6 +245,21 @@
 
 .receta-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.receta-card .receta-image {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: #f0f0f0;
+}
+
+.receta-card .receta-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .receta-card.no-disponible {

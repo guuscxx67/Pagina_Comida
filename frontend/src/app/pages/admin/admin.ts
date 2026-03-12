@@ -23,7 +23,7 @@ export class AdminComponent implements OnInit {
   // Formulario receta
   formVisible = false;
   editandoId: number | null = null;
-  form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true };
+  form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
 
   readonly categorias = ['Menú del Día', 'Antojitos', 'Caldos y Sopas', 'Especialidades', 'Bebidas', 'Postres', 'General'];
 
@@ -73,13 +73,13 @@ export class AdminComponent implements OnInit {
 
   abrirFormNuevo() {
     this.editandoId = null;
-    this.form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true };
+    this.form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
     this.formVisible = true;
   }
 
   editarReceta(r: any) {
     this.editandoId = r.id;
-    this.form = { nombre: r.nombre, descripcion: r.descripcion, precio: r.precio, categoria: r.categoria, disponible: r.disponible };
+    this.form = { nombre: r.nombre, descripcion: r.descripcion, precio: r.precio, categoria: r.categoria, disponible: r.disponible, imagen: r.imagen || '' };
     this.formVisible = true;
   }
 
@@ -99,7 +99,10 @@ export class AdminComponent implements OnInit {
         this.formVisible = false;
         this.cargarRecetas();
       },
-      error: () => alert('Error al guardar la receta')
+      error: (err) => {
+        console.error('Error:', err);
+        alert('Error al guardar la receta');
+      }
     });
   }
 

@@ -1,0 +1,78 @@
+<section class="gallery-showcase-section">
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando platos deliciosos...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !cargando" class="error-state">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Gallery Content -->
+  <div class="container-fluid" *ngIf="!cargando && !error">
+    <!-- Section Header -->
+    <div class="gallery-header">
+      <h2 class="gallery-title">NUESTROS PLATOS ESTRELLA</h2>
+      <p class="gallery-subtitle">Cada platillo hecho con ingredientes frescos y recetas tradicionales</p>
+      <div class="header-divider"></div>
+    </div>
+
+    <!-- Featured Section (Destacados) -->
+    <div class="featured-section" *ngIf="platos.length > 0">
+      <div class="featured-grid">
+        <div class="featured-card" *ngFor="let plato of platos | slice:0:3">
+          <div class="featured-image-wrapper">
+            <img [src]="plato.imagen" [alt]="plato.nombre" class="featured-image" />
+            <div class="featured-overlay">
+              <button class="featured-btn">Ver detalles</button>
+            </div>
+            <div class="featured-badge">ESTRELLA</div>
+          </div>
+          <div class="featured-content">
+            <h3>{{ plato.nombre }}</h3>
+            <p>{{ plato.descripcion }}</p>
+            <div class="featured-footer">
+              <span class="featured-price">${{ plato.precio }}</span>
+              <button class="featured-add-btn">+ Agregar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Dishes Grid -->
+    <div class="dishes-section" *ngIf="platos.length > 0">
+      <div class="dishes-header">
+        <h3>TODO NUESTRO MENÚ</h3>
+      </div>
+
+      <div class="dishes-grid">
+        <div class="dish-card" *ngFor="let plato of platos">
+          <div class="dish-image-wrapper">
+            <img [src]="plato.imagen" [alt]="plato.nombre" class="dish-image" />
+            <div class="dish-overlay">
+              <div class="dish-action-buttons">
+                <button class="dish-btn dish-view">👁 Ver</button>
+                <button class="dish-btn dish-add">+ Agregar</button>
+              </div>
+            </div>
+          </div>
+          <div class="dish-info">
+            <h4>{{ plato.nombre }}</h4>
+            <p class="dish-desc">{{ plato.descripcion | slice:0:50 }}...</p>
+            <div class="dish-footer">
+              <span class="dish-price">${{ plato.precio }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No dishes message -->
+    <div *ngIf="platos.length === 0" class="empty-state">
+      <p>No hay platos disponibles por el momento. Intenta más tarde.</p>
+    </div>
+  </div>
+</section>

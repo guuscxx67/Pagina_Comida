@@ -67,6 +67,10 @@
         <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
       </select>
 
+      <label>URL de Imagen *</label>
+      <input type="url" [(ngModel)]="form.imagen" placeholder="https://ejemplo.com/imagen.jpg" />
+      <small style="color: #666;">Pega la URL de la imagen (Unsplash, Cloudinary, etc.)</small>
+
       <label class="check-label">
         <input type="checkbox" [(ngModel)]="form.disponible" />
         Disponible para ordenar
@@ -82,6 +86,9 @@
 
     <div class="recetas-grid">
       <div *ngFor="let r of recetas" class="card receta-card" [class.no-disponible]="!r.disponible">
+        <div *ngIf="r.imagen" class="receta-image">
+          <img [src]="r.imagen" [alt]="r.nombre" />
+        </div>
         <div class="receta-header">
           <span class="receta-cat">{{ r.categoria }}</span>
           <span class="receta-precio">${{ r.precio }}</span>

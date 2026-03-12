@@ -1,0 +1,102 @@
+{
+  "platos": [
+    {
+      "id": 1,
+      "nombre": "Mole Poblano",
+      "descripcion": "El mole poblano es una de las formas más antiguas de la cocina mexicana. Hecho con pollo tierno, salsa de mole acompañado de arroz y tortillas caseras.",
+      "imagen": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=500&fit=crop",
+      "precio": 120,
+      "categoria": "Especialidades",
+      "destacado": true,
+      "disponible": true,
+      "ingredientes": ["pollo", "mole", "arroz", "frijoles", "tortillas"],
+      "tiempo_preparacion": "45 minutos"
+    },
+    {
+      "id": 2,
+      "nombre": "Enchiladas Verdes",
+      "descripcion": "Enchiladas caseras rellenas de pollo, bañadas en salsa verde fresca hecha con tomatillos con queso cotija.",
+      "imagen": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&h=500&fit=crop",
+      "precio": 95,
+      "categoria": "Platos Principales",
+      "destacado": true,
+      "disponible": true,
+      "ingredientes": ["pollo", "tortillas", "salsa verde", "queso cotija", "crema"],
+      "tiempo_preparacion": "30 minutos"
+    },
+    {
+      "id": 3,
+      "nombre": "Sopa de Tortilla",
+      "descripcion": "Caldo aromático con tiras de tortilla crujiente, aguacate, queso fresco y crema fresca. Un clásico mexicano.",
+      "imagen": "https://images.unsplash.com/photo-1618103897929-4d7a5c662c5f?w=500&h=500&fit=crop",
+      "precio": 65,
+      "categoria": "Sopas",
+      "destacado": true,
+      "disponible": true,
+      "ingredientes": ["caldo de pollo", "tortillas", "aguacate", "queso", "crema"],
+      "tiempo_preparacion": "20 minutos"
+    },
+    {
+      "id": 4,
+      "nombre": "Tacos de Carnitas",
+      "descripcion": "Carnitas de puerco desmenuzadas, servidas en tortillas calientitas con cebolla morada y cilantro fresco.",
+      "imagen": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&h=500&fit=crop",
+      "precio": 50,
+      "categoria": "Antojitos",
+      "destacado": false,
+      "disponible": true,
+      "ingredientes": ["puerco", "tortillas", "cebolla", "cilantro", "limón"],
+      "tiempo_preparacion": "15 minutos",
+      "cantidad_piezas": 3
+    },
+    {
+      "id": 5,
+      "nombre": "Chiles Rellenos",
+      "descripcion": "Chile poblano relleno de queso fresco, bañado en salsa de jitomate casera hecha con tomates frescos.",
+      "imagen": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=500&fit=crop",
+      "precio": 85,
+      "categoria": "Platos Principales",
+      "destacado": false,
+      "disponible": true,
+      "ingredientes": ["chile poblano", "queso fresco", "tomate", "cebolla", "ajo"],
+      "tiempo_preparacion": "35 minutos"
+    },
+    {
+      "id": 6,
+      "nombre": "Tamales de Rajas",
+      "descripcion": "Tamales caseros rellenos de rajas con queso, en su hoja de maíz natural. Hechos en la casa con masa fresca.",
+      "imagen": "https://images.unsplash.com/photo-1618103897929-4d7a5c662c5f?w=500&h=500&fit=crop",
+      "precio": 40,
+      "categoria": "Antojitos",
+      "destacado": false,
+      "disponible": true,
+      "ingredientes": ["masa", "rajas", "queso", "chile poblano"],
+      "tiempo_preparacion": "25 minutos",
+      "cantidad_piezas": 1
+    },
+    {
+      "id": 7,
+      "nombre": "Pozole Rojo",
+      "descripcion": "Caldo tradicional con hominy rojo, servido con toppings y acompañado de tostadas crujientes.",
+      "imagen": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=500&fit=crop",
+      "precio": 110,
+      "categoria": "Sopas",
+      "destacado": false,
+      "disponible": true,
+      "ingredientes": ["hominy", "caldo de pollo", "chile guajillo", "ajo"],
+      "tiempo_preparacion": "50 minutos"
+    },
+    {
+      "id": 8,
+      "nombre": "Quesadillas de Flor de Calabaza",
+      "descripcion": "Quesadillas rellenas de flor de calabaza fresca con queso, servidas con salsa y crema.",
+      "imagen": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&h=500&fit=crop",
+      "precio": 55,
+      "categoria": "Antojitos",
+      "destacado": false,
+      "disponible": true,
+      "ingredientes": ["flor de calabaza", "queso", "tortillas", "epazote"],
+      "tiempo_preparacion": "20 minutos"
+    }
+  ]
+}
