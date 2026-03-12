@@ -1,17 +1,8 @@
 <section class="gallery-showcase-section">
-  <!-- Loading State -->
-  <div *ngIf="cargando" class="loading-state">
-    <div class="spinner"></div>
-    <p>Cargando platos deliciosos...</p>
-  </div>
 
-  <!-- Error State -->
-  <div *ngIf="error && !cargando" class="error-state">
-    <p>⚠️ {{ error }}</p>
-  </div>
-
-  <!-- Gallery Content -->
-  <div class="container-fluid" *ngIf="!cargando && !error">
+  
+  <!-- Gallery Content: visible en cuanto hay platos cargados -->
+  <div class="container-fluid" *ngIf="platos.length > 0">
     <!-- Section Header -->
     <div class="gallery-header">
       <h2 class="gallery-title">NUESTROS PLATOS ESTRELLA</h2>
@@ -72,10 +63,12 @@
       </div>
     </div>
 
-    <!-- No dishes message -->
-    <div *ngIf="platos.length === 0" class="empty-state">
-      <p>No hay platos disponibles por el momento. Intenta más tarde.</p>
-    </div>
+    <!-- No dishes message - never shown (container requires platos.length > 0) -->
+  </div>
+
+  <!-- Sin datos y sin carga: error o vacío -->
+  <div *ngIf="!cargando && platos.length === 0" class="empty-state">
+    <p>No hay platos disponibles.</p>
   </div>
 
   <!-- Modal de Detalles -->

@@ -16,8 +16,6 @@
     <div class="menu-section">
       <h2 class="section-title">Selecciona tus platillos</h2>
 
-      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menú...</div>
-
       <div *ngIf="!cargandoMenu && menu.length === 0" class="loading-msg">
         No hay platillos disponibles por el momento.
       </div>

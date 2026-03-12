@@ -1,8 +1,7 @@
 """
 Backend Flask para Comida Casera - Con MongoDB
 """
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, make_response
 from flask_bcrypt import Bcrypt
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
@@ -14,7 +13,23 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# ── CORS manual (funciona con cualquier versión de Flask) ──────────────────
+@app.before_request
+def handle_preflight():
+    if request.method == 'OPTIONS':
+        res = make_response()
+        res.headers['Access-Control-Allow-Origin'] = '*'
+        res.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        res.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return res
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 # Config
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'tu-clave-secreta')
@@ -25,7 +40,7 @@ bcrypt = Bcrypt(app)
 
 # MongoDB Connection
 try:
-    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000, socketTimeoutMS=10000)
     mongo_client.admin.command('ping')
     db = mongo_client[MONGO_DB]
     print(f"✓ Conectado a MongoDB: {MONGO_DB}")
@@ -172,7 +187,7 @@ def crear_pedido():
             return jsonify({'error': 'fecha_recogida inválida'}), 400
 
     pedido = {
-        'usuario_id': int(data['usuario_id']),
+        'usuario_id': str(data['usuario_id']),
         'tipo': data['tipo'],
         'estado': 'pendiente',
         'total': float(data['total']),
@@ -225,18 +240,15 @@ def actualizar_pedido(pedido_id):
 
 @app.route('/api/pedidos/usuario/<usuario_id>', methods=['GET'])
 def obtener_pedidos_usuario(usuario_id):
-    try:
-        usuario_id = int(usuario_id)
-    except ValueError:
-        return jsonify({'error': 'ID de usuario inválido'}), 400
-
-    pedidos = list(pedidos_col.find({'usuario_id': usuario_id}).sort('fecha_pedido', -1))
+    pedidos = list(pedidos_col.find({'usuario_id': str(usuario_id)}).sort('fecha_pedido', -1))
     return jsonify([pedido_to_dict(p) for p in pedidos]), 200
 
 # ============ Routes — Recetas (público) ============
 
 @app.route('/api/recetas', methods=['GET'])
 def listar_recetas():
+    if recetas_col is None:
+        return jsonify({'error': 'Base de datos no disponible'}), 503
     recetas = list(recetas_col.find({'disponible': True}).sort([('categoria', 1), ('nombre', 1)]))
     return jsonify([receta_to_dict(r) for r in recetas]), 200
 
