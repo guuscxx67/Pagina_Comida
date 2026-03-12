@@ -99,6 +99,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   agregarAlCarrito(plato: Plato) {
     this.cerrarModal();
     localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
+    this.cdr.detectChanges();
     this.router.navigate(['/pedido/recoger']);
   }
 }

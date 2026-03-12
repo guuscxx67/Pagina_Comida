@@ -1,6 +1,18 @@
 <section class="gallery-showcase-section">
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando platos deliciosos...</p>
+  </div>
 
-  <div class="container-fluid" *ngIf="platos.length > 0">
+  <!-- Error State -->
+  <div *ngIf="error && !cargando" class="error-state">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Gallery Content -->
+  <div class="container-fluid" *ngIf="!cargando && !error">
+    <!-- Section Header -->
     <div class="gallery-header">
       <h2 class="gallery-title">NUESTROS PLATOS ESTRELLA</h2>
       <p class="gallery-subtitle">Cada platillo hecho con ingredientes frescos y recetas tradicionales</p>
