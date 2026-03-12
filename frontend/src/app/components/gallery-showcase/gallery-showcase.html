@@ -1,16 +1,12 @@
 <section class="gallery-showcase-section">
 
-  
-  <!-- Gallery Content: visible en cuanto hay platos cargados -->
   <div class="container-fluid" *ngIf="platos.length > 0">
-    <!-- Section Header -->
     <div class="gallery-header">
       <h2 class="gallery-title">NUESTROS PLATOS ESTRELLA</h2>
       <p class="gallery-subtitle">Cada platillo hecho con ingredientes frescos y recetas tradicionales</p>
       <div class="header-divider"></div>
     </div>
 
-    <!-- Featured Section (Destacados) -->
     <div class="featured-section" *ngIf="platos.length > 0">
       <div class="featured-grid">
         <div class="featured-card" *ngFor="let plato of platos | slice:0:3">
@@ -34,7 +30,6 @@
       </div>
     </div>
 
-    <!-- All Dishes Grid -->
     <div class="dishes-section" *ngIf="platos.length > 0">
       <div class="dishes-header">
         <h3>TODO NUESTRO MENÚ</h3>
@@ -44,11 +39,10 @@
         <div class="dish-card" *ngFor="let plato of platos">
           <div class="dish-image-wrapper">
             <img *ngIf="plato.imagen" [src]="plato.imagen" [alt]="plato.nombre" class="dish-image" />
-            <div *ngIf="!plato.imagen" class="no-image-placeholder">🍽️</div>
             <div class="dish-overlay">
               <div class="dish-action-buttons">
-                <button class="dish-btn dish-view" (click)="verDetalles(plato)">👁 Ver</button>
-                <button class="dish-btn dish-add" (click)="agregarAlCarrito(plato)">+ Agregar</button>
+                <button class="dish-btn dish-view" (click)="verDetalles(plato)"> Ver</button>
+                <button class="dish-btn dish-add" (click)="agregarAlCarrito(plato)">Agregar</button>
               </div>
             </div>
           </div>
@@ -62,22 +56,17 @@
         </div>
       </div>
     </div>
-
-    <!-- No dishes message - never shown (container requires platos.length > 0) -->
   </div>
 
-  <!-- Sin datos y sin carga: error o vacío -->
   <div *ngIf="!cargando && platos.length === 0" class="empty-state">
     <p>No hay platos disponibles.</p>
   </div>
 
-  <!-- Modal de Detalles -->
   <div *ngIf="modalVisible" class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="modal-close" (click)="cerrarModal()">✕</button>
       <div *ngIf="platoSeleccionado" class="modal-body">
         <img *ngIf="platoSeleccionado.imagen" [src]="platoSeleccionado.imagen" [alt]="platoSeleccionado.nombre" class="modal-image" />
-        <div *ngIf="!platoSeleccionado.imagen" class="modal-no-image">🍽️</div>
         <div class="modal-info">
           <p class="modal-category" *ngIf="platoSeleccionado.categoria">{{ platoSeleccionado.categoria }}</p>
           <h2>{{ platoSeleccionado.nombre }}</h2>

@@ -1,11 +1,9 @@
 <div class="register-container">
-  <!-- Toggle -->
   <div class="modo-toggle">
     <button [class.active]="modo === 'login'" (click)="modo = 'login'">Iniciar Sesión</button>
     <button [class.active]="modo === 'registro'" (click)="modo = 'registro'">Crear Cuenta</button>
   </div>
 
-  <!-- LOGIN -->
   <div *ngIf="modo === 'login'" class="form-section">
     <h2>Iniciar Sesión</h2>
     <input [(ngModel)]="loginEmail" placeholder="Correo electrónico" type="email" />
@@ -14,8 +12,6 @@
     <button class="btn-primary" (click)="iniciarSesion()">Entrar</button>
     <p class="hint">Admin: admin&#64;test.com / 123456</p>
   </div>
-
-  <!-- REGISTRO -->
   <div *ngIf="modo === 'registro'" class="form-section">
     <h2>Nueva Cuenta</h2>
     <input [(ngModel)]="nombre" placeholder="Nombre completo" />

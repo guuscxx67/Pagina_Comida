@@ -1,10 +1,8 @@
 <div class="admin-container">
   <div class="admin-header">
-    <h2>Panel Administrador</h2>
+    <h2>Panel del Administrador</h2>
     <button class="btn-logout" (click)="cerrarSesion()">Cerrar sesión</button>
   </div>
-
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab-btn" [class.active]="activeTab === 'recetas'" (click)="activeTab = 'recetas'">
       Recetas <span class="badge">{{ recetas.length }}</span>
@@ -16,15 +14,12 @@
       Pedidos <span class="badge">{{ pedidos.length }}</span>
     </button>
   </div>
-
-  <!-- ── SECCIÓN RECETAS ──────────────────────────── -->
   <section *ngIf="activeTab === 'recetas'">
     <div class="section-header">
       <h3>Recetas del Menú</h3>
       <button class="btn-nuevo" (click)="abrirFormNuevo()">+ Nueva Receta</button>
     </div>
 
-    <!-- Formulario crear / editar -->
     <div *ngIf="formVisible" class="form-card">
       <h4>{{ editandoId ? 'Editar Receta' : 'Nueva Receta' }}</h4>
 
@@ -34,7 +29,7 @@
       <label>Descripción</label>
       <input type="text" [(ngModel)]="form.descripcion" placeholder="Breve descripción del platillo" />
 
-      <label>Precio (MXN) *</label>
+      <label>Precio *</label>
       <input type="number" [(ngModel)]="form.precio" min="1" step="0.5" />
 
       <label>Categoría</label>
@@ -44,7 +39,7 @@
 
       <label>URL de Imagen</label>
       <input type="url" [(ngModel)]="form.imagen" placeholder="https://ejemplo.com/imagen.jpg" />
-      <small>Pega la URL de la imagen (Unsplash, Cloudinary, etc.)</small>
+      <small>Pega la URL de la imagen </small>
 
       <div *ngIf="form.imagen" class="imagen-preview">
         <img [src]="form.imagen" alt="Vista previa" />
@@ -86,7 +81,6 @@
     </div>
   </section>
 
-  <!-- ── SECCIÓN MENÚ ──────────────────────────────── -->
   <section *ngIf="activeTab === 'menu'">
     <div class="section-header">
       <h3>Secciones del Menú Principal</h3>
@@ -132,7 +126,6 @@
     </div>
   </section>
 
-  <!-- ── SECCIÓN PEDIDOS ──────────────────────────── -->
   <section *ngIf="activeTab === 'pedidos'">
     <div class="section-header">
       <h3>Pedidos</h3>

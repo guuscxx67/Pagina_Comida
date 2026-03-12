@@ -50,15 +50,10 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Cargar platos del backend (recetas)
-   * Filtra solo los que tengan imagen y estén disponibles
-   */
   cargarPlatos() {
     this.error = null;
     this.api.obtenerRecetas().subscribe({
       next: (data: any) => {
-        // Filtrar recetas disponibles con imagen
         this.platos = (data || [])
           .filter((p: any) => p.disponible)
           .map((p: any, index: number) => ({
@@ -69,7 +64,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
             precio: p.precio,
             categoria: p.categoria,
             disponible: p.disponible,
-            destacado: index < 3 // Los primeros 3 son destacados
+            destacado: index < 3 
           }));
         this.cargando = false;
         this.error = null;
@@ -89,32 +84,21 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
     element?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  /**
-   * Abrir modal con detalles del plato
-   */
   verDetalles(plato: Plato) {
     this.platoSeleccionado = plato;
     this.modalVisible = true;
     this.cdr.detectChanges();
   }
 
-  /**
-   * Cerrar modal de detalles
-   */
   cerrarModal() {
     this.modalVisible = false;
     this.platoSeleccionado = null;
     this.cdr.detectChanges();
   }
 
-  /**
-   * Agregar plato al carrito y navegar a pedido
-   */
   agregarAlCarrito(plato: Plato) {
     this.cerrarModal();
-    // Guardar el plato seleccionado en localStorage para referencia
     localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
-    // Navegar a la página de pedido
     this.router.navigate(['/pedido/recoger']);
   }
 }

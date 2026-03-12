@@ -20,7 +20,6 @@ export class AdminComponent implements OnInit {
   adminId: string | null = null;
   activeTab: 'pedidos' | 'recetas' | 'menu' = 'recetas';
 
-  // Formulario receta
   formVisible = false;
   editandoId: string | null = null;
   form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
@@ -55,7 +54,6 @@ export class AdminComponent implements OnInit {
     this.cargarRecetas();
   }
 
-  // ── PEDIDOS ─────────────────────────────────────────────
   cargarPedidos() {
     if (!this.adminId) return;
     this.api.obtenerPedidosAdmin(this.adminId).subscribe({
@@ -74,8 +72,6 @@ export class AdminComponent implements OnInit {
       error: () => alert('No se pudo actualizar el estado')
     });
   }
-
-  // ── RECETAS ──────────────────────────────────────────────
   cargarRecetas() {
     if (!this.adminId) return;
     this.api.obtenerRecetasAdmin(this.adminId).subscribe({

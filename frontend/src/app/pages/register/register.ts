@@ -17,11 +17,9 @@ export class RegisterComponent {
 
   modo: 'login' | 'registro' = 'login';
 
-  // Login
   loginEmail = '';
   loginPassword = '';
 
-  // Registro
   nombre = '';
   email = '';
   password = '';

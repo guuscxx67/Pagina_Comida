@@ -8,7 +8,6 @@
   margin: 0 auto;
 }
 
-/* ── Banner oferta ─────────────────────────────── */
 .oferta-banner {
   position: relative;
   overflow: hidden;
@@ -22,7 +21,6 @@
   box-shadow: 0 8px 28px rgba(200, 134, 10, 0.35);
 }
 
-/* Círculo decorativo */
 .oferta-banner::before {
   content: '';
   position: absolute;
@@ -95,7 +93,6 @@
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* ── Título de sección ─────────────────────────── */
 .section-header {
   text-align: center;
   margin-bottom: 38px;
@@ -116,7 +113,6 @@
   margin: 0;
 }
 
-/* ── Grid de categorías ────────────────────────── */
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -174,7 +170,6 @@
   border-radius: 50px;
 }
 
-/* ── Responsive ────────────────────────────────── */
 @media (max-width: 900px) {
   .categorias-grid {
     grid-template-columns: repeat(2, 1fr);

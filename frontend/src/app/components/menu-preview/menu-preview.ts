@@ -25,12 +25,9 @@ export class MenuPreviewComponent implements OnInit {
     this.api.obtenerRecetas().subscribe({
       next: (recetas: any[]) => {
         if (recetas.length === 0) return;
-
-        // Oferta del día: primer platillo de "Menú del Día", o el más barato
         const menuDia = recetas.filter(r => r.categoria === 'Menú del Día');
         this.ofertaDelDia = menuDia[0] || recetas[0];
 
-        // Agrupar por categoría
         const map = new Map<string, any[]>();
         for (const r of recetas) {
           if (!map.has(r.categoria)) map.set(r.categoria, []);
@@ -44,7 +41,6 @@ export class MenuPreviewComponent implements OnInit {
         }));
       },
       error: () => {
-        // Si falla la API, se muestra el HTML estático (no se reemplaza)
       }
     });
   }
