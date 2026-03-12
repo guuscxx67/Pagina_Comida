@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api';
 import { interval, Subscription } from 'rxjs';
 
@@ -17,17 +18,22 @@ interface Plato {
 @Component({
   selector: 'app-gallery-showcase',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './gallery-showcase.html',
   styleUrls: ['./gallery-showcase.css'],
 })
 export class GalleryShowcaseComponent implements OnInit, OnDestroy {
+  private api = inject(ApiService);
+  private router = inject(Router);
+
   platos: Plato[] = [];
   cargando = true;
   error: string | null = null;
   private reloadSubscription: Subscription | null = null;
 
-  constructor(private api: ApiService) {}
+  // Modal state
+  modalVisible = false;
+  platoSeleccionado: Plato | null = null;
 
   ngOnInit() {
     this.cargarPlatos();
@@ -77,5 +83,32 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   scrollToSection(id: string) {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /**
+   * Abrir modal con detalles del plato
+   */
+  verDetalles(plato: Plato) {
+    this.platoSeleccionado = plato;
+    this.modalVisible = true;
+  }
+
+  /**
+   * Cerrar modal de detalles
+   */
+  cerrarModal() {
+    this.modalVisible = false;
+    this.platoSeleccionado = null;
+  }
+
+  /**
+   * Agregar plato al carrito y navegar a pedido
+   */
+  agregarAlCarrito(plato: Plato) {
+    this.cerrarModal();
+    // Guardar el plato seleccionado en localStorage para referencia
+    localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
+    // Navegar a la página de pedido
+    this.router.navigate(['/pedido/recoger']);
   }
 }
