@@ -56,6 +56,23 @@
   text-align: center;
 }
 
+/* ========== NO IMAGE PLACEHOLDER ========== */
+
+.no-image-placeholder,
+.modal-no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5ede2, #e8d5be);
+  font-size: 4rem;
+}
+
+.modal-no-image {
+  min-height: 300px;
+}
+
 /* ========== EMPTY STATE ========== */
 
 .empty-state {

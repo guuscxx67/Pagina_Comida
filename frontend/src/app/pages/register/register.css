@@ -1,7 +1,77 @@
 .register-container {
   max-width: 420px;
-  margin: 30px auto;
+  margin: 60px auto;
+  padding: 0 16px;
+}
+
+.modo-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  margin-bottom: 24px;
+}
+
+.modo-toggle button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modo-toggle button.active {
+  background: #1a1a1a;
+  color: white;
+  font-weight: 600;
+}
+
+.form-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+.form-section h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.form-section input {
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.form-section input:focus {
+  border-color: #1a1a1a;
+}
+
+.btn-primary {
+  padding: 13px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #333;
+}
+
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin: 0;
 }

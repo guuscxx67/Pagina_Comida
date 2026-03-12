@@ -1,46 +1,21 @@
 <div class="admin-container">
-  <h2>Panel Administrador</h2>
+  <div class="admin-header">
+    <h2>Panel Administrador</h2>
+    <button class="btn-logout" (click)="cerrarSesion()">Cerrar sesión</button>
+  </div>
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-btn" [class.active]="activeTab === 'pedidos'" (click)="activeTab = 'pedidos'">
-      Pedidos <span class="badge">{{ pedidos.length }}</span>
-    </button>
     <button class="tab-btn" [class.active]="activeTab === 'recetas'" (click)="activeTab = 'recetas'">
       Recetas <span class="badge">{{ recetas.length }}</span>
     </button>
+    <button class="tab-btn" [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+      Menú
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'pedidos'" (click)="activeTab = 'pedidos'">
+      Pedidos <span class="badge">{{ pedidos.length }}</span>
+    </button>
   </div>
-
-  <!-- ── SECCIÓN PEDIDOS ──────────────────────────── -->
-  <section *ngIf="activeTab === 'pedidos'">
-    <div class="section-header">
-      <h3>Pedidos</h3>
-      <button class="btn-refresh" (click)="cargarPedidos()">↺ Actualizar</button>
-    </div>
-
-    <p *ngIf="pedidos.length === 0" class="empty-msg">No hay pedidos aún.</p>
-
-    <div *ngFor="let p of pedidos" class="card pedido-card" [class]="'estado-' + p.estado">
-      <div class="card-header">
-        <span class="pedido-id">#{{ p.id }}</span>
-        <span class="tipo-badge">{{ p.tipo }}</span>
-        <span class="estado-badge">{{ p.estado }}</span>
-      </div>
-      <div class="card-body">
-        <p><b>Total:</b> ${{ p.total }} &nbsp;|&nbsp; <b>Usuario ID:</b> {{ p.usuario_id }}</p>
-        <p><b>Fecha:</b> {{ p.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</p>
-        <div *ngIf="p.items && p.items.length > 0" class="items-list">
-          <span *ngFor="let item of p.items">{{ item.nombre }} x{{ item.cantidad }}</span>
-        </div>
-        <p *ngIf="p.notas"><b>Notas:</b> {{ p.notas }}</p>
-      </div>
-      <div class="card-actions">
-        <button class="btn btn-confirmar" (click)="cambiarEstado(p.id, 'confirmado')" [disabled]="p.estado === 'confirmado'">Confirmar</button>
-        <button class="btn btn-completar" (click)="cambiarEstado(p.id, 'completado')" [disabled]="p.estado === 'completado'">Completar</button>
-        <button class="btn btn-cancelar" (click)="cambiarEstado(p.id, 'cancelado')" [disabled]="p.estado === 'cancelado'">Cancelar</button>
-      </div>
-    </div>
-  </section>
 
   <!-- ── SECCIÓN RECETAS ──────────────────────────── -->
   <section *ngIf="activeTab === 'recetas'">
@@ -67,9 +42,13 @@
         <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
       </select>
 
-      <label>URL de Imagen *</label>
+      <label>URL de Imagen</label>
       <input type="url" [(ngModel)]="form.imagen" placeholder="https://ejemplo.com/imagen.jpg" />
-      <small style="color: #666;">Pega la URL de la imagen (Unsplash, Cloudinary, etc.)</small>
+      <small>Pega la URL de la imagen (Unsplash, Cloudinary, etc.)</small>
+
+      <div *ngIf="form.imagen" class="imagen-preview">
+        <img [src]="form.imagen" alt="Vista previa" />
+      </div>
 
       <label class="check-label">
         <input type="checkbox" [(ngModel)]="form.disponible" />
@@ -82,7 +61,7 @@
       </div>
     </div>
 
-    <p *ngIf="recetas.length === 0" class="empty-msg">No hay recetas. Agrega la primera.</p>
+    <p *ngIf="recetas.length === 0 && !formVisible" class="empty-msg">No hay recetas. Agrega la primera.</p>
 
     <div class="recetas-grid">
       <div *ngFor="let r of recetas" class="card receta-card" [class.no-disponible]="!r.disponible">
@@ -95,6 +74,7 @@
         </div>
         <h4>{{ r.nombre }}</h4>
         <p class="receta-desc">{{ r.descripcion }}</p>
+        <p *ngIf="!r.disponible" class="no-disp-label">— No disponible —</p>
         <div class="receta-actions">
           <button class="btn btn-editar" (click)="editarReceta(r)">Editar</button>
           <button class="btn btn-toggle" (click)="toggleDisponible(r)">
@@ -102,6 +82,82 @@
           </button>
           <button class="btn btn-eliminar" (click)="eliminarReceta(r.id)">Eliminar</button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN MENÚ ──────────────────────────────── -->
+  <section *ngIf="activeTab === 'menu'">
+    <div class="section-header">
+      <h3>Secciones del Menú Principal</h3>
+      <p class="section-hint">Aquí ves lo que aparece en cada sección de la página de inicio. Edita las recetas de cada categoría para actualizar el menú.</p>
+    </div>
+
+    <div *ngFor="let cat of menuCategorias" class="menu-cat-block">
+      <div class="menu-cat-header">
+        <div class="menu-cat-title">
+          <h4>{{ cat.nombre }}</h4>
+          <span class="cat-count-badge">{{ cat.recetas.length }} platillo{{ cat.recetas.length !== 1 ? 's' : '' }}</span>
+        </div>
+        <button class="btn-nuevo-cat" (click)="abrirFormNuevoEnCategoria(cat.nombre)">+ Agregar platillo</button>
+      </div>
+
+      <div *ngIf="cat.recetas.length === 0" class="cat-empty">
+        <p>Sin platillos en esta categoría. Esta sección mostrará contenido estático en la página.</p>
+        <button class="btn-nuevo-cat" (click)="abrirFormNuevoEnCategoria(cat.nombre)">+ Agregar primero</button>
+      </div>
+
+      <div *ngIf="cat.recetas.length > 0" class="menu-recetas-list">
+        <div *ngFor="let r of cat.recetas" class="menu-receta-row" [class.inactivo]="!r.disponible">
+          <div class="menu-receta-img">
+            <img *ngIf="r.imagen" [src]="r.imagen" [alt]="r.nombre" />
+            <div *ngIf="!r.imagen" class="no-img">Sin imagen</div>
+          </div>
+          <div class="menu-receta-info">
+            <strong>{{ r.nombre }}</strong>
+            <span class="menu-receta-desc">{{ r.descripcion }}</span>
+          </div>
+          <div class="menu-receta-precio">${{ r.precio }}</div>
+          <div class="menu-receta-estado">
+            <span [class]="r.disponible ? 'dot-verde' : 'dot-rojo'">
+              {{ r.disponible ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+          <div class="menu-receta-btns">
+            <button class="btn btn-editar" (click)="editarReceta(r)">Editar</button>
+            <button class="btn btn-eliminar" (click)="eliminarReceta(r.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECCIÓN PEDIDOS ──────────────────────────── -->
+  <section *ngIf="activeTab === 'pedidos'">
+    <div class="section-header">
+      <h3>Pedidos</h3>
+      <button class="btn-refresh" (click)="cargarPedidos()">↺ Actualizar</button>
+    </div>
+
+    <p *ngIf="pedidos.length === 0" class="empty-msg">No hay pedidos aún.</p>
+
+    <div *ngFor="let p of pedidos" class="card pedido-card" [class]="'estado-' + p.estado">
+      <div class="card-header">
+        <span class="pedido-id">#{{ p.id | slice:0:8 }}</span>
+        <span class="tipo-badge">{{ p.tipo }}</span>
+        <span class="estado-badge">{{ p.estado }}</span>
+      </div>
+      <div class="card-body">
+        <p><b>Total:</b> ${{ p.total }} &nbsp;|&nbsp; <b>Fecha:</b> {{ p.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</p>
+        <div *ngIf="p.items && p.items.length > 0" class="items-list">
+          <span *ngFor="let item of p.items">{{ item.nombre }} x{{ item.cantidad }}</span>
+        </div>
+        <p *ngIf="p.notas"><b>Notas:</b> {{ p.notas }}</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-confirmar" (click)="cambiarEstado(p.id, 'confirmado')" [disabled]="p.estado === 'confirmado'">Confirmar</button>
+        <button class="btn btn-completar" (click)="cambiarEstado(p.id, 'completado')" [disabled]="p.estado === 'completado'">Completar</button>
+        <button class="btn btn-cancelar" (click)="cambiarEstado(p.id, 'cancelado')" [disabled]="p.estado === 'cancelado'">Cancelar</button>
       </div>
     </div>
   </section>

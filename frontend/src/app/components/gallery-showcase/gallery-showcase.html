@@ -24,7 +24,8 @@
       <div class="featured-grid">
         <div class="featured-card" *ngFor="let plato of platos | slice:0:3">
           <div class="featured-image-wrapper">
-            <img [src]="plato.imagen" [alt]="plato.nombre" class="featured-image" />
+            <img *ngIf="plato.imagen" [src]="plato.imagen" [alt]="plato.nombre" class="featured-image" />
+            <div *ngIf="!plato.imagen" class="no-image-placeholder">🍽️</div>
             <div class="featured-overlay">
               <button class="featured-btn" (click)="verDetalles(plato)">Ver detalles</button>
             </div>
@@ -51,7 +52,8 @@
       <div class="dishes-grid">
         <div class="dish-card" *ngFor="let plato of platos">
           <div class="dish-image-wrapper">
-            <img [src]="plato.imagen" [alt]="plato.nombre" class="dish-image" />
+            <img *ngIf="plato.imagen" [src]="plato.imagen" [alt]="plato.nombre" class="dish-image" />
+            <div *ngIf="!plato.imagen" class="no-image-placeholder">🍽️</div>
             <div class="dish-overlay">
               <div class="dish-action-buttons">
                 <button class="dish-btn dish-view" (click)="verDetalles(plato)">👁 Ver</button>
@@ -81,7 +83,8 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="modal-close" (click)="cerrarModal()">✕</button>
       <div *ngIf="platoSeleccionado" class="modal-body">
-        <img [src]="platoSeleccionado.imagen" [alt]="platoSeleccionado.nombre" class="modal-image" />
+        <img *ngIf="platoSeleccionado.imagen" [src]="platoSeleccionado.imagen" [alt]="platoSeleccionado.nombre" class="modal-image" />
+        <div *ngIf="!platoSeleccionado.imagen" class="modal-no-image">🍽️</div>
         <div class="modal-info">
           <p class="modal-category" *ngIf="platoSeleccionado.categoria">{{ platoSeleccionado.categoria }}</p>
           <h2>{{ platoSeleccionado.nombre }}</h2>

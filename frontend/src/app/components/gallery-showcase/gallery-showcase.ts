@@ -58,7 +58,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         // Filtrar recetas disponibles con imagen
         this.platos = (data || [])
-          .filter((p: any) => p.disponible && p.imagen)
+          .filter((p: any) => p.disponible)
           .map((p: any, index: number) => ({
             id: p.id,
             nombre: p.nombre,

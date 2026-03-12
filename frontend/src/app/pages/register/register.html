@@ -1,15 +1,27 @@
 <div class="register-container">
-  <h2>Registro</h2>
+  <!-- Toggle -->
+  <div class="modo-toggle">
+    <button [class.active]="modo === 'login'" (click)="modo = 'login'">Iniciar Sesión</button>
+    <button [class.active]="modo === 'registro'" (click)="modo = 'registro'">Crear Cuenta</button>
+  </div>
 
-  <input [(ngModel)]="nombre" placeholder="Nombre" />
-  <input [(ngModel)]="email" placeholder="Correo" type="email" />
-  <input [(ngModel)]="password" placeholder="Contraseña" type="password" />
-  <input [(ngModel)]="telefono" placeholder="Teléfono" />
+  <!-- LOGIN -->
+  <div *ngIf="modo === 'login'" class="form-section">
+    <h2>Iniciar Sesión</h2>
+    <input [(ngModel)]="loginEmail" placeholder="Correo electrónico" type="email" />
+    <input [(ngModel)]="loginPassword" placeholder="Contraseña" type="password"
+           (keydown.enter)="iniciarSesion()" />
+    <button class="btn-primary" (click)="iniciarSesion()">Entrar</button>
+    <p class="hint">Admin: admin&#64;test.com / 123456</p>
+  </div>
 
-  <label>
-    <input type="checkbox" [(ngModel)]="es_admin" />
-    Registrar como administrador
-  </label>
-
-  <button (click)="registrar()">Crear cuenta</button>
+  <!-- REGISTRO -->
+  <div *ngIf="modo === 'registro'" class="form-section">
+    <h2>Nueva Cuenta</h2>
+    <input [(ngModel)]="nombre" placeholder="Nombre completo" />
+    <input [(ngModel)]="email" placeholder="Correo electrónico" type="email" />
+    <input [(ngModel)]="password" placeholder="Contraseña" type="password" />
+    <input [(ngModel)]="telefono" placeholder="Teléfono (opcional)" />
+    <button class="btn-primary" (click)="registrar()">Crear cuenta</button>
+  </div>
 </div>

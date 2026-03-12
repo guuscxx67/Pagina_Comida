@@ -18,7 +18,7 @@ export class AdminComponent implements OnInit {
   pedidos: any[] = [];
   recetas: any[] = [];
   adminId: string | null = null;
-  activeTab: 'pedidos' | 'recetas' = 'pedidos';
+  activeTab: 'pedidos' | 'recetas' | 'menu' = 'recetas';
 
   // Formulario receta
   formVisible = false;
@@ -26,6 +26,16 @@ export class AdminComponent implements OnInit {
   form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
 
   readonly categorias = ['Menú del Día', 'Antojitos', 'Caldos y Sopas', 'Especialidades', 'Bebidas', 'Postres', 'General'];
+
+  get menuCategorias() {
+    const map = new Map<string, any[]>();
+    for (const cat of this.categorias) map.set(cat, []);
+    for (const r of this.recetas) {
+      if (!map.has(r.categoria)) map.set(r.categoria, []);
+      map.get(r.categoria)!.push(r);
+    }
+    return Array.from(map.entries()).map(([nombre, recetas]) => ({ nombre, recetas }));
+  }
 
   ngOnInit(): void {
     const user = localStorage.getItem('usuario');
@@ -50,7 +60,10 @@ export class AdminComponent implements OnInit {
     if (!this.adminId) return;
     this.api.obtenerPedidosAdmin(this.adminId).subscribe({
       next: (res: any) => (this.pedidos = res),
-      error: () => alert('No se pudieron cargar pedidos')
+      error: (err) => {
+        if (err.status === 403) alert('Sesión expirada. Cierra sesión y vuelve a entrar.');
+        else alert('No se pudieron cargar pedidos');
+      }
     });
   }
 
@@ -67,7 +80,10 @@ export class AdminComponent implements OnInit {
     if (!this.adminId) return;
     this.api.obtenerRecetasAdmin(this.adminId).subscribe({
       next: (res: any) => (this.recetas = res),
-      error: () => alert('No se pudieron cargar las recetas')
+      error: (err) => {
+        if (err.status === 403) alert('Sesión expirada. Cierra sesión y vuelve a entrar.');
+        else alert('No se pudieron cargar las recetas');
+      }
     });
   }
 
@@ -77,10 +93,18 @@ export class AdminComponent implements OnInit {
     this.formVisible = true;
   }
 
+  abrirFormNuevoEnCategoria(categoria: string) {
+    this.editandoId = null;
+    this.form = { nombre: '', descripcion: '', precio: 0, categoria, disponible: true, imagen: '' };
+    this.formVisible = true;
+    this.activeTab = 'recetas';
+  }
+
   editarReceta(r: any) {
     this.editandoId = r.id;
     this.form = { nombre: r.nombre, descripcion: r.descripcion, precio: r.precio, categoria: r.categoria, disponible: r.disponible, imagen: r.imagen || '' };
     this.formVisible = true;
+    this.activeTab = 'recetas';
   }
 
   guardarReceta() {
@@ -101,7 +125,8 @@ export class AdminComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error:', err);
-        alert('Error al guardar la receta');
+        if (err.status === 403) alert('Sesión expirada. Cierra sesión y vuelve a entrar.');
+        else alert('Error al guardar la receta');
       }
     });
   }
@@ -125,5 +150,10 @@ export class AdminComponent implements OnInit {
 
   cancelarForm() {
     this.formVisible = false;
+  }
+
+  cerrarSesion() {
+    localStorage.removeItem('usuario');
+    this.router.navigate(['/register']);
   }
 }
