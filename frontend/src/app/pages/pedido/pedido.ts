@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -24,6 +24,7 @@ export class PedidoComponent implements OnInit {
   private api = inject(ApiService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   tipo: 'reserva' | 'recoger' = 'recoger';
   usuario: any = null;
@@ -58,10 +59,12 @@ export class PedidoComponent implements OnInit {
       next: (recetas: any[]) => {
         this.menu = recetas.map(r => ({ ...r, cantidad: 0 }));
         this.cargandoMenu = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         alert('No se pudo cargar el menú. Verifica que el servidor esté activo.');
         this.cargandoMenu = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -80,13 +83,16 @@ export class PedidoComponent implements OnInit {
 
   incrementar(item: MenuItem) {
     item.cantidad++;
+    this.cdr.detectChanges();
   }
 
   decrementar(item: MenuItem) {
     if (item.cantidad > 0) item.cantidad--;
+    this.cdr.detectChanges();
   }
 
   volver() {
+    this.cdr.detectChanges();
     this.router.navigate(['/home']);
   }
 
@@ -121,11 +127,13 @@ export class PedidoComponent implements OnInit {
     this.api.crearPedido(pedido).subscribe({
       next: (res: any) => {
         alert(`¡Pedido #${res.id} creado con éxito!`);
+        this.cdr.detectChanges();
         this.router.navigate(['/profile']);
       },
       error: (e: any) => {
         alert(e?.error?.error || 'Error al crear el pedido');
         this.enviando = false;
+        this.cdr.detectChanges();
       },
     });
   }

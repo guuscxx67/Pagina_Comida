@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api';
@@ -25,6 +25,7 @@ interface Plato {
 export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   private api = inject(ApiService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   platos: Plato[] = [];
   cargando = true;
@@ -71,11 +72,13 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
           }));
         this.cargando = false;
         this.error = null;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar platos:', err);
         this.error = 'Error al cargar los platos. Intenta recargar la página.';
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -91,6 +94,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   verDetalles(plato: Plato) {
     this.platoSeleccionado = plato;
     this.modalVisible = true;
+    this.cdr.detectChanges();
   }
 
   /**
@@ -99,6 +103,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   cerrarModal() {
     this.modalVisible = false;
     this.platoSeleccionado = null;
+    this.cdr.detectChanges();
   }
 
   /**
@@ -108,6 +113,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
     this.cerrarModal();
     // Guardar el plato seleccionado en localStorage para referencia
     localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
+    this.cdr.detectChanges();
     // Navegar a la página de pedido
     this.router.navigate(['/pedido/recoger']);
   }

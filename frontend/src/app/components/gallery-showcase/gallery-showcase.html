@@ -1,14 +1,4 @@
 <section class="gallery-showcase-section">
-  <!-- Loading State -->
-  <div *ngIf="cargando" class="loading-state">
-    <div class="spinner"></div>
-    <p>Cargando platos deliciosos...</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="error && !cargando" class="error-state">
-    <p>⚠️ {{ error }}</p>
-  </div>
 
   <!-- Gallery Content -->
   <div class="container-fluid" *ngIf="!cargando && !error">
