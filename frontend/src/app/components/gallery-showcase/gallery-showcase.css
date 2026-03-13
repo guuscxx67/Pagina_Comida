@@ -252,6 +252,21 @@
   margin-top: 60px;
 }
 
+.menu-categoria-block {
+  margin-bottom: 48px;
+}
+
+.categoria-titulo {
+  font-size: 1.6rem;
+  color: #8B6F47;
+  margin: 0 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #d4a574;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
 .dishes-header {
   text-align: center;
   margin-bottom: 40px;

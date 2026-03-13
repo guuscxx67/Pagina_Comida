@@ -340,6 +340,29 @@ def admin_actualizar_estado(pedido_id):
     pedidos_col.update_one({'_id': ObjectId(pedido_id)}, {'$set': {'estado': nuevo_estado}})
     return jsonify({'id': pedido_id, 'estado': nuevo_estado}), 200
 
+@app.route('/api/admin/pedidos/<pedido_id>', methods=['DELETE'])
+def admin_eliminar_pedido(pedido_id):
+    admin_id = request.args.get('admin_id')
+
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    try:
+        pedido = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    except:
+        return jsonify({'error': 'ID de pedido inválido'}), 400
+
+    if not pedido:
+        return jsonify({'error': 'Pedido no encontrado'}), 404
+
+    pedidos_col.delete_one({'_id': ObjectId(pedido_id)})
+    return jsonify({'ok': True}), 200
+
 # ============ Routes — Admin Recetas ============
 
 @app.route('/api/admin/recetas', methods=['POST'])

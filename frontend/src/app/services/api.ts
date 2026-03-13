@@ -45,6 +45,10 @@ export class ApiService {
     });
   }
 
+  eliminarPedidoAdmin(adminId: string, pedidoId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/pedidos/${pedidoId}`, { params: { admin_id: adminId } });
+  }
+
   // Recetas — público
   obtenerRecetas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/recetas`);

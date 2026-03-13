@@ -169,6 +169,7 @@
         <button class="btn btn-confirmar" (click)="cambiarEstado(p.id, 'confirmado')" [disabled]="p.estado === 'confirmado'">Confirmar</button>
         <button class="btn btn-completar" (click)="cambiarEstado(p.id, 'completado')" [disabled]="p.estado === 'completado'">Completar</button>
         <button class="btn btn-cancelar" (click)="cambiarEstado(p.id, 'cancelado')" [disabled]="p.estado === 'cancelado'">Cancelar</button>
+        <button class="btn btn-eliminar" (click)="eliminarPedido(p.id)">Eliminar</button>
       </div>
     </div>
   </section>

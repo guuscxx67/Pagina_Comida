@@ -37,6 +37,14 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   modalVisible = false;
   platoSeleccionado: Plato | null = null;
 
+  get categoriasMenu(): string[] {
+    return [...new Set(this.platos.map(p => p.categoria).filter((c): c is string => !!c))];
+  }
+
+  platosPorCategoria(cat: string): Plato[] {
+    return this.platos.filter(p => p.categoria === cat);
+  }
+
   ngOnInit() {
     this.cargarPlatos();
     // Recargar cada 30 segundos para ver cambios del admin en tiempo real

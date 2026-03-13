@@ -27,6 +27,8 @@ export class ProfileComponent implements OnInit {
     if (u) {
       this.usuario = JSON.parse(u);
       this.cargarPedidos();
+    } else {
+      this.router.navigate(['/register']);
     }
   }
 

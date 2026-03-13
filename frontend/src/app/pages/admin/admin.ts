@@ -110,6 +110,16 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  async eliminarPedido(id: string) {
+    if (!this.adminId) return;
+    const ok = await this.modal.confirmar('¿Eliminar este pedido? Esta acción no se puede deshacer.');
+    if (!ok) return;
+    this.api.eliminarPedidoAdmin(this.adminId, id).subscribe({
+      next: () => this.cargarPedidos(),
+      error: () => this.modal.error('Error al eliminar el pedido')
+    });
+  }
+
   cargarRecetas() {
     if (!this.adminId) return;
     this.api.obtenerRecetasAdmin(this.adminId).subscribe({
