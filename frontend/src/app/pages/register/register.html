@@ -1,10 +1,9 @@
 <div class="auth-page">
-  <!-- Panel decorativo izquierdo -->
   <div class="auth-side">
     <div class="auth-side-content">
       <img src="logo2.png" alt="Garnachas Tommy" class="auth-logo" />
       <h1 class="auth-brand">Garnachas Tommy</h1>
-      <p class="auth-tagline">Sabor casero en cada bocado</p>
+      <p class="auth-tagline">Sabor de drogas en cada bocado</p>
       <div class="auth-decoration">
         <div class="deco-circle deco-1"></div>
         <div class="deco-circle deco-2"></div>
@@ -12,8 +11,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Panel del formulario -->
   <div class="auth-main">
     <div class="auth-card">
       <div class="auth-tabs">
@@ -21,26 +18,25 @@
           class="auth-tab"
           [class.active]="modo === 'login'"
           (click)="modo = 'login'">
-          <span class="tab-icon">&#x1f511;</span>
+          <span class="tab-icon"><i class="fa-solid fa-right-to-bracket"></i></span>
           Iniciar Sesion
         </button>
         <button
           class="auth-tab"
           [class.active]="modo === 'registro'"
           (click)="modo = 'registro'">
-          <span class="tab-icon">&#x270d;</span>
+          <span class="tab-icon"><i class="fa-solid fa-user-plus"></i></span>
           Crear Cuenta
         </button>
         <div class="tab-indicator" [class.right]="modo === 'registro'"></div>
       </div>
 
-      <!-- Login -->
       <div class="auth-form" *ngIf="modo === 'login'" [@fadeSlide]>
         <h2 class="auth-title">Bienvenido de vuelta</h2>
         <p class="auth-subtitle">Ingresa tus datos para continuar</p>
 
         <div class="input-group">
-          <span class="input-icon">&#x2709;</span>
+          <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
           <input
             type="email"
             [(ngModel)]="loginEmail"
@@ -49,7 +45,7 @@
         </div>
 
         <div class="input-group">
-          <span class="input-icon">&#x1f512;</span>
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input
             type="password"
             [(ngModel)]="loginPassword"
@@ -57,7 +53,7 @@
             (keydown.enter)="iniciarSesion()"
             autocomplete="current-password" />
           <button class="toggle-pass" (click)="mostrarPass = !mostrarPass" type="button">
-            {{ mostrarPass ? '&#x1f441;' : '&#x1f441;&#x200d;&#x1f5e8;' }}
+            <i class="fa-solid" [class.fa-eye]="mostrarPass" [class.fa-eye-slash]="!mostrarPass"></i>
           </button>
         </div>
 
@@ -75,13 +71,12 @@
         </p>
       </div>
 
-      <!-- Registro -->
       <div class="auth-form" *ngIf="modo === 'registro'" [@fadeSlide]>
         <h2 class="auth-title">Crea tu cuenta</h2>
         <p class="auth-subtitle">Unete y ordena tu comida favorita</p>
 
         <div class="input-group">
-          <span class="input-icon">&#x1f464;</span>
+          <span class="input-icon"><i class="fa-solid fa-user"></i></span>
           <input
             type="text"
             [(ngModel)]="nombre"
@@ -90,7 +85,7 @@
         </div>
 
         <div class="input-group">
-          <span class="input-icon">&#x2709;</span>
+          <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
           <input
             type="email"
             [(ngModel)]="email"
@@ -99,7 +94,7 @@
         </div>
 
         <div class="input-group">
-          <span class="input-icon">&#x1f512;</span>
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input
             type="password"
             [(ngModel)]="password"
@@ -108,7 +103,7 @@
         </div>
 
         <div class="input-group">
-          <span class="input-icon">&#x1f4de;</span>
+          <span class="input-icon"><i class="fa-solid fa-phone"></i></span>
           <input
             type="tel"
             [(ngModel)]="telefono"
