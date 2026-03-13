@@ -28,6 +28,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
 
   platos: Plato[] = [];
+  platosEstrella: Plato[] = [];
   cargando = true;
   error: string | null = null;
   private reloadSubscription: Subscription | null = null;
@@ -52,11 +53,29 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
 
   cargarPlatos() {
     this.error = null;
+
+    this.api.obtenerPlatosEstrella().subscribe({
+      next: (data: any) => {
+        this.platosEstrella = (data || []).map((p: any) => ({
+          id: p.id,
+          nombre: p.nombre,
+          descripcion: p.descripcion,
+          imagen: p.imagen,
+          precio: p.precio,
+          destacado: true
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar platos estrella:', err);
+      }
+    });
+
     this.api.obtenerRecetas().subscribe({
       next: (data: any) => {
         this.platos = (data || [])
           .filter((p: any) => p.disponible)
-          .map((p: any, index: number) => ({
+          .map((p: any) => ({
             id: p.id,
             nombre: p.nombre,
             descripcion: p.descripcion,
@@ -64,7 +83,6 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
             precio: p.precio,
             categoria: p.categoria,
             disponible: p.disponible,
-            destacado: index < 3 
           }));
         this.cargando = false;
         this.error = null;
@@ -101,5 +119,11 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
     localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
     this.cdr.detectChanges();
     this.router.navigate(['/pedido/recoger']);
+  }
+
+  imagenUrl(imagen: string): string {
+    if (!imagen) return '';
+    if (imagen.startsWith('http://') || imagen.startsWith('https://') || imagen.startsWith('/')) return imagen;
+    return '/' + imagen;
   }
 }

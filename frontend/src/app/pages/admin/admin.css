@@ -340,6 +340,33 @@
 
 .admin-header h2 { margin: 0; }
 
+.admin-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-home {
+  padding: 7px 14px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-home:hover { background: #333; }
+
+.section-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .btn-logout {
   padding: 7px 14px;
   background: #f0f0f0;
@@ -377,6 +404,25 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.imagen-upload {
+  margin-top: 6px;
+}
+
+.btn-subir-img {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #6c757d;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.btn-subir-img:hover {
+  background: #565e64;
 }
 
 .no-disp-label {

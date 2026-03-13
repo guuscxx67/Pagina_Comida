@@ -1,0 +1,20 @@
+<div class="modal-overlay" *ngIf="visible" (click)="cancelar()">
+  <div class="modal-box" [class]="data?.tipo" (click)="$event.stopPropagation()">
+    <div class="modal-icon">
+      <span *ngIf="data?.tipo === 'exito'">&#10003;</span>
+      <span *ngIf="data?.tipo === 'error'">&#10007;</span>
+      <span *ngIf="data?.tipo === 'alerta'">!</span>
+      <span *ngIf="data?.tipo === 'confirmar'">?</span>
+    </div>
+    <h3 class="modal-title">{{ data?.titulo }}</h3>
+    <p class="modal-message">{{ data?.mensaje }}</p>
+    <div class="modal-actions">
+      <button *ngIf="data?.tipo === 'confirmar'" class="btn-modal btn-cancel" (click)="cancelar()">
+        {{ data?.textoCancelar || 'No' }}
+      </button>
+      <button class="btn-modal btn-accept" [class]="'btn-' + data?.tipo" (click)="aceptar()">
+        {{ data?.tipo === 'confirmar' ? (data?.textoConfirmar || 'Si') : 'Aceptar' }}
+      </button>
+    </div>
+  </div>
+</div>

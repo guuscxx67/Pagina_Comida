@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,6 +15,7 @@ import { ApiService } from '../../services/api';
 export class ProfileComponent implements OnInit {
   private api = inject(ApiService);
   private router = inject(Router);
+  private modal = inject(ModalService);
 
   usuario: any = null;
   pedidos: any[] = [];
@@ -36,7 +38,7 @@ export class ProfileComponent implements OnInit {
         this.cargarPedidos();
         this.router.navigate([res.es_admin ? '/admin' : '/home']);
       },
-      error: (e) => alert(e?.error?.error || 'Credenciales inválidas')
+      error: (e) => this.modal.error(e?.error?.error || 'Credenciales invalidas')
     });
   }
 

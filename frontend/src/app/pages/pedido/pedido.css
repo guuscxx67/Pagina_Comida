@@ -23,6 +23,10 @@
   background: linear-gradient(135deg, #4a1a04 0%, #7a3a10 100%);
 }
 
+.pedido-header.header-domicilio {
+  background: linear-gradient(135deg, #1a2a3a 0%, #2a4a6a 100%);
+}
+
 .pedido-header .btn-back {
   background: rgba(255, 255, 255, 0.15);
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -346,6 +350,64 @@
   border-color: #2d5016;
 }
 
+.domicilio-fields {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 2px solid #e4d5c0;
+}
+
+.domicilio-fields h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2c1a0e;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.domicilio-fields .address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.domicilio-fields .field-full {
+  grid-column: 1 / -1;
+}
+
+.domicilio-fields .field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.domicilio-fields .field-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b4e3d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.domicilio-fields .field-group input {
+  padding: 9px 12px;
+  border: 2px solid #e4d5c0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #2c1a0e;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.domicilio-fields .field-group input:focus {
+  border-color: #2a4a6a;
+}
+
+.domicilio-fields .field-group input::placeholder {
+  color: #9e7a67;
+}
+
 .notes-field {
   margin-top: 20px;
   padding-top: 18px;
@@ -414,6 +476,10 @@
 
 .btn-confirmar.btn-recoger {
   background: linear-gradient(135deg, #4a1a04, #7a3a10);
+}
+
+.btn-confirmar.btn-domicilio {
+  background: linear-gradient(135deg, #1a2a3a, #2a4a6a);
 }
 
 .btn-confirmar:hover:not(:disabled) {

@@ -1,10 +1,10 @@
   <div class="pedido-page">
 
-    <div class="pedido-header" [class.header-reserva]="tipo === 'reserva'" [class.header-recoger]="tipo === 'recoger'">
+    <div class="pedido-header" [class.header-reserva]="tipo === 'reserva'" [class.header-recoger]="tipo === 'recoger'" [class.header-domicilio]="tipo === 'domicilio'">
       <button class="btn-back" (click)="volver()">← Volver</button>
       <div class="header-text">
-        <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : 'Ordenar para Recoger' }}</h1>
-        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : 'Listo cuando tú llegues' }}</p>
+        <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : tipo === 'domicilio' ? 'Pedido a Domicilio' : 'Ordenar para Recoger' }}</h1>
+        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tú llegues' }}</p>
       </div>
       <div class="header-user" *ngIf="usuario">
         Hola, <strong>{{ usuario.nombre }}</strong>
@@ -81,6 +81,40 @@
           </div>
         </div>
 
+        <div class="domicilio-fields" *ngIf="tipo === 'domicilio'">
+          <h3>Dirección de entrega</h3>
+          <div class="address-grid">
+            <div class="field-group field-full">
+              <label>Calle *</label>
+              <input type="text" [(ngModel)]="calle" placeholder="Ej: Av. Benito Juárez" />
+            </div>
+            <div class="field-group">
+              <label>No. Exterior *</label>
+              <input type="text" [(ngModel)]="numeroExterior" placeholder="Ej: 123" />
+            </div>
+            <div class="field-group">
+              <label>No. Interior</label>
+              <input type="text" [(ngModel)]="numeroInterior" placeholder="Ej: Depto 4" />
+            </div>
+            <div class="field-group">
+              <label>Colonia *</label>
+              <input type="text" [(ngModel)]="colonia" placeholder="Ej: Centro" />
+            </div>
+            <div class="field-group">
+              <label>Código Postal</label>
+              <input type="text" [(ngModel)]="codigoPostal" placeholder="Ej: 12345" maxlength="5" />
+            </div>
+            <div class="field-group field-full">
+              <label>Referencia</label>
+              <input type="text" [(ngModel)]="referencia" placeholder="Ej: Casa azul frente al parque" />
+            </div>
+            <div class="field-group field-full">
+              <label>Teléfono de contacto *</label>
+              <input type="tel" [(ngModel)]="telefonoContacto" placeholder="Ej: 55 1234 5678" />
+            </div>
+          </div>
+        </div>
+
         <div class="notes-field">
           <h3>Notas especiales <span class="optional">(opcional)</span></h3>
           <textarea
@@ -94,11 +128,12 @@
           class="btn-confirmar"
           [class.btn-reserva]="tipo === 'reserva'"
           [class.btn-recoger]="tipo === 'recoger'"
+          [class.btn-domicilio]="tipo === 'domicilio'"
           (click)="confirmarPedido()"
           [disabled]="enviando || total === 0 || cargandoMenu"
         >
           <span *ngIf="!enviando">
-            {{ tipo === 'reserva' ? 'Confirmar Reserva' : 'Confirmar Pedido' }}
+            {{ tipo === 'reserva' ? 'Confirmar Reserva' : tipo === 'domicilio' ? 'Confirmar Pedido a Domicilio' : 'Confirmar Pedido' }}
           </span>
           <span *ngIf="enviando">Enviando...</span>
         </button>

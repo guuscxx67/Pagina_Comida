@@ -1,0 +1,149 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.25s ease-out;
+}
+
+/* Icono circular */
+.modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.exito .modal-icon {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.error .modal-icon {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.alerta .modal-icon {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.confirmar .modal-icon {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+}
+
+.modal-message {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+
+/* Botones */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 11px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-modal:hover {
+  transform: translateY(-1px);
+}
+
+.btn-modal:active {
+  transform: translateY(0);
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-accept.btn-exito {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.btn-accept.btn-exito:hover {
+  background: #1b5e20;
+}
+
+.btn-accept.btn-error {
+  background: #c62828;
+  color: #fff;
+}
+
+.btn-accept.btn-error:hover {
+  background: #b71c1c;
+}
+
+.btn-accept.btn-alerta {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.btn-accept.btn-alerta:hover {
+  background: #333;
+}
+
+.btn-accept.btn-confirmar {
+  background: #1565c0;
+  color: #fff;
+}
+
+.btn-accept.btn-confirmar:hover {
+  background: #0d47a1;
+}

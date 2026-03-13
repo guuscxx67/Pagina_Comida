@@ -1,8 +1,6 @@
 .hero-section {
   position: relative;
-  background:
-    radial-gradient(ellipse at 85% 30%, rgba(212, 165, 116, 0.25) 0%, transparent 45%),
-    linear-gradient(135deg, #6b4226 0%, #8B6F47 40%, #a07850 70%, #7a5a35 100%);
+  background: #c8c8c8;
   padding: 70px 0 110px;
   min-height: 520px;
   display: flex;
@@ -12,7 +10,7 @@
 
 .hero-section.with-image {
   background-image:
-    linear-gradient(135deg, rgba(107, 66, 38, 0.7) 0%, rgba(139, 111, 71, 0.7) 100%),
+    linear-gradient(135deg, rgba(200, 200, 200, 0.7) 0%, rgba(180, 180, 180, 0.7) 100%),
     url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=600&fit=crop');
   background-size: cover;
   background-position: center;
@@ -26,7 +24,7 @@
   left: 0;
   width: 100%;
   height: 80px;
-  background: #faf5ee;
+  background: #c8c8c8;
   clip-path: polygon(0 100%, 100% 20%, 100% 100%);
   z-index: 3;
 }
@@ -66,7 +64,7 @@
 }
 
 .hero-section .hero-content .hero-left {
-  color: white;
+  color: #333;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -77,14 +75,14 @@
   font-weight: 900;
   line-height: 1.15;
   margin: 0;
-  color: white;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  color: #2a2a2a;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   letter-spacing: 0.5px;
 }
 
 .hero-section .hero-content .hero-left .hero-arrow {
   font-size: 2rem;
-  color: white;
+  color: #444;
   animation: slideRight 0.8s ease-in-out infinite;
 }
 
@@ -92,18 +90,24 @@
   display: inline-block;
   font-size: 1.7rem;
   font-weight: 700;
-  color: #fff;
+  color: #2a2a2a;
   margin: 0;
-  background: rgba(0, 0, 0, 0.25);
-  border-left: 5px solid #D4A574;
+  background: rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #888;
   padding: 6px 16px;
   border-radius: 0 8px 8px 0;
 }
 
 .hero-section .hero-content .hero-left .chef-illustration {
-  width: 150px;
-  height: 200px;
+  width: 200px;
   margin-top: 10px;
+}
+
+.hero-section .hero-content .hero-left .chef-illustration img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
 }
 
 .hero-section .hero-content .hero-right {
@@ -122,9 +126,9 @@
 .hero-section .hero-content .hero-right .dish-container .dish-label {
   font-size: 1.4rem;
   font-weight: 900;
-  color: white;
+  color: #333;
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   letter-spacing: 2px;
   text-transform: uppercase;
   background: rgba(0, 0, 0, 0.2);
@@ -159,7 +163,7 @@
 .hero-section .hero-content .hero-right .dish-container .dish-label-bottom {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #F5E6D3;
+  color: #555;
   text-align: center;
   font-style: italic;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
@@ -197,8 +201,7 @@
   }
 
   .hero-section .hero-content .hero-left .chef-illustration {
-    width: 110px;
-    height: 148px;
+    width: 150px;
   }
 
   .hero-section .hero-content .hero-right .dish-container .dish-image {

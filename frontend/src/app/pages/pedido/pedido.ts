@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { ModalService } from '../../services/modal.service';
 
 interface MenuItem {
   id: string;
@@ -25,14 +26,24 @@ export class PedidoComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+  private modal = inject(ModalService);
 
-  tipo: 'reserva' | 'recoger' = 'recoger';
+  tipo: 'reserva' | 'recoger' | 'domicilio' = 'recoger';
   usuario: any = null;
   notas = '';
   fechaRecogida = '';
   horaRecogida = '';
   enviando = false;
   cargandoMenu = true;
+
+  // Campos de dirección para domicilio
+  calle = '';
+  numeroExterior = '';
+  numeroInterior = '';
+  colonia = '';
+  codigoPostal = '';
+  referencia = '';
+  telefonoContacto = '';
 
   menu: MenuItem[] = [];
 
@@ -53,7 +64,13 @@ export class PedidoComponent implements OnInit {
     }
     this.usuario = JSON.parse(u);
     const param = this.route.snapshot.paramMap.get('tipo');
-    this.tipo = param === 'reserva' ? 'reserva' : 'recoger';
+    if (param === 'reserva') this.tipo = 'reserva';
+    else if (param === 'domicilio') this.tipo = 'domicilio';
+    else this.tipo = 'recoger';
+
+    if (this.usuario.telefono) {
+      this.telefonoContacto = this.usuario.telefono;
+    }
 
     this.api.obtenerRecetas().subscribe({
       next: (recetas: any[]) => {
@@ -62,7 +79,7 @@ export class PedidoComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        alert('No se pudo cargar el menú. Verifica que el servidor esté activo.');
+        this.modal.error('No se pudo cargar el menu. Verifica que el servidor este activo.');
         this.cargandoMenu = false;
         this.cdr.detectChanges();
       }
@@ -98,12 +115,30 @@ export class PedidoComponent implements OnInit {
 
   confirmarPedido() {
     if (this.total === 0) {
-      alert('Selecciona al menos un platillo');
+      this.modal.alerta('Selecciona al menos un platillo');
       return;
     }
     if (this.tipo === 'reserva' && !this.fechaRecogida) {
-      alert('Selecciona la fecha de la reserva');
+      this.modal.alerta('Selecciona la fecha de la reserva');
       return;
+    }
+    if (this.tipo === 'domicilio') {
+      if (!this.calle.trim()) {
+        this.modal.alerta('Ingresa la calle de entrega');
+        return;
+      }
+      if (!this.numeroExterior.trim()) {
+        this.modal.alerta('Ingresa el número exterior');
+        return;
+      }
+      if (!this.colonia.trim()) {
+        this.modal.alerta('Ingresa la colonia');
+        return;
+      }
+      if (!this.telefonoContacto.trim()) {
+        this.modal.alerta('Ingresa un teléfono de contacto');
+        return;
+      }
     }
 
     this.enviando = true;
@@ -116,7 +151,7 @@ export class PedidoComponent implements OnInit {
 
     const pedido: any = {
       usuario_id: this.usuario.id,
-      tipo: this.tipo === 'reserva' ? 'reserva' : 'recogida',
+      tipo: this.tipo === 'reserva' ? 'reserva' : this.tipo === 'domicilio' ? 'domicilio' : 'recogida',
       total: this.total,
       items: this.itemsSeleccionados.map(i => ({ nombre: i.nombre, cantidad: i.cantidad })),
       notas: this.notas,
@@ -124,14 +159,30 @@ export class PedidoComponent implements OnInit {
 
     if (fechaISO) pedido.fecha_recogida = fechaISO;
 
+    if (this.tipo === 'domicilio') {
+      pedido.direccion = {
+        calle: this.calle.trim(),
+        numero_exterior: this.numeroExterior.trim(),
+        numero_interior: this.numeroInterior.trim(),
+        colonia: this.colonia.trim(),
+        codigo_postal: this.codigoPostal.trim(),
+        referencia: this.referencia.trim(),
+        telefono_contacto: this.telefonoContacto.trim(),
+      };
+    }
+
     this.api.crearPedido(pedido).subscribe({
-      next: (res: any) => {
-        alert(`¡Pedido #${res.id} creado con éxito!`);
+      next: async (res: any) => {
+        let mensaje = `Pedido #${res.id.slice(0, 8)} creado con exito!`;
+        if (this.tipo === 'domicilio') {
+          mensaje += `\n\nTu pedido sera enviado a:\n${this.calle.trim()} #${this.numeroExterior.trim()}, Col. ${this.colonia.trim()}\n\nTe contactaremos al ${this.telefonoContacto.trim()}`;
+        }
+        await this.modal.exito(mensaje);
         this.cdr.detectChanges();
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/home']);
       },
       error: (e: any) => {
-        alert(e?.error?.error || 'Error al crear el pedido');
+        this.modal.error(e?.error?.error || 'Error al crear el pedido');
         this.enviando = false;
         this.cdr.detectChanges();
       },

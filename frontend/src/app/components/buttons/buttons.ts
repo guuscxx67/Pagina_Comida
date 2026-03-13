@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-buttons',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class ButtonsComponent implements OnInit {
   private router = inject(Router);
+  private modal = inject(ModalService);
 
   usuarioId: number | null = null;
 
@@ -21,22 +23,30 @@ export class ButtonsComponent implements OnInit {
     }
   }
 
-  recogerPedido() {
+  async recogerPedido() {
     if (!this.usuarioId) {
-      alert('Debes estar registrado para hacer un pedido');
+      await this.modal.alerta('Debes estar registrado para hacer un pedido');
       this.router.navigate(['/register']);
       return;
     }
     this.router.navigate(['/pedido/recoger']);
   }
 
-  reservarPedido() {
+  async reservarPedido() {
     if (!this.usuarioId) {
-      alert('Debes estar registrado para reservar');
+      await this.modal.alerta('Debes estar registrado para reservar');
       this.router.navigate(['/register']);
       return;
     }
     this.router.navigate(['/pedido/reserva']);
   }
-}
 
+  async pedidoDomicilio() {
+    if (!this.usuarioId) {
+      await this.modal.alerta('Debes estar registrado para pedir a domicilio');
+      this.router.navigate(['/register']);
+      return;
+    }
+    this.router.navigate(['/pedido/domicilio']);
+  }
+}

@@ -14,16 +14,16 @@
   <div class="container-fluid" *ngIf="!cargando && !error">
     <!-- Section Header -->
     <div class="gallery-header">
-      <h2 class="gallery-title">NUESTROS PLATOS ESTRELLA</h2>
-      <p class="gallery-subtitle">Cada platillo hecho con ingredientes frescos y recetas tradicionales</p>
+      <h2 class="gallery-title">Platos estrella</h2>
+      <p class="gallery-subtitle">Cada platillo hecho con ingredientes frescos y recetas tradicionales libre de gluten.</p>
       <div class="header-divider"></div>
     </div>
 
-    <div class="featured-section" *ngIf="platos.length > 0">
+    <div class="featured-section" *ngIf="platosEstrella.length > 0">
       <div class="featured-grid">
-        <div class="featured-card" *ngFor="let plato of platos | slice:0:3">
+        <div class="featured-card" *ngFor="let plato of platosEstrella">
           <div class="featured-image-wrapper">
-            <img *ngIf="plato.imagen" [src]="plato.imagen" [alt]="plato.nombre" class="featured-image" />
+            <img *ngIf="plato.imagen" [src]="imagenUrl(plato.imagen)" [alt]="plato.nombre" class="featured-image" />
             <div *ngIf="!plato.imagen" class="no-image-placeholder">🍽️</div>
             <div class="featured-overlay">
               <button class="featured-btn" (click)="verDetalles(plato)">Ver detalles</button>
@@ -44,13 +44,13 @@
 
     <div class="dishes-section" *ngIf="platos.length > 0">
       <div class="dishes-header">
-        <h3>TODO NUESTRO MENÚ</h3>
+        <h3>Menu completo</h3>
       </div>
 
       <div class="dishes-grid">
         <div class="dish-card" *ngFor="let plato of platos">
           <div class="dish-image-wrapper">
-            <img *ngIf="plato.imagen" [src]="plato.imagen" [alt]="plato.nombre" class="dish-image" />
+            <img *ngIf="plato.imagen" [src]="imagenUrl(plato.imagen)" [alt]="plato.nombre" class="dish-image" />
             <div class="dish-overlay">
               <div class="dish-action-buttons">
                 <button class="dish-btn dish-view" (click)="verDetalles(plato)"> Ver</button>
@@ -78,7 +78,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="modal-close" (click)="cerrarModal()">✕</button>
       <div *ngIf="platoSeleccionado" class="modal-body">
-        <img *ngIf="platoSeleccionado.imagen" [src]="platoSeleccionado.imagen" [alt]="platoSeleccionado.nombre" class="modal-image" />
+        <img *ngIf="platoSeleccionado.imagen" [src]="imagenUrl(platoSeleccionado.imagen)" [alt]="platoSeleccionado.nombre" class="modal-image" />
         <div class="modal-info">
           <p class="modal-category" *ngIf="platoSeleccionado.categoria">{{ platoSeleccionado.categoria }}</p>
           <h2>{{ platoSeleccionado.nombre }}</h2>

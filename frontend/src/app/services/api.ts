@@ -66,4 +66,38 @@ export class ApiService {
   eliminarReceta(adminId: string, id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin/recetas/${id}`, { params: { admin_id: adminId } });
   }
+
+  // Platos Estrella — público
+  obtenerPlatosEstrella(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/platos-estrella`);
+  }
+
+  // Platos Estrella — admin
+  obtenerPlatosEstrellaAdmin(adminId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/platos-estrella`, { params: { admin_id: adminId } });
+  }
+
+  crearPlatoEstrella(adminId: string, plato: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/platos-estrella`, { admin_id: adminId, ...plato });
+  }
+
+  actualizarPlatoEstrella(adminId: string, id: string, plato: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/platos-estrella/${id}`, { admin_id: adminId, ...plato });
+  }
+
+  eliminarPlatoEstrella(adminId: string, id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/platos-estrella/${id}`, { params: { admin_id: adminId } });
+  }
+
+  // Imágenes
+  obtenerImagenes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/imagenes`);
+  }
+
+  subirImagen(adminId: string, archivo: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('admin_id', adminId);
+    formData.append('imagen', archivo);
+    return this.http.post(`${this.apiUrl}/admin/imagenes/subir`, formData);
+  }
 }

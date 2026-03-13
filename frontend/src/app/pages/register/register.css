@@ -1,77 +1,350 @@
-.register-container {
-  max-width: 420px;
-  margin: 60px auto;
-  padding: 0 16px;
-}
-
-.modo-toggle {
+/* ========== Auth Page — Full Layout ========== */
+.auth-page {
   display: flex;
-  border-radius: 8px;
+  min-height: 100vh;
+  background: #f8f7f4;
+}
+
+/* ========== Panel Decorativo (Izquierda) ========== */
+.auth-side {
+  flex: 0 0 44%;
+  background: linear-gradient(160deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   overflow: hidden;
-  border: 1px solid #ddd;
+}
+
+.auth-side-content {
+  text-align: center;
+  z-index: 2;
+  padding: 40px;
+}
+
+.auth-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px;
   margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.modo-toggle button {
+.auth-brand {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 12px;
+  letter-spacing: -0.5px;
+}
+
+.auth-tagline {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Circulos decorativos animados */
+.auth-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.deco-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  animation: floatCircle 20s ease-in-out infinite;
+}
+
+.deco-2 {
+  width: 300px;
+  height: 300px;
+  bottom: -80px;
+  right: -60px;
+  animation: floatCircle 15s ease-in-out infinite reverse;
+}
+
+.deco-3 {
+  width: 200px;
+  height: 200px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.02);
+  animation: pulseCircle 8s ease-in-out infinite;
+}
+
+@keyframes floatCircle {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(20px, -20px); }
+  66% { transform: translate(-15px, 15px); }
+}
+
+@keyframes pulseCircle {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.5; }
+}
+
+/* ========== Panel del Formulario (Derecha) ========== */
+.auth-main {
   flex: 1;
-  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+/* ========== Tabs ========== */
+.auth-tabs {
+  display: flex;
+  position: relative;
+  background: #eeece8;
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 36px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 14px 8px;
   border: none;
-  background: #f5f5f5;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modo-toggle button.active {
-  background: #1a1a1a;
-  color: white;
+  background: transparent;
+  font-size: 0.95rem;
   font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.form-section {
+.auth-tab.active {
+  color: #1a1a1a;
+}
+
+.tab-icon {
+  font-size: 1rem;
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: #fff;
+  border-radius: 11px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tab-indicator.right {
+  transform: translateX(100%);
+}
+
+/* ========== Form ========== */
+.auth-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
-.form-section h2 {
-  margin: 0 0 8px;
-  font-size: 22px;
+.auth-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: -0.3px;
 }
 
-.form-section input {
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 15px;
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: #999;
+  margin: -4px 0 8px;
+}
+
+/* ========== Input Groups ========== */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px 16px 15px 48px;
+  border: 2px solid #e8e6e2;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #1a1a1a;
   outline: none;
-  transition: border 0.2s;
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.form-section input:focus {
+.input-group input::placeholder {
+  color: #c0bdb8;
+}
+
+.input-group input:focus {
   border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
 }
 
-.btn-primary {
-  padding: 13px;
-  background: #1a1a1a;
-  color: white;
+.input-group input:focus ~ .input-icon,
+.input-group:focus-within .input-icon {
+  color: #1a1a1a;
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 14px;
+  background: none;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.toggle-pass:hover {
+  color: #1a1a1a;
+}
+
+/* ========== Button ========== */
+.btn-auth {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
+.btn-auth:hover:not(:disabled) {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.btn-auth:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-auth:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== Switch links ========== */
+.auth-switch {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #999;
+  margin: 4px 0 0;
+}
+
+.auth-switch a {
+  color: #1a1a1a;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 4px;
-  transition: background 0.2s;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
 }
 
-.btn-primary:hover {
-  background: #333;
+.auth-switch a:hover {
+  border-bottom-color: #1a1a1a;
 }
 
-.hint {
-  text-align: center;
-  font-size: 13px;
-  color: #888;
-  margin: 0;
+/* ========== Responsive ========== */
+@media (max-width: 900px) {
+  .auth-side {
+    display: none;
+  }
+
+  .auth-page {
+    background: #f8f7f4;
+  }
+
+  .auth-main {
+    padding: 32px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    max-width: 100%;
+  }
+
+  .auth-tabs {
+    margin-bottom: 28px;
+  }
+
+  .auth-tab {
+    font-size: 0.88rem;
+    padding: 12px 6px;
+  }
+
+  .auth-title {
+    font-size: 1.4rem;
+  }
+
+  .input-group input {
+    padding: 13px 14px 13px 44px;
+    font-size: 0.9rem;
+  }
 }

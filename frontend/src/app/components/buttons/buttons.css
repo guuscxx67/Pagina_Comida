@@ -15,9 +15,9 @@
 
 .options-section .options-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 28px;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -27,7 +27,8 @@
   cursor: pointer;
   min-height: 360px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   position: relative;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -47,12 +48,7 @@
   z-index: 2;
   width: 100%;
   padding: 34px 30px;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.82) 0%,
-    rgba(0, 0, 0, 0.2) 65%,
-    transparent 100%
-  );
+  text-align: center;
 }
 
 .options-section .option-card .card-icon {
@@ -98,16 +94,22 @@
   border-color: #ffffff;
 }
 
-/* Tarjeta Reserva — verde oscuro */
+/* Tarjeta Reserva — verde salvia elegante */
 .options-section .card-reserva {
-  background: radial-gradient(ellipse at 75% 15%, rgba(90, 200, 60, 0.25) 0%, transparent 55%),
-    linear-gradient(150deg, #163d0a 0%, #295e13 45%, #3a8020 100%);
+  background: radial-gradient(ellipse at 75% 15%, rgba(160, 190, 150, 0.2) 0%, transparent 55%),
+    linear-gradient(150deg, #2c3e2d 0%, #3e5e40 45%, #547558 100%);
 }
 
-/* Tarjeta Recoger — café/terra cotta */
+/* Tarjeta Recoger — terracota suave */
 .options-section .card-recoger {
-  background: radial-gradient(ellipse at 25% 15%, rgba(220, 140, 60, 0.25) 0%, transparent 55%),
-    linear-gradient(150deg, #4a1a04 0%, #7a3a10 45%, #a0521a 100%);
+  background: radial-gradient(ellipse at 25% 15%, rgba(200, 170, 140, 0.2) 0%, transparent 55%),
+    linear-gradient(150deg, #4a3228 0%, #6b4f42 45%, #8a6b5a 100%);
+}
+
+/* Tarjeta Domicilio — azul noche */
+.options-section .card-domicilio {
+  background: radial-gradient(ellipse at 50% 15%, rgba(140, 170, 200, 0.2) 0%, transparent 55%),
+    linear-gradient(150deg, #1a2a3a 0%, #2a4a6a 45%, #3a6a8a 100%);
 }
 
 @media (max-width: 768px) {

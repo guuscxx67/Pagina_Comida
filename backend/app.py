@@ -7,12 +7,20 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
 from datetime import datetime
+from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
+
+# Ruta a la carpeta public del frontend para imágenes
+FRONTEND_PUBLIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frontend', 'public')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ── CORS manual (funciona con cualquier versión de Flask) ──────────────────
 @app.before_request
@@ -52,6 +60,7 @@ except PyMongoError as e:
 usuarios_col = db['usuarios'] if db is not None else None
 pedidos_col = db['pedidos'] if db is not None else None
 recetas_col = db['recetas'] if db is not None else None
+platos_estrella_col = db['platos_estrella'] if db is not None else None
 
 # Create indexes
 if usuarios_col is not None:
@@ -92,6 +101,7 @@ def pedido_to_dict(p):
         'fecha_recogida': fecha_recogida,
         'items': p.get('items', []),
         'notas': p.get('notas', ''),
+        'direccion': p.get('direccion', None),
     }
 
 def receta_to_dict(r):
@@ -108,6 +118,19 @@ def receta_to_dict(r):
         'imagen': r.get('imagen', ''),
     }
 
+def plato_estrella_to_dict(p):
+    """Convierte un documento PlatoEstrella de MongoDB a dict"""
+    if not p:
+        return None
+    return {
+        'id': str(p['_id']) if '_id' in p else str(p.get('id')),
+        'nombre': p.get('nombre', ''),
+        'descripcion': p.get('descripcion', ''),
+        'precio': p.get('precio', 0),
+        'imagen': p.get('imagen', ''),
+        'orden': p.get('orden', 0),
+    }
+
 # Data inicial
 RECETAS_INICIALES = [
     {'nombre': 'Comida Completa del Día',  'descripcion': 'Sopa, guiso, arroz, frijoles y tortillas', 'precio': 110, 'categoria': 'Menú del Día', 'disponible': True, 'imagen': ''},
@@ -118,6 +141,12 @@ RECETAS_INICIALES = [
     {'nombre': 'Sopa de Lima',             'descripcion': 'Sopa yucateca con pollo y tostadas', 'precio': 80,  'categoria': 'Caldos y Sopas', 'disponible': True, 'imagen': ''},
     {'nombre': 'Agua Fresca',              'descripcion': 'Jamaica, horchata o fruta de temporada', 'precio': 25,  'categoria': 'Bebidas', 'disponible': True, 'imagen': ''},
     {'nombre': 'Tortillas (10 pzas)',      'descripcion': 'Tortillas de maíz hechas a mano', 'precio': 20,  'categoria': 'Antojitos', 'disponible': True, 'imagen': ''},
+]
+
+PLATOS_ESTRELLA_INICIALES = [
+    {'nombre': 'Comida Completa del Dia', 'descripcion': 'Sopa, guiso, arroz, frijoles y tortillas', 'precio': 110, 'imagen': '', 'orden': 1},
+    {'nombre': 'Pollo en Mole',           'descripcion': 'Mole casero con pollo, arroz y tortillas',  'precio': 95,  'imagen': '', 'orden': 2},
+    {'nombre': 'Enchiladas Verdes',       'descripcion': 'Enchiladas con salsa verde, crema y queso', 'precio': 85,  'imagen': '', 'orden': 3},
 ]
 
 # ============ Routes — Auth ============
@@ -176,8 +205,13 @@ def crear_pedido():
     if not data.get('usuario_id') or not data.get('tipo') or data.get('total') is None:
         return jsonify({'error': 'usuario_id, tipo y total son obligatorios'}), 400
 
-    if data['tipo'] not in ['recogida', 'reserva']:
+    if data['tipo'] not in ['recogida', 'reserva', 'domicilio']:
         return jsonify({'error': 'tipo inválido'}), 400
+
+    if data['tipo'] == 'domicilio':
+        direccion = data.get('direccion')
+        if not direccion or not direccion.get('calle') or not direccion.get('numero_exterior') or not direccion.get('colonia') or not direccion.get('telefono_contacto'):
+            return jsonify({'error': 'Para pedidos a domicilio se requiere calle, numero_exterior, colonia y telefono_contacto'}), 400
 
     fecha_recogida = None
     if data.get('fecha_recogida'):
@@ -194,7 +228,8 @@ def crear_pedido():
         'fecha_pedido': datetime.utcnow(),
         'fecha_recogida': fecha_recogida,
         'items': data.get('items', []),
-        'notas': data.get('notas', '')
+        'notas': data.get('notas', ''),
+        'direccion': data.get('direccion', None),
     }
 
     result = pedidos_col.insert_one(pedido)
@@ -251,6 +286,15 @@ def listar_recetas():
         return jsonify({'error': 'Base de datos no disponible'}), 503
     recetas = list(recetas_col.find({'disponible': True}).sort([('categoria', 1), ('nombre', 1)]))
     return jsonify([receta_to_dict(r) for r in recetas]), 200
+
+# ============ Routes — Platos Estrella (público) ============
+
+@app.route('/api/platos-estrella', methods=['GET'])
+def listar_platos_estrella():
+    if platos_estrella_col is None:
+        return jsonify({'error': 'Base de datos no disponible'}), 503
+    platos = list(platos_estrella_col.find().sort('orden', 1))
+    return jsonify([plato_estrella_to_dict(p) for p in platos]), 200
 
 # ============ Routes — Admin Pedidos ============
 
@@ -407,6 +451,144 @@ def admin_listar_recetas():
     recetas = list(recetas_col.find().sort([('categoria', 1), ('nombre', 1)]))
     return jsonify([receta_to_dict(r) for r in recetas]), 200
 
+# ============ Routes — Admin Platos Estrella ============
+
+@app.route('/api/admin/platos-estrella', methods=['GET'])
+def admin_listar_platos_estrella():
+    admin_id = request.args.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        admin = None
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+    platos = list(platos_estrella_col.find().sort('orden', 1))
+    return jsonify([plato_estrella_to_dict(p) for p in platos]), 200
+
+@app.route('/api/admin/platos-estrella', methods=['POST'])
+def admin_crear_plato_estrella():
+    data = request.json or {}
+    admin_id = data.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+    if not data.get('nombre') or data.get('precio') is None:
+        return jsonify({'error': 'nombre y precio son obligatorios'}), 400
+    plato = {
+        'nombre': data['nombre'],
+        'descripcion': data.get('descripcion', ''),
+        'precio': float(data['precio']),
+        'imagen': data.get('imagen', ''),
+        'orden': int(data.get('orden', 0)),
+        'fecha_creacion': datetime.utcnow()
+    }
+    result = platos_estrella_col.insert_one(plato)
+    return jsonify(plato_estrella_to_dict({**plato, '_id': result.inserted_id})), 201
+
+@app.route('/api/admin/platos-estrella/<plato_id>', methods=['PUT'])
+def admin_actualizar_plato_estrella(plato_id):
+    data = request.json or {}
+    admin_id = data.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+    try:
+        plato = platos_estrella_col.find_one({'_id': ObjectId(plato_id)})
+    except:
+        return jsonify({'error': 'ID de plato inválido'}), 400
+    if not plato:
+        return jsonify({'error': 'Plato estrella no encontrado'}), 404
+    update_data = {}
+    if data.get('nombre') is not None:
+        update_data['nombre'] = data['nombre']
+    if data.get('descripcion') is not None:
+        update_data['descripcion'] = data['descripcion']
+    if data.get('precio') is not None:
+        update_data['precio'] = float(data['precio'])
+    if data.get('imagen') is not None:
+        update_data['imagen'] = data['imagen']
+    if data.get('orden') is not None:
+        update_data['orden'] = int(data['orden'])
+    if update_data:
+        platos_estrella_col.update_one({'_id': ObjectId(plato_id)}, {'$set': update_data})
+    plato_actualizado = platos_estrella_col.find_one({'_id': ObjectId(plato_id)})
+    return jsonify(plato_estrella_to_dict(plato_actualizado)), 200
+
+@app.route('/api/admin/platos-estrella/<plato_id>', methods=['DELETE'])
+def admin_eliminar_plato_estrella(plato_id):
+    admin_id = request.args.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+    try:
+        plato = platos_estrella_col.find_one({'_id': ObjectId(plato_id)})
+    except:
+        return jsonify({'error': 'ID de plato inválido'}), 400
+    if not plato:
+        return jsonify({'error': 'Plato estrella no encontrado'}), 404
+    platos_estrella_col.delete_one({'_id': ObjectId(plato_id)})
+    return jsonify({'ok': True}), 200
+
+# ============ Routes — Imágenes ============
+
+@app.route('/api/imagenes', methods=['GET'])
+def listar_imagenes():
+    """Lista todas las imágenes disponibles en frontend/public"""
+    imagenes = []
+    try:
+        for f in os.listdir(FRONTEND_PUBLIC_DIR):
+            if allowed_file(f):
+                imagenes.append(f)
+        imagenes.sort()
+    except OSError:
+        return jsonify({'error': 'No se pudo leer la carpeta de imágenes'}), 500
+    return jsonify(imagenes), 200
+
+@app.route('/api/admin/imagenes/subir', methods=['POST'])
+def admin_subir_imagen():
+    """Sube una imagen a frontend/public"""
+    admin_id = request.form.get('admin_id')
+    try:
+        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+    except:
+        return jsonify({'error': 'No autorizado'}), 403
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    if 'imagen' not in request.files:
+        return jsonify({'error': 'No se envió ninguna imagen'}), 400
+
+    file = request.files['imagen']
+    if file.filename == '':
+        return jsonify({'error': 'No se seleccionó ningún archivo'}), 400
+
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Tipo de archivo no permitido. Usa: png, jpg, jpeg, webp, gif'}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(FRONTEND_PUBLIC_DIR, filename)
+
+    # Si ya existe, agregar sufijo numérico
+    if os.path.exists(filepath):
+        name, ext = os.path.splitext(filename)
+        counter = 1
+        while os.path.exists(filepath):
+            filename = f"{name}_{counter}{ext}"
+            filepath = os.path.join(FRONTEND_PUBLIC_DIR, filename)
+            counter += 1
+
+    file.save(filepath)
+    return jsonify({'filename': filename}), 201
+
 # ============ Health Check ============
 
 @app.route('/api/health', methods=['GET'])
@@ -419,6 +601,10 @@ if __name__ == '__main__':
         if recetas_col.count_documents({}) == 0:
             recetas_col.insert_many(RECETAS_INICIALES)
             print(f"✓ Insertadas {len(RECETAS_INICIALES)} recetas iniciales")
+
+        if platos_estrella_col.count_documents({}) == 0:
+            platos_estrella_col.insert_many(PLATOS_ESTRELLA_INICIALES)
+            print(f"✓ Insertados {len(PLATOS_ESTRELLA_INICIALES)} platos estrella iniciales")
 
         # Crear admin por defecto si no existe
         if usuarios_col.count_documents({'email': 'admin@test.com'}) == 0:
