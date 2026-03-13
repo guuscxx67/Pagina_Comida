@@ -4,26 +4,26 @@
       <img class="logo-icon" src="logo2.png" alt="Garnachas tommy" />
       <span class="brand-text">Garnachas tommy</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="menuAbierto" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="navbar-collapse" [class.show]="menuAbierto" [class.collapse]="!menuAbierto">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" *ngIf="usuario">
           <span class="nav-link user-greeting">Bienvenido, {{ usuario.nombre }}</span>
         </li>
         <li class="nav-item" *ngIf="usuario?.es_admin">
-          <a class="nav-link" routerLink="/admin">ADMIN</a>
+          <a class="nav-link" routerLink="/admin" (click)="cerrarMenu()">ADMIN</a>
         </li>
         <li class="nav-item" *ngIf="usuario">
           <button class="btn btn-link nav-link" style="text-decoration:none" (click)="cerrarSesion()">SALIR</button>
         </li>
         <li class="nav-item" *ngIf="!usuario">
-          <a class="nav-link" routerLink="/register">INICIAR SESIÓN</a>
+          <a class="nav-link" routerLink="/register" (click)="cerrarMenu()">INICIAR SESIÓN</a>
         </li>
         <li class="nav-item" *ngIf="!usuario">
-          <a class="nav-link" routerLink="/register">REGISTRARSE</a>
+          <a class="nav-link" routerLink="/register" (click)="cerrarMenu()">REGISTRARSE</a>
         </li>
       </ul>
     </div>

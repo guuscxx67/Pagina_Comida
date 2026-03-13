@@ -11,15 +11,25 @@ import { RouterLink } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   usuario: any = null;
+  menuAbierto = false;
 
   ngOnInit() {
     const u = localStorage.getItem('usuario');
     if (u) this.usuario = JSON.parse(u);
   }
 
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  cerrarMenu() {
+    this.menuAbierto = false;
+  }
+
   cerrarSesion() {
     localStorage.removeItem('usuario');
     this.usuario = null;
+    this.menuAbierto = false;
     window.location.href = '/home';
   }
 }

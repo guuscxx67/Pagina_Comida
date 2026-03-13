@@ -101,6 +101,21 @@
   }
 }
 
+/* Collapse behavior controlled by Angular */
+.header .navbar-collapse.collapse {
+  display: none;
+}
+
+.header .navbar-collapse.show {
+  display: block;
+}
+
+@media (min-width: 992px) {
+  .header .navbar-collapse.collapse {
+    display: flex;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.5rem 0;
@@ -121,7 +136,7 @@
   }
 
   .header .navbar-nav {
-    gap: 10px;
+    gap: 4px;
     margin-top: 10px;
     align-items: flex-start;
   }
@@ -132,8 +147,9 @@
 
   .header .navbar-nav .nav-item .nav-link,
   .header .navbar-nav .nav-item button {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: #8B6F47;
   }
 }
 
