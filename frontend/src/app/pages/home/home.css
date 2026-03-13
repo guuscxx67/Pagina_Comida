@@ -4,4 +4,6 @@
   flex-direction: column;
   background-color: #faf5ee;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  overflow-x: hidden;
 }

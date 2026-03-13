@@ -147,6 +147,20 @@
   color: #95a5a6;
 }
 
+@media (max-width: 1024px) and (min-width: 769px) {
+  .footer .footer-cookie-banner .cookie-content {
+    gap: 16px;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-text p {
+    font-size: 0.9rem;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-actions .btn-cookie {
+    padding: 8px 14px;
+  }
+}
+
 @media (max-width: 768px) {
   .footer .footer-cookie-banner .cookie-content {
     flex-direction: column;
@@ -177,5 +191,28 @@
 
   .footer .footer-main .footer-content .footer-section h5 {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    margin-top: 40px;
+  }
+
+  .footer .footer-cookie-banner {
+    padding: 12px 0;
+  }
+
+  .footer .footer-cookie-banner .cookie-content .cookie-text p {
+    font-size: 0.8rem;
+  }
+
+  .footer .footer-main {
+    padding: 24px 0 12px;
+  }
+
+  .footer .footer-main .footer-content .footer-section p,
+  .footer .footer-main .footer-content .footer-section ul li a {
+    font-size: 0.88rem;
   }
 }

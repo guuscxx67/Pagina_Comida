@@ -5,6 +5,11 @@
   margin-bottom: 0;
 }
 
+.header .container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .header .logo-brand {
   display: flex;
   align-items: center;
@@ -82,9 +87,28 @@
   font-weight: bold;
 }
 
+@media (max-width: 1024px) and (min-width: 769px) {
+  .header .logo-brand .brand-text {
+    font-size: 1.05rem;
+  }
+
+  .header .navbar-nav {
+    gap: 14px;
+  }
+
+  .header .navbar-nav .nav-item .user-greeting {
+    font-size: 0.82rem;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.5rem 0;
+  }
+
+  .header .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 
   .header .logo-brand .logo-icon {
@@ -99,5 +123,31 @@
   .header .navbar-nav {
     gap: 10px;
     margin-top: 10px;
+    align-items: flex-start;
+  }
+
+  .header .navbar-nav .nav-item {
+    width: 100%;
+  }
+
+  .header .navbar-nav .nav-item .nav-link,
+  .header .navbar-nav .nav-item button {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header .logo-brand {
+    gap: 8px;
+  }
+
+  .header .logo-brand .brand-text {
+    font-size: 0.9rem;
+  }
+
+  .header .logo-brand .logo-icon {
+    width: 30px;
+    height: 30px;
   }
 }

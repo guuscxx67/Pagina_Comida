@@ -112,6 +112,25 @@
     linear-gradient(150deg, #1a2a3a 0%, #2a4a6a 45%, #3a6a8a 100%);
 }
 
+@media (max-width: 1024px) and (min-width: 769px) {
+  .options-section {
+    padding: 60px 24px 70px;
+  }
+
+  .options-section .options-title {
+    font-size: 1.9rem;
+    margin-bottom: 40px;
+  }
+
+  .options-section .options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .options-section .option-card {
+    min-height: 300px;
+  }
+}
+
 @media (max-width: 768px) {
   .options-section {
     padding: 50px 20px 60px;
@@ -134,5 +153,29 @@
 
   .options-section .option-card .card-heading {
     font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .options-section {
+    padding: 40px 14px 50px;
+  }
+
+  .options-section .options-title {
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+  }
+
+  .options-section .option-card .card-body-content {
+    padding: 26px 18px;
+  }
+
+  .options-section .option-card .card-heading {
+    font-size: 1.15rem;
+  }
+
+  .options-section .option-card .card-desc {
+    font-size: 0.88rem;
+    margin-bottom: 18px;
   }
 }

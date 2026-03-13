@@ -180,6 +180,30 @@
   50%       { transform: translateY(-18px); }
 }
 
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hero-section {
+    min-height: 480px;
+    padding: 60px 0 100px;
+  }
+
+  .hero-section.with-image {
+    background-attachment: scroll;
+  }
+
+  .hero-section .hero-content {
+    gap: 28px;
+  }
+
+  .hero-section .hero-content .hero-left .hero-title {
+    font-size: 2.3rem;
+  }
+
+  .hero-section .hero-content .hero-right .dish-container .dish-image {
+    width: 250px;
+    height: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-section {
     padding: 50px 0 100px;
@@ -215,6 +239,47 @@
 
   .hero-section .hero-content .hero-right .dish-container .dish-label-bottom {
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 40px 0 85px;
+  }
+
+  .hero-section::after {
+    height: 55px;
+  }
+
+  .hero-section .hero-content {
+    gap: 16px;
+  }
+
+  .hero-section .hero-content .hero-left .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-section .hero-content .hero-left .hero-price {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+  }
+
+  .hero-section .hero-content .hero-left .chef-illustration {
+    width: 120px;
+  }
+
+  .hero-section .hero-content .hero-right .dish-container .dish-label {
+    font-size: 0.95rem;
+    padding: 6px 14px;
+  }
+
+  .hero-section .hero-content .hero-right .dish-container .dish-image {
+    width: 185px;
+    height: 185px;
+  }
+
+  .hero-section .hero-content .hero-right .dish-container .dish-label-bottom {
+    font-size: 0.85rem;
   }
 }
 
