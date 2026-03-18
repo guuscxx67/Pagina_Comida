@@ -1,0 +1,59 @@
+<div class="section-header">
+  <h3>Platos Estrella</h3>
+  <div class="section-header-actions">
+    <button class="btn-refresh" (click)="cargarPlatosEstrella()">&#8634; Actualizar</button>
+    <button class="btn-nuevo" (click)="abrirFormNuevo()">+ Nuevo Plato Estrella</button>
+  </div>
+</div>
+
+<div *ngIf="formVisible" class="form-card">
+  <h4>{{ editandoId ? 'Editar Plato Estrella' : 'Nuevo Plato Estrella' }}</h4>
+
+  <div *ngIf="!editandoId">
+    <label>Seleccionar Receta *</label>
+    <select [(ngModel)]="recetaSeleccionadaId">
+      <option value="">— Selecciona una receta —</option>
+      <option *ngFor="let r of recetasDisponibles" [value]="r.id">{{ r.nombre }} - ${{ r.precio }} ({{ r.categoria }})</option>
+    </select>
+
+    <div *ngIf="recetaSeleccionada" class="receta-preview">
+      <div *ngIf="recetaSeleccionada.imagen" class="imagen-preview">
+        <img [src]="imagenUrl(recetaSeleccionada.imagen)" alt="Vista previa" />
+      </div>
+      <div class="preview-info">
+        <p><b>{{ recetaSeleccionada.nombre }}</b></p>
+        <p>{{ recetaSeleccionada.descripcion }}</p>
+        <p><b>Precio:</b> ${{ recetaSeleccionada.precio }}</p>
+        <p><b>Categoria:</b> {{ recetaSeleccionada.categoria }}</p>
+      </div>
+    </div>
+  </div>
+
+  <label>Orden (posicion)</label>
+  <input type="number" [(ngModel)]="formOrden" min="1" step="1" />
+
+  <div class="form-actions">
+    <button class="btn btn-guardar" (click)="guardarPlatoEstrella()">Guardar</button>
+    <button class="btn btn-cancelar-form" (click)="cancelarForm()">Cancelar</button>
+  </div>
+</div>
+
+<p *ngIf="platosEstrella.length === 0 && !formVisible" class="empty-msg">No hay platos estrella. Agrega el primero.</p>
+
+<div class="recetas-grid">
+  <div *ngFor="let p of platosEstrella" class="card receta-card">
+    <div *ngIf="p.imagen" class="receta-image">
+      <img [src]="imagenUrl(p.imagen)" [alt]="p.nombre" />
+    </div>
+    <div class="receta-header">
+      <span class="receta-cat">Orden: {{ p.orden }}</span>
+      <span class="receta-precio">${{ p.precio }}</span>
+    </div>
+    <h4>{{ p.nombre }}</h4>
+    <p class="receta-desc">{{ p.descripcion }}</p>
+    <div class="receta-actions">
+      <button class="btn btn-editar" (click)="editarPlatoEstrella(p)">Editar</button>
+      <button class="btn btn-eliminar" (click)="eliminarPlatoEstrella(p.id)">Eliminar</button>
+    </div>
+  </div>
+</div>

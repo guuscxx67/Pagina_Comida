@@ -581,3 +581,77 @@
   gap: 6px;
 }
 
+/* Sub-tabs para filtro de pedidos */
+.sub-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.sub-tab {
+  padding: 7px 16px;
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.sub-tab.active {
+  background: #c0392b;
+  color: #fff;
+  border-color: #c0392b;
+}
+
+.sub-tab:hover:not(.active) {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.sub-tab .badge {
+  background: rgba(255,255,255,0.25);
+  color: inherit;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+  margin-left: 4px;
+}
+
+.sub-tab:not(.active) .badge {
+  background: #e0e0e0;
+  color: #555;
+}
+
+/* Preview de receta seleccionada para platos estrella */
+.receta-preview {
+  margin-top: 12px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.receta-preview .preview-info p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* Info de direccion en pedidos */
+.direccion-info {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #2980b9;
+}
+
+.direccion-info p {
+  margin: 2px 0;
+  font-size: 0.85rem;
+  color: #444;
+}

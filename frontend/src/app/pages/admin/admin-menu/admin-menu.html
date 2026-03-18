@@ -1,0 +1,42 @@
+<div class="section-header">
+  <h3>Secciones del Menu Principal</h3>
+</div>
+<p class="section-hint">Aqui ves lo que aparece en cada seccion de la pagina de inicio. Edita las recetas de cada categoria para actualizar el menu.</p>
+
+<div *ngFor="let cat of menuCategorias" class="menu-cat-block">
+  <div class="menu-cat-header">
+    <div class="menu-cat-title">
+      <h4>{{ cat.nombre }}</h4>
+      <span class="cat-count-badge">{{ cat.recetas.length }} platillo{{ cat.recetas.length !== 1 ? 's' : '' }}</span>
+    </div>
+    <button class="btn-nuevo-cat" (click)="onAgregarPlatillo(cat.nombre)">+ Agregar platillo</button>
+  </div>
+
+  <div *ngIf="cat.recetas.length === 0" class="cat-empty">
+    <p>Sin platillos en esta categoria. Esta seccion mostrara contenido estatico en la pagina.</p>
+    <button class="btn-nuevo-cat" (click)="onAgregarPlatillo(cat.nombre)">+ Agregar primero</button>
+  </div>
+
+  <div *ngIf="cat.recetas.length > 0" class="menu-recetas-list">
+    <div *ngFor="let r of cat.recetas" class="menu-receta-row" [class.inactivo]="!r.disponible">
+      <div class="menu-receta-img">
+        <img *ngIf="r.imagen" [src]="imagenUrl(r.imagen)" [alt]="r.nombre" />
+        <div *ngIf="!r.imagen" class="no-img">Sin imagen</div>
+      </div>
+      <div class="menu-receta-info">
+        <strong>{{ r.nombre }}</strong>
+        <span class="menu-receta-desc">{{ r.descripcion }}</span>
+      </div>
+      <div class="menu-receta-precio">${{ r.precio }}</div>
+      <div class="menu-receta-estado">
+        <span [class]="r.disponible ? 'dot-verde' : 'dot-rojo'">
+          {{ r.disponible ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+      <div class="menu-receta-btns">
+        <button class="btn btn-editar" (click)="onEditarReceta(r)">Editar</button>
+        <button class="btn btn-eliminar" (click)="eliminarReceta(r.id)">✕</button>
+      </div>
+    </div>
+  </div>
+</div>

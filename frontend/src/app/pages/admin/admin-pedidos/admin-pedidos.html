@@ -1,0 +1,52 @@
+<div class="section-header">
+  <h3>Pedidos</h3>
+  <button class="btn-refresh" (click)="cargarPedidos()">&#8634; Actualizar</button>
+</div>
+
+<div class="sub-tabs">
+  <button class="sub-tab" [class.active]="filtroTipo === 'todos'" (click)="filtroTipo = 'todos'">
+    Todos <span class="badge">{{ pedidos.length }}</span>
+  </button>
+  <button class="sub-tab" [class.active]="filtroTipo === 'reserva'" (click)="filtroTipo = 'reserva'">
+    Reservas <span class="badge">{{ conteoReservas }}</span>
+  </button>
+  <button class="sub-tab" [class.active]="filtroTipo === 'recogida'" (click)="filtroTipo = 'recogida'">
+    Ordenes <span class="badge">{{ conteoOrdenes }}</span>
+  </button>
+  <button class="sub-tab" [class.active]="filtroTipo === 'domicilio'" (click)="filtroTipo = 'domicilio'">
+    Envios <span class="badge">{{ conteoEnvios }}</span>
+  </button>
+</div>
+
+<p *ngIf="pedidosFiltrados.length === 0" class="empty-msg">No hay pedidos en esta categoria.</p>
+
+<div *ngFor="let p of pedidosFiltrados" class="card pedido-card" [class]="'estado-' + p.estado">
+  <div class="card-header">
+    <span class="pedido-id">#{{ p.id | slice:0:8 }}</span>
+    <span class="tipo-badge">{{ p.tipo }}</span>
+    <span class="estado-badge">{{ p.estado }}</span>
+  </div>
+  <div class="card-body">
+    <p><b>Total:</b> ${{ p.total }} &nbsp;|&nbsp; <b>Fecha:</b> {{ p.fecha_pedido | date:'dd/MM/yyyy HH:mm' }}</p>
+    <div *ngIf="p.items && p.items.length > 0" class="items-list">
+      <span *ngFor="let item of p.items">{{ item.nombre }} x{{ item.cantidad }}</span>
+    </div>
+    <p *ngIf="p.notas"><b>Notas:</b> {{ p.notas }}</p>
+    <div *ngIf="p.direccion && p.tipo === 'domicilio'" class="direccion-info">
+      <p><b>Direccion:</b> {{ p.direccion.calle }} #{{ p.direccion.numero_exterior }}
+        <span *ngIf="p.direccion.numero_interior">, Int. {{ p.direccion.numero_interior }}</span>,
+        {{ p.direccion.colonia }}
+        <span *ngIf="p.direccion.codigo_postal">, CP {{ p.direccion.codigo_postal }}</span>
+      </p>
+      <p *ngIf="p.direccion.telefono_contacto"><b>Tel:</b> {{ p.direccion.telefono_contacto }}</p>
+      <p *ngIf="p.direccion.referencia"><b>Referencia:</b> {{ p.direccion.referencia }}</p>
+    </div>
+    <p *ngIf="p.fecha_recogida && p.tipo === 'reserva'"><b>Fecha reserva:</b> {{ p.fecha_recogida | date:'dd/MM/yyyy HH:mm' }}</p>
+  </div>
+  <div class="card-actions">
+    <button class="btn btn-confirmar" (click)="cambiarEstado(p.id, 'confirmado')" [disabled]="p.estado === 'confirmado'">Confirmar</button>
+    <button class="btn btn-completar" (click)="cambiarEstado(p.id, 'completado')" [disabled]="p.estado === 'completado'">Completar</button>
+    <button class="btn btn-cancelar" (click)="cambiarEstado(p.id, 'cancelado')" [disabled]="p.estado === 'cancelado'">Cancelar</button>
+    <button class="btn btn-eliminar" (click)="eliminarPedido(p.id)">Eliminar</button>
+  </div>
+</div>
