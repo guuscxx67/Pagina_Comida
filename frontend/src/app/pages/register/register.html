@@ -1,4 +1,8 @@
 <div class="auth-page">
+  <button class="btn-back" (click)="irHome()">
+    <i class="fa-solid fa-arrow-left"></i>
+  </button>
+
   <div class="auth-side">
     <div class="auth-side-content">
       <img src="logo2.png" alt="Garnachas Tommy" class="auth-logo" />
@@ -11,6 +15,7 @@
       </div>
     </div>
   </div>
+
   <div class="auth-main">
     <div class="auth-card">
       <div class="auth-tabs">
@@ -21,6 +26,7 @@
           <span class="tab-icon"><i class="fa-solid fa-right-to-bracket"></i></span>
           Iniciar Sesion
         </button>
+
         <button
           class="auth-tab"
           [class.active]="modo === 'registro'"
@@ -28,9 +34,11 @@
           <span class="tab-icon"><i class="fa-solid fa-user-plus"></i></span>
           Crear Cuenta
         </button>
+
         <div class="tab-indicator" [class.right]="modo === 'registro'"></div>
       </div>
 
+      <!-- LOGIN -->
       <div class="auth-form" *ngIf="modo === 'login'" [@fadeSlide]>
         <h2 class="auth-title">Bienvenido de vuelta</h2>
         <p class="auth-subtitle">Ingresa tus datos para continuar</p>
@@ -71,6 +79,7 @@
         </p>
       </div>
 
+      <!-- REGISTRO -->
       <div class="auth-form" *ngIf="modo === 'registro'" [@fadeSlide]>
         <h2 class="auth-title">Crea tu cuenta</h2>
         <p class="auth-subtitle">Unete y ordena tu comida favorita</p>
@@ -124,6 +133,7 @@
           <a (click)="modo = 'login'">Inicia sesion</a>
         </p>
       </div>
+
     </div>
   </div>
 </div>

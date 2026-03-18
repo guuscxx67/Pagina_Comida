@@ -8,7 +8,9 @@ from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
 from datetime import datetime
 from werkzeug.utils import secure_filename
+import json
 import os
+import uuid
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,10 +19,89 @@ app = Flask(__name__)
 
 # Ruta a la carpeta public del frontend para imágenes
 FRONTEND_PUBLIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frontend', 'public')
+INSTANCE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+LOCAL_AUTH_FILE = os.path.join(INSTANCE_DIR, 'auth_users.json')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def ensure_instance_dir():
+    os.makedirs(INSTANCE_DIR, exist_ok=True)
+
+def load_local_users():
+    ensure_instance_dir()
+    if not os.path.exists(LOCAL_AUTH_FILE):
+        return []
+
+    try:
+        with open(LOCAL_AUTH_FILE, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data if isinstance(data, list) else []
+    except (OSError, json.JSONDecodeError):
+        return []
+
+def save_local_users(users):
+    ensure_instance_dir()
+    with open(LOCAL_AUTH_FILE, 'w', encoding='utf-8') as file:
+        json.dump(users, file, ensure_ascii=True, indent=2)
+
+def find_local_user_by_email(email):
+    if not email:
+        return None
+
+    normalized_email = str(email).strip().lower()
+    for user in load_local_users():
+        if str(user.get('email', '')).strip().lower() == normalized_email:
+            return user
+    return None
+
+def find_local_user_by_id(user_id):
+    if not user_id:
+        return None
+
+    for user in load_local_users():
+        if str(user.get('id')) == str(user_id):
+            return user
+    return None
+
+def create_local_user(nombre, email, password, telefono='', es_admin=False):
+    users = load_local_users()
+    normalized_email = str(email).strip().lower()
+
+    if any(str(user.get('email', '')).strip().lower() == normalized_email for user in users):
+        return None
+
+    user = {
+        'id': uuid.uuid4().hex,
+        'nombre': nombre,
+        'email': normalized_email,
+        'password': bcrypt.generate_password_hash(password).decode(),
+        'telefono': telefono,
+        'es_admin': bool(es_admin),
+        'fecha_creacion': datetime.utcnow().isoformat()
+    }
+    users.append(user)
+    save_local_users(users)
+    return user
+
+def ensure_local_admin():
+    if find_local_user_by_email('admin@test.com'):
+        return
+    create_local_user('Admin', 'admin@test.com', '123456', es_admin=True)
+
+def get_user_by_email(email):
+    if usuarios_col is not None:
+        return usuarios_col.find_one({'email': str(email).strip().lower()})
+    return find_local_user_by_email(email)
+
+def get_user_by_id(user_id):
+    if usuarios_col is not None:
+        try:
+            return usuarios_col.find_one({'_id': ObjectId(user_id)}) if user_id else None
+        except:
+            return None
+    return find_local_user_by_id(user_id)
 
 # ── CORS manual (funciona con cualquier versión de Flask) ──────────────────
 @app.before_request
@@ -159,13 +240,31 @@ def register():
     if any(not data.get(k) for k in required):
         return jsonify({'error': 'nombre, email y password son obligatorios'}), 400
 
+    email = str(data['email']).strip().lower()
+
     # Verificar si el email ya existe
-    if usuarios_col.find_one({'email': data['email']}):
+    if get_user_by_email(email):
         return jsonify({'error': 'Email ya registrado'}), 400
+
+    if usuarios_col is None:
+        usuario = create_local_user(
+            data['nombre'],
+            email,
+            data['password'],
+            data.get('telefono', ''),
+            data.get('es_admin', False)
+        )
+
+        return jsonify({
+            'id': usuario['id'],
+            'nombre': usuario['nombre'],
+            'email': usuario['email'],
+            'es_admin': usuario['es_admin']
+        }), 201
 
     usuario = {
         'nombre': data['nombre'],
-        'email': data['email'],
+        'email': email,
         'password': bcrypt.generate_password_hash(data['password']).decode(),
         'telefono': data.get('telefono', ''),
         'es_admin': bool(data.get('es_admin', False)),
@@ -184,13 +283,13 @@ def register():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json or {}
-    usuario = usuarios_col.find_one({'email': data.get('email')})
+    usuario = get_user_by_email(data.get('email'))
 
     if not usuario or not bcrypt.check_password_hash(usuario['password'], data.get('password', '')):
         return jsonify({'error': 'Credenciales inválidas'}), 401
 
     return jsonify({
-        'id': str(usuario['_id']),
+        'id': str(usuario['_id']) if '_id' in usuario else str(usuario['id']),
         'nombre': usuario['nombre'],
         'email': usuario['email'],
         'es_admin': usuario['es_admin']
@@ -302,7 +401,7 @@ def listar_platos_estrella():
 def admin_listar_pedidos():
     admin_id = request.args.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         admin = None
 
@@ -319,7 +418,7 @@ def admin_actualizar_estado(pedido_id):
     nuevo_estado = data.get('estado')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -345,7 +444,7 @@ def admin_eliminar_pedido(pedido_id):
     admin_id = request.args.get('admin_id')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -371,7 +470,7 @@ def admin_crear_receta():
     admin_id = data.get('admin_id')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -401,7 +500,7 @@ def admin_actualizar_receta(receta_id):
     admin_id = data.get('admin_id')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -441,7 +540,7 @@ def admin_eliminar_receta(receta_id):
     admin_id = request.args.get('admin_id')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -464,7 +563,7 @@ def admin_listar_recetas():
     admin_id = request.args.get('admin_id')
 
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
 
@@ -480,7 +579,7 @@ def admin_listar_recetas():
 def admin_listar_platos_estrella():
     admin_id = request.args.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         admin = None
     if not admin or not admin.get('es_admin', False):
@@ -493,7 +592,7 @@ def admin_crear_plato_estrella():
     data = request.json or {}
     admin_id = data.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
     if not admin or not admin.get('es_admin', False):
@@ -516,7 +615,7 @@ def admin_actualizar_plato_estrella(plato_id):
     data = request.json or {}
     admin_id = data.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
     if not admin or not admin.get('es_admin', False):
@@ -547,7 +646,7 @@ def admin_actualizar_plato_estrella(plato_id):
 def admin_eliminar_plato_estrella(plato_id):
     admin_id = request.args.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
     if not admin or not admin.get('es_admin', False):
@@ -581,7 +680,7 @@ def admin_subir_imagen():
     """Sube una imagen a frontend/public"""
     admin_id = request.form.get('admin_id')
     try:
-        admin = usuarios_col.find_one({'_id': ObjectId(admin_id)}) if admin_id else None
+        admin = get_user_by_id(admin_id)
     except:
         return jsonify({'error': 'No autorizado'}), 403
     if not admin or not admin.get('es_admin', False):
@@ -616,18 +715,21 @@ def admin_subir_imagen():
 
 @app.route('/api/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'ok', 'database': 'mongodb'}), 200
+    return jsonify({
+        'status': 'ok',
+        'database': 'mongodb' if db is not None else 'local-auth-fallback'
+    }), 200
 
 if __name__ == '__main__':
     if db is not None:
-        # Inicializar colecciones con datos si están vacías
+        # Inicializar colecciones con datos si estan vacias
         if recetas_col.count_documents({}) == 0:
             recetas_col.insert_many(RECETAS_INICIALES)
-            print(f"✓ Insertadas {len(RECETAS_INICIALES)} recetas iniciales")
+            print(f'Insertadas {len(RECETAS_INICIALES)} recetas iniciales')
 
         if platos_estrella_col.count_documents({}) == 0:
             platos_estrella_col.insert_many(PLATOS_ESTRELLA_INICIALES)
-            print(f"✓ Insertados {len(PLATOS_ESTRELLA_INICIALES)} platos estrella iniciales")
+            print(f'Insertados {len(PLATOS_ESTRELLA_INICIALES)} platos estrella iniciales')
 
         # Crear admin por defecto si no existe
         if usuarios_col.count_documents({'email': 'admin@test.com'}) == 0:
@@ -640,7 +742,10 @@ if __name__ == '__main__':
                 'fecha_creacion': datetime.utcnow()
             }
             usuarios_col.insert_one(admin)
-            print("✓ Admin por defecto creado: admin@test.com / 123456")
+            print('Admin por defecto creado: admin@test.com / 123456')
+    else:
+        ensure_local_admin()
+        print('Auth local habilitada: admin@test.com / 123456')
 
-    print(f"🚀 Backend ejecutándose en http://localhost:5000")
+    print('Backend ejecutandose en http://localhost:5000')
     app.run(debug=True, port=5000)

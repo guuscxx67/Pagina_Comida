@@ -41,6 +41,23 @@ export class RegisterComponent {
   password = '';
   telefono = '';
 
+  // 🔙 FUNCIÓN PARA REGRESAR AL HOME
+  irHome() {
+    this.router.navigate(['/home']);
+  }
+
+  private obtenerMensajeError(error: any, respaldo: string) {
+    if (error?.status === 0) {
+      return 'No se pudo conectar con el servidor';
+    }
+
+    if (error?.status === 503) {
+      return 'El servidor no tiene la base de datos disponible';
+    }
+
+    return error?.error?.error || respaldo;
+  }
+
   iniciarSesion() {
     if (!this.loginEmail || !this.loginPassword) {
       this.modal.alerta('Ingresa correo y contrasena');
@@ -54,7 +71,7 @@ export class RegisterComponent {
       },
       error: (e) => {
         this.cargando = false;
-        this.modal.error(e?.error?.error || 'Credenciales incorrectas');
+        this.modal.error(this.obtenerMensajeError(e, 'Credenciales incorrectas'));
       }
     });
   }
@@ -78,7 +95,7 @@ export class RegisterComponent {
       },
       error: (e) => {
         this.cargando = false;
-        this.modal.error(e?.error?.error || 'Error al registrar');
+        this.modal.error(this.obtenerMensajeError(e, 'Error al registrar'));
       }
     });
   }
