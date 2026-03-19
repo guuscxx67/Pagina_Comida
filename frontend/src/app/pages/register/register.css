@@ -14,7 +14,7 @@
   width: 44px;
   height: 44px;
 
-  border-radius: 50%;
+  border-radius: 4px;
   border: none;
 
   background: rgba(0, 0, 0, 0.65);
@@ -30,8 +30,8 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 
-  z-index: 10; /* 🔥 BAJADO (ANTES 9999) */
-  pointer-events: auto; /* 🔥 asegura que solo el botón reciba clicks */
+  z-index: 10; /* BAJADO (ANTES 9999) */
+  pointer-events: auto; /* asegura que solo el botón reciba clicks */
 
   transition: all 0.25s ease;
 }
@@ -156,7 +156,7 @@
   display: flex;
   position: relative;
   background: #eeece8;
-  border-radius: 14px;
+  border-radius: 4px;
   padding: 4px;
   margin-bottom: 36px;
 }
@@ -193,7 +193,7 @@
   width: calc(50% - 4px);
   height: calc(100% - 8px);
   background: #fff;
-  border-radius: 11px;
+  border-radius: 4px;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -243,7 +243,7 @@
   width: 100%;
   padding: 15px 16px 15px 48px;
   border: 2px solid #e8e6e2;
-  border-radius: 12px;
+  border-radius: 4px;
   font-size: 0.95rem;
   background: #fff;
   color: #1a1a1a;
@@ -286,7 +286,7 @@
   width: 100%;
   padding: 16px;
   border: none;
-  border-radius: 12px;
+  border-radius: 4px;
   background: #1a1a1a;
   color: #fff;
   font-size: 1rem;

@@ -1,7 +1,7 @@
   <div class="pedido-page">
 
     <div class="pedido-header" [class.header-reserva]="tipo === 'reserva'" [class.header-recoger]="tipo === 'recoger'" [class.header-domicilio]="tipo === 'domicilio'">
-      <button class="btn-back" (click)="volver()">← Volver</button>
+      <button class="btn-back" (click)="volver()"><i class="fa-solid fa-arrow-left"></i> Volver</button>
       <div class="header-text">
         <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : tipo === 'domicilio' ? 'Pedido a Domicilio' : 'Ordenar para Recoger' }}</h1>
         <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tú llegues' }}</p>

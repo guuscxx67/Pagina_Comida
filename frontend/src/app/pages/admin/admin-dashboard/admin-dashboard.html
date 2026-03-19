@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="section-header">
     <h3>panel de control</h3>
-    <button class="btn-refresh" (click)="cargarDashboard()">Actualizar</button>
+    <button class="btn-refresh" (click)="cargarDashboard(); cargarReportes()">Actualizar</button>
   </div>
 
   <ng-container *ngIf="dashboard">
@@ -15,14 +15,14 @@
         </div>
       </div>
       <div class="stat-card stat-pedidos">
-        <div class="stat-icon">&#128230;</div>
+        <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
         <div class="stat-info">
           <span class="stat-value">{{ dashboard.total_pedidos }}</span>
           <span class="stat-label">Total Pedidos</span>
         </div>
       </div>
       <div class="stat-card stat-recetas">
-        <div class="stat-icon">&#127860;</div>
+        <div class="stat-icon"><i class="fa-solid fa-utensils"></i></div>
         <div class="stat-info">
           <span class="stat-value">{{ dashboard.total_recetas }}</span>
           <span class="stat-label">Recetas</span>
@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="stat-card stat-usuarios">
-        <div class="stat-icon">&#128100;</div>
+        <div class="stat-icon"><i class="fa-solid fa-user"></i></div>
         <div class="stat-info">
           <span class="stat-value">{{ dashboard.total_usuarios }}</span>
           <span class="stat-label">Usuarios</span>
@@ -122,5 +122,101 @@
         <p class="empty-msg">No hay pedidos registrados</p>
       </ng-template>
     </div>
+
+    <!-- Reportes de Ingresos -->
+    <ng-container *ngIf="reportes">
+      <div class="resumen-grid">
+        <div class="resumen-card resumen-pedidos">
+          <span class="resumen-value">{{ reportes.resumen.total_pedidos }}</span>
+          <span class="resumen-label">Pedidos Completados</span>
+        </div>
+        <div class="resumen-card resumen-ticket">
+          <span class="resumen-value">${{ reportes.resumen.ticket_promedio | number:'1.2-2' }}</span>
+          <span class="resumen-label">Ticket Promedio</span>
+        </div>
+      </div>
+
+      <div class="reporte-section">
+        <div class="reporte-header">
+          <h4>Ingresos por Periodo</h4>
+          <div class="sub-tabs">
+            <button class="sub-tab" [class.active]="vistaActiva === 'diario'" (click)="vistaActiva = 'diario'">Diario (30 dias)</button>
+            <button class="sub-tab" [class.active]="vistaActiva === 'mensual'" (click)="vistaActiva = 'mensual'">Mensual (12 meses)</button>
+          </div>
+        </div>
+
+        <div *ngIf="vistaActiva === 'diario'">
+          <div *ngIf="reportes.ingresos_diarios?.length > 0; else noDiarios" class="chart-bars">
+            <div class="chart-row" *ngFor="let dia of reportes.ingresos_diarios">
+              <span class="chart-label">{{ formatFechaDia(dia._id) }}</span>
+              <div class="chart-bar-container">
+                <div class="chart-bar" [style.width.%]="getBarWidth(dia.ingresos, reportes.ingresos_diarios)"></div>
+              </div>
+              <span class="chart-value">${{ dia.ingresos | number:'1.2-2' }}</span>
+              <span class="chart-count">{{ dia.cantidad }} ped.</span>
+            </div>
+          </div>
+          <ng-template #noDiarios>
+            <p class="empty-msg">Sin ingresos en los ultimos 30 dias</p>
+          </ng-template>
+        </div>
+
+        <div *ngIf="vistaActiva === 'mensual'">
+          <div *ngIf="reportes.ingresos_mensuales?.length > 0; else noMensuales" class="chart-bars">
+            <div class="chart-row" *ngFor="let mes of reportes.ingresos_mensuales">
+              <span class="chart-label chart-label-mes">{{ formatFechaMes(mes._id) }}</span>
+              <div class="chart-bar-container">
+                <div class="chart-bar chart-bar-mes" [style.width.%]="getBarWidth(mes.ingresos, reportes.ingresos_mensuales)"></div>
+              </div>
+              <span class="chart-value">${{ mes.ingresos | number:'1.2-2' }}</span>
+              <span class="chart-count">{{ mes.cantidad }} ped.</span>
+            </div>
+          </div>
+          <ng-template #noMensuales>
+            <p class="empty-msg">Sin ingresos en los ultimos 12 meses</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="reporte-row">
+        <div class="reporte-section reporte-half">
+          <h4>Ingresos por Categoria</h4>
+          <div *ngIf="reportes.ingresos_por_categoria?.length > 0; else noCat" class="cat-list">
+            <div class="cat-item" *ngFor="let cat of reportes.ingresos_por_categoria">
+              <div class="cat-info">
+                <span class="cat-nombre">{{ cat._id || 'Sin categoria' }}</span>
+                <span class="cat-cant">{{ cat.cantidad }} uds vendidas</span>
+              </div>
+              <div class="cat-bar-container">
+                <div class="cat-bar" [style.width.%]="getBarWidth(cat.ingresos, reportes.ingresos_por_categoria)"></div>
+              </div>
+              <span class="cat-valor">${{ cat.ingresos | number:'1.2-2' }}</span>
+            </div>
+          </div>
+          <ng-template #noCat>
+            <p class="empty-msg">Sin datos por categoria</p>
+          </ng-template>
+        </div>
+
+        <div class="reporte-section reporte-half">
+          <h4>Ingresos por Tipo de Pedido</h4>
+          <div *ngIf="reportes.ingresos_por_tipo?.length > 0; else noTipo" class="tipo-reporte-list">
+            <div class="tipo-reporte-item" *ngFor="let tipo of reportes.ingresos_por_tipo">
+              <div class="tipo-reporte-header">
+                <span class="tipo-reporte-nombre">{{ tipo._id === 'recogida' ? 'Recogida' : tipo._id === 'reserva' ? 'Reserva' : tipo._id === 'domicilio' ? 'Domicilio' : tipo._id }}</span>
+                <span class="tipo-reporte-valor">${{ tipo.ingresos | number:'1.2-2' }}</span>
+              </div>
+              <div class="tipo-reporte-bar-container">
+                <div class="tipo-reporte-bar" [style.width.%]="getBarWidth(tipo.ingresos, reportes.ingresos_por_tipo)"></div>
+              </div>
+              <span class="tipo-reporte-cant">{{ tipo.cantidad }} pedidos</span>
+            </div>
+          </div>
+          <ng-template #noTipo>
+            <p class="empty-msg">Sin datos por tipo</p>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
   </ng-container>
 </div>

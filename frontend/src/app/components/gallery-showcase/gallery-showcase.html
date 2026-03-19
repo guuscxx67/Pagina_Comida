@@ -20,7 +20,7 @@
         <div class="featured-card" *ngFor="let plato of platosEstrella">
           <div class="featured-image-wrapper">
             <img *ngIf="plato.imagen" [src]="imagenUrl(plato.imagen)" [alt]="plato.nombre" class="featured-image" />
-            <div *ngIf="!plato.imagen" class="no-image-placeholder">🍽️</div>
+            <div *ngIf="!plato.imagen" class="no-image-placeholder"><i class="fa-solid fa-utensils"></i></div>
             <div class="featured-overlay">
               <button class="featured-btn" (click)="verDetalles(plato)">Ver detalles</button>
             </div>
@@ -75,7 +75,7 @@
 
   <div *ngIf="modalVisible" class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="cerrarModal()">✕</button>
+      <button class="modal-close" (click)="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
       <div *ngIf="platoSeleccionado" class="modal-body">
         <img *ngIf="platoSeleccionado.imagen" [src]="imagenUrl(platoSeleccionado.imagen)" [alt]="platoSeleccionado.nombre" class="modal-image" />
         <div class="modal-info">
@@ -93,23 +93,23 @@
 
   <div *ngIf="modalModoVisible" class="modal-overlay" (click)="cerrarModalModo()">
     <div class="modal-content modal-modo" (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="cerrarModalModo()">✕</button>
+      <button class="modal-close" (click)="cerrarModalModo()"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-modo-body">
         <h2>¿Cómo deseas tu pedido?</h2>
         <p class="modal-modo-subtitle">Se agregará <strong>{{ platoParaAgregar?.nombre }}</strong> a tu carrito</p>
         <div class="modal-modo-opciones">
           <button class="modo-option modo-reserva" (click)="agregarYNavegar('reserva')">
-            <span class="modo-icon">📅</span>
+            <span class="modo-icon"><i class="fa-regular fa-calendar"></i></span>
             <span class="modo-titulo">Pedido Programado</span>
             <span class="modo-desc">Agenda con antelación</span>
           </button>
           <button class="modo-option modo-recoger" (click)="agregarYNavegar('recoger')">
-            <span class="modo-icon">🕑</span>
+            <span class="modo-icon"><i class="fa-regular fa-clock"></i></span>
             <span class="modo-titulo">Al Momento</span>
             <span class="modo-desc">Pide y recoge</span>
           </button>
           <button class="modo-option modo-domicilio" (click)="agregarYNavegar('domicilio')">
-            <span class="modo-icon">🏠</span>
+            <span class="modo-icon"><i class="fa-solid fa-house"></i></span>
             <span class="modo-titulo">A Domicilio</span>
             <span class="modo-desc">Te lo llevamos</span>
           </button>

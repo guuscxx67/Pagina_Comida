@@ -6,12 +6,11 @@ import { AdminMenuComponent } from './admin-menu/admin-menu';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos';
 import { AdminPlatosEstrellaComponent } from './admin-platos-estrella/admin-platos-estrella';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard';
-import { AdminReportesComponent } from './admin-reportes/admin-reportes';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink, AdminRecetasComponent, AdminMenuComponent, AdminPedidosComponent, AdminPlatosEstrellaComponent, AdminDashboardComponent, AdminReportesComponent],
+  imports: [CommonModule, RouterLink, AdminRecetasComponent, AdminMenuComponent, AdminPedidosComponent, AdminPlatosEstrellaComponent, AdminDashboardComponent],
   templateUrl: './admin.html',
   styleUrls: ['./admin.css']
 })
@@ -19,7 +18,7 @@ export class AdminComponent implements OnInit {
   private router = inject(Router);
 
   adminId: string | null = null;
-  activeTab: 'dashboard' | 'recetas' | 'menu' | 'pedidos' | 'platos-estrella' | 'reportes' = 'dashboard';
+  activeTab: 'dashboard' | 'recetas' | 'menu' | 'pedidos' | 'platos-estrella' = 'dashboard';
   recetas: any[] = [];
 
   @ViewChild(AdminRecetasComponent) recetasComp?: AdminRecetasComponent;

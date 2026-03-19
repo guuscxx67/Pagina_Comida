@@ -22,9 +22,6 @@
     <button class="tab-btn" [class.active]="activeTab === 'platos-estrella'" (click)="activeTab = 'platos-estrella'">
       Platos Estrella
     </button>
-    <button class="tab-btn" [class.active]="activeTab === 'reportes'" (click)="activeTab = 'reportes'">
-      Reportes
-    </button>
   </div>
 
   <app-admin-dashboard
@@ -57,9 +54,4 @@
     [adminId]="adminId"
     (platosActualizados)="onPlatosActualizados()">
   </app-admin-platos-estrella>
-
-  <app-admin-reportes
-    *ngIf="activeTab === 'reportes'"
-    [adminId]="adminId">
-  </app-admin-reportes>
 </div>

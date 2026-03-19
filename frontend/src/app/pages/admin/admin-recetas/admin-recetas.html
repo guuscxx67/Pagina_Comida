@@ -71,7 +71,7 @@
         [class.active]="esPlatoEstrella(r.id)"
         (click)="togglePlatoEstrella(r)"
         [title]="esPlatoEstrella(r.id) ? 'Quitar de Platos Estrella' : 'Agregar a Platos Estrella'">
-        {{ esPlatoEstrella(r.id) ? '⭐' : '☆' }}
+        <i class="fa-solid fa-star" *ngIf="esPlatoEstrella(r.id)"></i><i class="fa-regular fa-star" *ngIf="!esPlatoEstrella(r.id)"></i>
       </button>
       <button class="btn btn-toggle" (click)="toggleDisponible(r)">
         {{ r.disponible ? 'Deshabilitar' : 'Habilitar' }}

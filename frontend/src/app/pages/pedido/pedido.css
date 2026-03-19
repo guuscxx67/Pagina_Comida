@@ -32,7 +32,7 @@
   border: 2px solid rgba(255, 255, 255, 0.5);
   color: white;
   padding: 8px 16px;
-  border-radius: 50px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
@@ -104,7 +104,7 @@
 .error-msg {
   color: #c0392b;
   background: #fdecea;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 16px 24px;
   font-weight: 500;
 }
@@ -133,7 +133,7 @@
 .menu-item {
   background: white;
   border: 2px solid #e4d5c0;
-  border-radius: 14px;
+  border-radius: 4px;
   padding: 16px 18px;
   display: flex;
   flex-direction: column;
@@ -197,7 +197,7 @@
 .menu-item .ctrl-btn {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 4px;
   border: 2px solid #e4d5c0;
   background: white;
   font-size: 1.2rem;
@@ -236,7 +236,7 @@
 }
 .summary-section {
   background: white;
-  border-radius: 20px;
+  border-radius: 4px;
   padding: 26px 24px;
   border: 2px solid #e4d5c0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
@@ -339,7 +339,7 @@
 .reserva-fields .field-group input {
   padding: 9px 12px;
   border: 2px solid #e4d5c0;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 0.9rem;
   color: #2c1a0e;
   outline: none;
@@ -393,7 +393,7 @@
   width: 100%;
   padding: 8px 12px;
   border: 2px solid #e4d5c0;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 0.85rem;
   color: #2c1a0e;
   outline: none;
@@ -437,7 +437,7 @@
   width: 100%;
   padding: 10px 12px;
   border: 2px solid #e4d5c0;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 0.9rem;
   color: #2c1a0e;
   resize: vertical;
@@ -460,7 +460,7 @@
   width: 100%;
   padding: 15px;
   border: none;
-  border-radius: 14px;
+  border-radius: 4px;
   font-size: 1.05rem;
   font-weight: 800;
   color: white;
