@@ -56,6 +56,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   private carrito = inject(CarritoService);
 
   private readonly STORAGE_KEY = 'pedido_guardado';
+  private readonly telefonoPattern = /^\d{10,12}$/;
+  private readonly codigoPostalPattern = /^\d{5}$/;
   private autoSaveSubscription: Subscription | null = null;
 
   tipo: 'reserva' | 'recoger' | 'domicilio' = 'recoger';
@@ -75,6 +77,14 @@ export class PedidoComponent implements OnInit, OnDestroy {
   referencia = '';
   telefonoContacto = '';
   direccionFavoritaDisponible = false;
+  camposTocados = {
+    fechaRecogida: false,
+    calle: false,
+    numeroExterior: false,
+    colonia: false,
+    codigoPostal: false,
+    telefonoContacto: false,
+  };
 
   menu: MenuItem[] = [];
 
@@ -269,24 +279,20 @@ export class PedidoComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.tipo === 'reserva' && !this.fechaRecogida) {
+      this.camposTocados.fechaRecogida = true;
       this.modal.alerta('Selecciona la fecha de la reserva');
       return;
     }
     if (this.tipo === 'domicilio') {
-      if (!this.calle.trim()) {
-        this.modal.alerta('Ingresa la calle de entrega');
-        return;
-      }
-      if (!this.numeroExterior.trim()) {
-        this.modal.alerta('Ingresa el número exterior');
-        return;
-      }
-      if (!this.colonia.trim()) {
-        this.modal.alerta('Ingresa la colonia');
-        return;
-      }
-      if (!this.telefonoContacto.trim()) {
-        this.modal.alerta('Ingresa un teléfono de contacto');
+      this.marcarCamposDomicilio();
+      if (
+        this.obtenerMensajeErrorCampo('calle') ||
+        this.obtenerMensajeErrorCampo('numeroExterior') ||
+        this.obtenerMensajeErrorCampo('colonia') ||
+        this.obtenerMensajeErrorCampo('codigoPostal') ||
+        this.obtenerMensajeErrorCampo('telefonoContacto')
+      ) {
+        this.modal.alerta('Corrige los campos marcados antes de confirmar');
         return;
       }
     }
@@ -362,6 +368,45 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  marcarCampoComoTocado(campo: keyof typeof this.camposTocados) {
+    this.camposTocados[campo] = true;
+  }
+
+  campoInvalido(campo: keyof typeof this.camposTocados): boolean {
+    return this.camposTocados[campo] && !!this.obtenerMensajeErrorCampo(campo);
+  }
+
+  obtenerMensajeErrorCampo(campo: keyof typeof this.camposTocados): string {
+    switch (campo) {
+      case 'fechaRecogida':
+        return this.fechaRecogida ? '' : 'Selecciona una fecha';
+      case 'calle':
+        if (!this.calle.trim()) return 'Calle obligatoria';
+        return this.calle.trim().length >= 3 ? '' : 'Minimo 3 caracteres';
+      case 'numeroExterior':
+        return this.numeroExterior.trim() ? '' : 'Numero exterior obligatorio';
+      case 'colonia':
+        if (!this.colonia.trim()) return 'Colonia obligatoria';
+        return this.colonia.trim().length >= 2 ? '' : 'Minimo 2 caracteres';
+      case 'codigoPostal':
+        if (!this.codigoPostal.trim()) return '';
+        return this.codigoPostalPattern.test(this.codigoPostal.trim()) ? '' : 'Debe tener 5 digitos';
+      case 'telefonoContacto':
+        if (!this.telefonoContacto.trim()) return 'Telefono obligatorio';
+        return this.telefonoPattern.test(this.telefonoContacto.trim()) ? '' : 'Solo numeros, 10 a 12 digitos';
+      default:
+        return '';
+    }
+  }
+
+  normalizarTelefonoContacto() {
+    this.telefonoContacto = this.telefonoContacto.replace(/\D/g, '').slice(0, 12);
+  }
+
+  normalizarCodigoPostal() {
+    this.codigoPostal = this.codigoPostal.replace(/\D/g, '').slice(0, 5);
+  }
+
   private aplicarDireccionFavoritaSiExiste() {
     const direccion = this.obtenerDireccionFavorita();
     this.direccionFavoritaDisponible = !!direccion;
@@ -397,5 +442,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
     const tieneDatos = Object.values(normalizada).some(valor => valor.trim().length > 0);
     return tieneDatos ? normalizada : null;
+  }
+
+  private marcarCamposDomicilio() {
+    this.camposTocados.calle = true;
+    this.camposTocados.numeroExterior = true;
+    this.camposTocados.colonia = true;
+    this.camposTocados.codigoPostal = true;
+    this.camposTocados.telefonoContacto = true;
   }
 }

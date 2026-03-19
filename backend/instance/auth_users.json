@@ -1,12 +1,20 @@
 [
   {
     "id": "cd3ff42fd02f4439b340d8b31ace1724",
-    "nombre": "Admin",
+    "nombre": "HG",
     "email": "admin@test.com",
     "password": "$2b$12$zqh1/FbcefrGFLaQw4zXsu3M5abnk.LQv0ZXcxhi5fqiOKwZFv87q",
-    "telefono": "",
+    "telefono": "7714066156",
     "es_admin": true,
-    "fecha_creacion": "2026-03-18T15:46:22.151738"
+    "fecha_creacion": "2026-03-18T15:46:22.151738",
+    "direccion_favorita": {
+      "calle": "",
+      "numero_exterior": "",
+      "numero_interior": "",
+      "colonia": "",
+      "codigo_postal": "",
+      "referencia": ""
+    }
   },
   {
     "id": "55eb058d2f0f44a09ce3bc2697a12fd6",

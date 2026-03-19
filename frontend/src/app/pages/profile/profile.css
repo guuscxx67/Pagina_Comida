@@ -97,6 +97,19 @@
   box-shadow: 0 0 0 3px rgba(179, 138, 92, 0.18);
 }
 
+.profile-form input.input-error {
+  border-color: #d64545;
+  background: #fff4f4;
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.14);
+}
+
+.field-error {
+  color: #d64545;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
 .profile-actions {
   margin-top: 20px;
 }

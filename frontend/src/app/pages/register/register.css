@@ -260,6 +260,12 @@
   box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
 }
 
+.input-group input.input-error {
+  border-color: #d64545;
+  background: #fff4f4;
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.14);
+}
+
 .input-group input:focus ~ .input-icon,
 .input-group:focus-within .input-icon {
   color: var(--text-primary);
@@ -279,6 +285,15 @@
 
 .toggle-pass:hover {
   color: var(--text-primary);
+}
+
+.field-error {
+  display: block;
+  margin: -8px 0 2px;
+  color: #d64545;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 /* ========== Button ========== */

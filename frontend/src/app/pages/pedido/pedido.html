@@ -4,7 +4,7 @@
       <button class="btn-back" (click)="volver()"><i class="fa-solid fa-arrow-left"></i> Volver</button>
       <div class="header-text">
         <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : tipo === 'domicilio' ? 'Pedido a Domicilio' : 'Ordenar para Recoger' }}</h1>
-        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tú llegues' }}</p>
+        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipacion' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tu llegues' }}</p>
       </div>
       <div class="header-user" *ngIf="usuario">
         Hola, <strong>{{ usuario.nombre }}</strong>
@@ -16,7 +16,7 @@
     <div class="menu-section">
       <h2 class="section-title">Selecciona tus platillos</h2>
 
-      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menú...</div>
+      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menu...</div>
 
       <div *ngIf="!cargandoMenu && menu.length === 0" class="loading-msg">
         No hay platillos disponibles por el momento.
@@ -37,7 +37,7 @@
               <span class="item-precio">${{ item.precio }}</span>
             </div>
             <div class="item-controls">
-              <button class="ctrl-btn" (click)="decrementar(item)" [disabled]="item.cantidad === 0">−</button>
+              <button class="ctrl-btn" (click)="decrementar(item)" [disabled]="item.cantidad === 0">-</button>
               <span class="item-qty">{{ item.cantidad }}</span>
               <button class="ctrl-btn ctrl-add" (click)="incrementar(item)">+</button>
             </div>
@@ -49,12 +49,12 @@
       <div class="summary-section">
         <h2 class="section-title">Tu pedido</h2>
         <div class="summary-empty" *ngIf="itemsSeleccionados.length === 0">
-          <p>Aún no has seleccionado ningún platillo</p>
+          <p>Aun no has seleccionado ningun platillo</p>
         </div>
 
         <div class="summary-list" *ngIf="itemsSeleccionados.length > 0">
           <div class="summary-row" *ngFor="let item of itemsSeleccionados">
-            <span class="row-name">{{ item.nombre }} <span class="row-qty">×{{ item.cantidad }}</span></span>
+            <span class="row-name">{{ item.nombre }} <span class="row-qty">x{{ item.cantidad }}</span></span>
             <span class="row-price">${{ item.precio * item.cantidad }}</span>
           </div>
           <div class="summary-divider"></div>
@@ -69,7 +69,8 @@
           <div class="date-row">
             <div class="field-group">
               <label>Fecha</label>
-              <input type="date" [(ngModel)]="fechaRecogida" [min]="hoyISO" />
+              <input type="date" [(ngModel)]="fechaRecogida" (blur)="marcarCampoComoTocado('fechaRecogida')" [class.input-error]="campoInvalido('fechaRecogida')" [min]="hoyISO" />
+              <small class="field-error" *ngIf="campoInvalido('fechaRecogida')">{{ obtenerMensajeErrorCampo('fechaRecogida') }}</small>
             </div>
             <div class="field-group">
               <label>Hora</label>
@@ -79,7 +80,7 @@
         </div>
 
         <div class="domicilio-fields" *ngIf="tipo === 'domicilio'">
-          <h3>Dirección de entrega</h3>
+          <h3>Direccion de entrega</h3>
           <div class="favorite-address-banner" *ngIf="direccionFavoritaDisponible">
             <div>
               <span class="favorite-address-label">Direccion favorita</span>
@@ -92,11 +93,13 @@
           <div class="address-grid">
             <div class="field-group field-full">
               <label>Calle *</label>
-              <input type="text" [(ngModel)]="calle" placeholder="Ej: Av. Benito Juárez" />
+              <input type="text" [(ngModel)]="calle" (blur)="marcarCampoComoTocado('calle')" [class.input-error]="campoInvalido('calle')" placeholder="Ej: Av. Benito Juarez" />
+              <small class="field-error" *ngIf="campoInvalido('calle')">{{ obtenerMensajeErrorCampo('calle') }}</small>
             </div>
             <div class="field-group">
               <label>No. Exterior *</label>
-              <input type="text" [(ngModel)]="numeroExterior" placeholder="Ej: 123" />
+              <input type="text" [(ngModel)]="numeroExterior" (blur)="marcarCampoComoTocado('numeroExterior')" [class.input-error]="campoInvalido('numeroExterior')" placeholder="Ej: 123" />
+              <small class="field-error" *ngIf="campoInvalido('numeroExterior')">{{ obtenerMensajeErrorCampo('numeroExterior') }}</small>
             </div>
             <div class="field-group">
               <label>No. Interior</label>
@@ -104,19 +107,22 @@
             </div>
             <div class="field-group">
               <label>Colonia *</label>
-              <input type="text" [(ngModel)]="colonia" placeholder="Ej: Centro" />
+              <input type="text" [(ngModel)]="colonia" (blur)="marcarCampoComoTocado('colonia')" [class.input-error]="campoInvalido('colonia')" placeholder="Ej: Centro" />
+              <small class="field-error" *ngIf="campoInvalido('colonia')">{{ obtenerMensajeErrorCampo('colonia') }}</small>
             </div>
             <div class="field-group">
-              <label>Código Postal</label>
-              <input type="text" [(ngModel)]="codigoPostal" placeholder="Ej: 12345" maxlength="5" />
+              <label>Codigo Postal</label>
+              <input type="text" [(ngModel)]="codigoPostal" (input)="normalizarCodigoPostal()" (blur)="marcarCampoComoTocado('codigoPostal')" [class.input-error]="campoInvalido('codigoPostal')" placeholder="Ej: 12345" maxlength="5" />
+              <small class="field-error" *ngIf="campoInvalido('codigoPostal')">{{ obtenerMensajeErrorCampo('codigoPostal') }}</small>
             </div>
             <div class="field-group field-full">
               <label>Referencia</label>
               <input type="text" [(ngModel)]="referencia" placeholder="Ej: Casa azul frente al parque" />
             </div>
             <div class="field-group field-full">
-              <label>Teléfono de contacto *</label>
-              <input type="tel" [(ngModel)]="telefonoContacto" placeholder="Ej: 55 1234 5678" />
+              <label>Telefono de contacto *</label>
+              <input type="tel" [(ngModel)]="telefonoContacto" (input)="normalizarTelefonoContacto()" (blur)="marcarCampoComoTocado('telefonoContacto')" [class.input-error]="campoInvalido('telefonoContacto')" placeholder="Ej: 55 1234 5678" />
+              <small class="field-error" *ngIf="campoInvalido('telefonoContacto')">{{ obtenerMensajeErrorCampo('telefonoContacto') }}</small>
             </div>
           </div>
         </div>

@@ -24,6 +24,12 @@ export class ProfileComponent implements OnInit {
   public telefono = '';
   public nuevaPassword = '';
   public guardando = false;
+  public camposTocados = {
+    nombre: false,
+    email: false,
+    telefono: false,
+    nuevaPassword: false,
+  };
   public direccionFavorita = {
     calle: '',
     numero_exterior: '',
@@ -62,6 +68,8 @@ export class ProfileComponent implements OnInit {
 
   guardarCambios() {
     if (!this.usuario) return;
+
+    this.marcarTodosLosCampos();
 
     const nombre = this.nombre.trim();
     const email = this.email.trim();
@@ -138,6 +146,33 @@ export class ProfileComponent implements OnInit {
     this.telefono = this.telefono.replace(/\D/g, '').slice(0, 12);
   }
 
+  marcarCampoComoTocado(campo: keyof typeof this.camposTocados) {
+    this.camposTocados[campo] = true;
+  }
+
+  campoInvalido(campo: keyof typeof this.camposTocados): boolean {
+    return this.camposTocados[campo] && !!this.obtenerMensajeError(campo);
+  }
+
+  obtenerMensajeError(campo: keyof typeof this.camposTocados): string {
+    switch (campo) {
+      case 'nombre':
+        return this.nombre.trim().length >= 2 ? '' : 'Minimo 2 caracteres';
+      case 'email':
+        return this.emailPattern.test(this.email.trim()) ? '' : 'Correo invalido';
+      case 'telefono':
+        if (!this.telefono.trim()) return 'Telefono obligatorio';
+        return this.telefonoPattern.test(this.telefono.trim()) ? '' : 'Solo numeros, 10 a 12 digitos';
+      case 'nuevaPassword':
+        if (!this.nuevaPassword.trim()) return '';
+        return this.passwordPattern.test(this.nuevaPassword.trim())
+          ? ''
+          : 'Minimo 8 caracteres, 1 mayuscula, 1 numero y 1 especial';
+      default:
+        return '';
+    }
+  }
+
   private cargarFormulario() {
     this.nombre = this.usuario?.nombre || '';
     this.email = this.usuario?.email || '';
@@ -150,5 +185,12 @@ export class ProfileComponent implements OnInit {
       codigo_postal: this.usuario?.direccion_favorita?.codigo_postal || '',
       referencia: this.usuario?.direccion_favorita?.referencia || '',
     };
+  }
+
+  private marcarTodosLosCampos() {
+    this.camposTocados.nombre = true;
+    this.camposTocados.email = true;
+    this.camposTocados.telefono = true;
+    this.camposTocados.nuevaPassword = true;
   }
 }

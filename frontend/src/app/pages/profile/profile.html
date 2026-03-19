@@ -16,12 +16,25 @@
     <div class="profile-form">
       <label>
         <span>Nombre</span>
-        <input [(ngModel)]="nombre" placeholder="Nombre completo" type="text" minlength="2" />
+        <input
+          [(ngModel)]="nombre"
+          (blur)="marcarCampoComoTocado('nombre')"
+          [class.input-error]="campoInvalido('nombre')"
+          placeholder="Nombre completo"
+          type="text"
+          minlength="2" />
+        <small class="field-error" *ngIf="campoInvalido('nombre')">{{ obtenerMensajeError('nombre') }}</small>
       </label>
 
       <label>
         <span>Correo</span>
-        <input [(ngModel)]="email" placeholder="Correo electronico" type="email" />
+        <input
+          [(ngModel)]="email"
+          (blur)="marcarCampoComoTocado('email')"
+          [class.input-error]="campoInvalido('email')"
+          placeholder="Correo electronico"
+          type="email" />
+        <small class="field-error" *ngIf="campoInvalido('email')">{{ obtenerMensajeError('email') }}</small>
       </label>
 
       <label>
@@ -29,20 +42,26 @@
         <input
           [(ngModel)]="telefono"
           (input)="normalizarTelefono()"
+          (blur)="marcarCampoComoTocado('telefono')"
+          [class.input-error]="campoInvalido('telefono')"
           placeholder="Telefono"
           type="tel"
           inputmode="numeric"
           minlength="10"
           maxlength="12" />
+        <small class="field-error" *ngIf="campoInvalido('telefono')">{{ obtenerMensajeError('telefono') }}</small>
       </label>
 
       <label>
         <span>Nueva contrasena</span>
         <input
           [(ngModel)]="nuevaPassword"
+          (blur)="marcarCampoComoTocado('nuevaPassword')"
+          [class.input-error]="campoInvalido('nuevaPassword')"
           placeholder="Deja vacio si no quieres cambiarla"
           type="password"
           minlength="8" />
+        <small class="field-error" *ngIf="campoInvalido('nuevaPassword')">{{ obtenerMensajeError('nuevaPassword') }}</small>
       </label>
     </div>
 

@@ -183,16 +183,12 @@
   .header .navbar-nav .nav-item button {
     padding: 8px 0;
     font-size: 0.95rem;
-<<<<<<< HEAD
     color: var(--text-primary);
-=======
-    color: #8b6f47;
   }
 
   .header .navbar-nav .nav-item .user-nav-group {
     width: 100%;
     justify-content: space-between;
->>>>>>> b630e729e6fb04aa7700393b16423a105621bd71
   }
 }
 

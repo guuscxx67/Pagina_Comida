@@ -48,15 +48,20 @@
           <input
             type="email"
             [(ngModel)]="loginEmail"
+            (blur)="marcarCampoComoTocado('loginEmail')"
+            [class.input-error]="campoInvalido('loginEmail')"
             placeholder="Correo electronico"
             autocomplete="email" />
         </div>
+        <small class="field-error" *ngIf="campoInvalido('loginEmail')">{{ obtenerMensajeErrorCampo('loginEmail') }}</small>
 
         <div class="input-group">
           <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input
             type="password"
             [(ngModel)]="loginPassword"
+            (blur)="marcarCampoComoTocado('loginPassword')"
+            [class.input-error]="campoInvalido('loginPassword')"
             placeholder="Contrasena"
             (keydown.enter)="iniciarSesion()"
             autocomplete="current-password" />
@@ -64,6 +69,7 @@
             <i class="fa-solid" [class.fa-eye]="mostrarPass" [class.fa-eye-slash]="!mostrarPass"></i>
           </button>
         </div>
+        <small class="field-error" *ngIf="campoInvalido('loginPassword')">{{ obtenerMensajeErrorCampo('loginPassword') }}</small>
 
         <button
           class="btn-auth"
@@ -89,36 +95,49 @@
           <input
             type="text"
             [(ngModel)]="nombre"
+            (blur)="marcarCampoComoTocado('nombre')"
+            [class.input-error]="campoInvalido('nombre')"
             placeholder="Nombre completo"
             autocomplete="name" />
         </div>
+        <small class="field-error" *ngIf="campoInvalido('nombre')">{{ obtenerMensajeErrorCampo('nombre') }}</small>
 
         <div class="input-group">
           <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
           <input
             type="email"
             [(ngModel)]="email"
+            (blur)="marcarCampoComoTocado('email')"
+            [class.input-error]="campoInvalido('email')"
             placeholder="Correo electronico"
             autocomplete="email" />
         </div>
+        <small class="field-error" *ngIf="campoInvalido('email')">{{ obtenerMensajeErrorCampo('email') }}</small>
 
         <div class="input-group">
           <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input
             type="password"
             [(ngModel)]="password"
+            (blur)="marcarCampoComoTocado('password')"
+            [class.input-error]="campoInvalido('password')"
             placeholder="Contrasena"
             autocomplete="new-password" />
         </div>
+        <small class="field-error" *ngIf="campoInvalido('password')">{{ obtenerMensajeErrorCampo('password') }}</small>
 
         <div class="input-group">
           <span class="input-icon"><i class="fa-solid fa-phone"></i></span>
           <input
             type="tel"
             [(ngModel)]="telefono"
-            placeholder="Telefono (opcional)"
+            (input)="normalizarTelefono()"
+            (blur)="marcarCampoComoTocado('telefono')"
+            [class.input-error]="campoInvalido('telefono')"
+            placeholder="Telefono"
             autocomplete="tel" />
         </div>
+        <small class="field-error" *ngIf="campoInvalido('telefono')">{{ obtenerMensajeErrorCampo('telefono') }}</small>
 
         <button
           class="btn-auth"
