@@ -20,6 +20,14 @@ export class ProfileComponent implements OnInit {
   public telefono = '';
   public nuevaPassword = '';
   public guardando = false;
+  public direccionFavorita = {
+    calle: '',
+    numero_exterior: '',
+    numero_interior: '',
+    colonia: '',
+    codigo_postal: '',
+    referencia: '',
+  };
 
   constructor(
     private api: ApiService,
@@ -65,6 +73,14 @@ export class ProfileComponent implements OnInit {
       nombre,
       email,
       telefono: this.telefono.trim(),
+      direccion_favorita: {
+        calle: this.direccionFavorita.calle.trim(),
+        numero_exterior: this.direccionFavorita.numero_exterior.trim(),
+        numero_interior: this.direccionFavorita.numero_interior.trim(),
+        colonia: this.direccionFavorita.colonia.trim(),
+        codigo_postal: this.direccionFavorita.codigo_postal.trim(),
+        referencia: this.direccionFavorita.referencia.trim(),
+      },
       password: this.nuevaPassword.trim() || undefined,
     }).subscribe({
       next: (res: any) => {
@@ -92,5 +108,13 @@ export class ProfileComponent implements OnInit {
     this.nombre = this.usuario?.nombre || '';
     this.email = this.usuario?.email || '';
     this.telefono = this.usuario?.telefono || '';
+    this.direccionFavorita = {
+      calle: this.usuario?.direccion_favorita?.calle || '',
+      numero_exterior: this.usuario?.direccion_favorita?.numero_exterior || '',
+      numero_interior: this.usuario?.direccion_favorita?.numero_interior || '',
+      colonia: this.usuario?.direccion_favorita?.colonia || '',
+      codigo_postal: this.usuario?.direccion_favorita?.codigo_postal || '',
+      referencia: this.usuario?.direccion_favorita?.referencia || '',
+    };
   }
 }

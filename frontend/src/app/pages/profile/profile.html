@@ -31,6 +31,43 @@
       </label>
     </div>
 
+    <div class="favorite-address">
+      <h3>Direccion favorita para domicilio</h3>
+      <p class="favorite-address-subtitle">Se usara como sugerencia automatica cuando hagas un pedido a domicilio.</p>
+
+      <div class="profile-form">
+        <label>
+          <span>Calle</span>
+          <input [(ngModel)]="direccionFavorita.calle" placeholder="Ej: Av. Benito Juarez" type="text" />
+        </label>
+
+        <label>
+          <span>No. exterior</span>
+          <input [(ngModel)]="direccionFavorita.numero_exterior" placeholder="Ej: 123" type="text" />
+        </label>
+
+        <label>
+          <span>No. interior</span>
+          <input [(ngModel)]="direccionFavorita.numero_interior" placeholder="Ej: Depto 4" type="text" />
+        </label>
+
+        <label>
+          <span>Colonia</span>
+          <input [(ngModel)]="direccionFavorita.colonia" placeholder="Ej: Centro" type="text" />
+        </label>
+
+        <label>
+          <span>Codigo postal</span>
+          <input [(ngModel)]="direccionFavorita.codigo_postal" placeholder="Ej: 12345" type="text" maxlength="5" />
+        </label>
+
+        <label class="field-full">
+          <span>Referencia</span>
+          <input [(ngModel)]="direccionFavorita.referencia" placeholder="Ej: Porton negro frente al parque" type="text" />
+        </label>
+      </div>
+    </div>
+
     <div class="profile-actions">
       <button class="btn-primary" (click)="guardarCambios()" [disabled]="guardando">
         {{ guardando ? 'Guardando...' : 'Guardar cambios' }}

@@ -80,6 +80,15 @@
 
         <div class="domicilio-fields" *ngIf="tipo === 'domicilio'">
           <h3>Dirección de entrega</h3>
+          <div class="favorite-address-banner" *ngIf="direccionFavoritaDisponible">
+            <div>
+              <span class="favorite-address-label">Direccion favorita</span>
+              <p>{{ direccionFavoritaTexto }}</p>
+            </div>
+            <button type="button" class="favorite-address-btn" (click)="usarDireccionFavorita()">
+              Usar esta direccion
+            </button>
+          </div>
           <div class="address-grid">
             <div class="field-group field-full">
               <label>Calle *</label>

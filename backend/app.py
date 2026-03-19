@@ -78,6 +78,14 @@ def create_local_user(nombre, email, password, telefono='', es_admin=False):
         'email': normalized_email,
         'password': bcrypt.generate_password_hash(password).decode(),
         'telefono': telefono,
+        'direccion_favorita': {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        },
         'es_admin': bool(es_admin),
         'fecha_creacion': datetime.utcnow().isoformat()
     }
@@ -170,6 +178,14 @@ def usuario_to_dict(u):
         'nombre': u.get('nombre', ''),
         'email': u.get('email', ''),
         'telefono': u.get('telefono', ''),
+        'direccion_favorita': u.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': u.get('es_admin', False),
     }
 
@@ -272,6 +288,15 @@ def register():
             'id': usuario['id'],
             'nombre': usuario['nombre'],
             'email': usuario['email'],
+            'telefono': usuario.get('telefono', ''),
+            'direccion_favorita': usuario.get('direccion_favorita', {
+                'calle': '',
+                'numero_exterior': '',
+                'numero_interior': '',
+                'colonia': '',
+                'codigo_postal': '',
+                'referencia': ''
+            }),
             'es_admin': usuario['es_admin']
         }), 201
 
@@ -280,6 +305,14 @@ def register():
         'email': email,
         'password': bcrypt.generate_password_hash(data['password']).decode(),
         'telefono': data.get('telefono', ''),
+        'direccion_favorita': {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        },
         'es_admin': bool(data.get('es_admin', False)),
         'fecha_creacion': datetime.utcnow()
     }
@@ -290,6 +323,15 @@ def register():
         'id': str(result.inserted_id),
         'nombre': usuario['nombre'],
         'email': usuario['email'],
+        'telefono': usuario.get('telefono', ''),
+        'direccion_favorita': usuario.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': usuario['es_admin']
     }), 201
 
@@ -306,6 +348,14 @@ def login():
         'nombre': usuario['nombre'],
         'email': usuario['email'],
         'telefono': usuario.get('telefono', ''),
+        'direccion_favorita': usuario.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': usuario['es_admin']
     }), 200
 
@@ -321,6 +371,7 @@ def actualizar_usuario(usuario_id):
     email = str(data.get('email', '')).strip().lower()
     telefono = str(data.get('telefono', '')).strip()
     password = str(data.get('password', '')).strip()
+    direccion = data.get('direccion_favorita') or {}
 
     if not nombre or not email:
         return jsonify({'error': 'Nombre y email son obligatorios'}), 400
@@ -335,6 +386,14 @@ def actualizar_usuario(usuario_id):
         'nombre': nombre,
         'email': email,
         'telefono': telefono,
+        'direccion_favorita': {
+            'calle': str(direccion.get('calle', '')).strip(),
+            'numero_exterior': str(direccion.get('numero_exterior', '')).strip(),
+            'numero_interior': str(direccion.get('numero_interior', '')).strip(),
+            'colonia': str(direccion.get('colonia', '')).strip(),
+            'codigo_postal': str(direccion.get('codigo_postal', '')).strip(),
+            'referencia': str(direccion.get('referencia', '')).strip(),
+        }
     }
 
     if password:
@@ -951,6 +1010,14 @@ if __name__ == '__main__':
                 'email': 'admin@test.com',
                 'password': bcrypt.generate_password_hash('123456').decode(),
                 'telefono': '',
+                'direccion_favorita': {
+                    'calle': '',
+                    'numero_exterior': '',
+                    'numero_interior': '',
+                    'colonia': '',
+                    'codigo_postal': '',
+                    'referencia': ''
+                },
                 'es_admin': True,
                 'fecha_creacion': datetime.utcnow()
             }

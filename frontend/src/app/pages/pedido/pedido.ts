@@ -31,6 +31,15 @@ interface EstadoPedido {
   telefonoContacto: string;
 }
 
+interface DireccionFavorita {
+  calle: string;
+  numero_exterior: string;
+  numero_interior: string;
+  colonia: string;
+  codigo_postal: string;
+  referencia: string;
+}
+
 @Component({
   selector: 'app-pedido',
   standalone: true,
@@ -65,6 +74,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   codigoPostal = '';
   referencia = '';
   telefonoContacto = '';
+  direccionFavoritaDisponible = false;
 
   menu: MenuItem[] = [];
 
@@ -92,6 +102,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
     if (this.usuario.telefono) {
       this.telefonoContacto = this.usuario.telefono;
     }
+
+    this.aplicarDireccionFavoritaSiExiste();
 
     this.api.obtenerRecetas().subscribe({
       next: (recetas: any[]) => {
@@ -212,6 +224,20 @@ export class PedidoComponent implements OnInit, OnDestroy {
     localStorage.removeItem(this.STORAGE_KEY);
   }
 
+  get direccionFavoritaTexto(): string {
+    const direccion = this.obtenerDireccionFavorita();
+    if (!direccion) return '';
+
+    const partes = [
+      direccion.calle ? `${direccion.calle} ${direccion.numero_exterior ? `#${direccion.numero_exterior}` : ''}`.trim() : '',
+      direccion.numero_interior ? `Int. ${direccion.numero_interior}` : '',
+      direccion.colonia,
+      direccion.codigo_postal ? `CP ${direccion.codigo_postal}` : '',
+    ].filter(Boolean);
+
+    return partes.join(', ');
+  }
+
   get itemsSeleccionados(): MenuItem[] {
     return this.menu.filter(i => i.cantidad > 0);
   }
@@ -315,5 +341,61 @@ export class PedidoComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  usarDireccionFavorita() {
+    const direccion = this.obtenerDireccionFavorita();
+    if (!direccion) return;
+
+    this.calle = direccion.calle;
+    this.numeroExterior = direccion.numero_exterior;
+    this.numeroInterior = direccion.numero_interior;
+    this.colonia = direccion.colonia;
+    this.codigoPostal = direccion.codigo_postal;
+    this.referencia = direccion.referencia;
+
+    if (!this.telefonoContacto.trim() && this.usuario?.telefono) {
+      this.telefonoContacto = this.usuario.telefono;
+    }
+
+    this.guardarEstado();
+    this.cdr.detectChanges();
+  }
+
+  private aplicarDireccionFavoritaSiExiste() {
+    const direccion = this.obtenerDireccionFavorita();
+    this.direccionFavoritaDisponible = !!direccion;
+
+    if (!direccion || this.tipo !== 'domicilio') return;
+
+    const yaCapturoDireccion = [
+      this.calle,
+      this.numeroExterior,
+      this.numeroInterior,
+      this.colonia,
+      this.codigoPostal,
+      this.referencia,
+    ].some(valor => valor.trim().length > 0);
+
+    if (!yaCapturoDireccion) {
+      this.usarDireccionFavorita();
+    }
+  }
+
+  private obtenerDireccionFavorita(): DireccionFavorita | null {
+    const direccion = this.usuario?.direccion_favorita;
+    if (!direccion) return null;
+
+    const normalizada: DireccionFavorita = {
+      calle: direccion.calle || '',
+      numero_exterior: direccion.numero_exterior || '',
+      numero_interior: direccion.numero_interior || '',
+      colonia: direccion.colonia || '',
+      codigo_postal: direccion.codigo_postal || '',
+      referencia: direccion.referencia || '',
+    };
+
+    const tieneDatos = Object.values(normalizada).some(valor => valor.trim().length > 0);
+    return tieneDatos ? normalizada : null;
   }
 }

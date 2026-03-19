@@ -76,6 +76,26 @@
   margin-top: 20px;
 }
 
+.favorite-address {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eadcc9;
+}
+
+.favorite-address h3 {
+  margin: 0 0 8px;
+  color: #6d5232;
+}
+
+.favorite-address-subtitle {
+  margin: 0 0 16px;
+  color: #8a7358;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
 .btn-primary,
 .btn-secondary {
   border: none;
@@ -124,5 +144,9 @@ button {
 
   .profile-form {
     grid-template-columns: 1fr;
+  }
+
+  .field-full {
+    grid-column: auto;
   }
 }
