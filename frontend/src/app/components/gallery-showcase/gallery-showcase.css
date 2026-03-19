@@ -232,7 +232,7 @@
 
 .featured-add-btn {
   background: var(--accent-dark);
-  color: white;
+  color: var(--bg-primary);
   border: none;
   padding: 10px 18px;
   border-radius: 4px;
@@ -372,11 +372,12 @@
 
 .dish-add {
   background: var(--accent-light);
-  color: white;
+  color: var(--accent-very-dark);
 }
 
 .dish-add:hover {
   background: var(--accent-very-dark);
+  color: var(--bg-primary);
 }
 
 .dish-info {
