@@ -64,4 +64,8 @@ export class AdminComponent implements OnInit {
   onRecetaEliminada() {
     this.recetasComp?.cargarRecetas();
   }
+
+  onPlatosActualizados() {
+    this.recetasComp?.cargarPlatosEstrella();
+  }
 }

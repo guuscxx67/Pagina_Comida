@@ -20,6 +20,7 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
   private modal = inject(ModalService);
 
   recetas: any[] = [];
+  platosEstrella: any[] = [];
   formVisible = false;
   editandoId: string | null = null;
   form = { nombre: '', descripcion: '', precio: 0, categoria: 'General', disponible: true, imagen: '' };
@@ -29,6 +30,7 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.cargarRecetas();
+    this.cargarPlatosEstrella();
     this.cargarImagenes();
   }
 
@@ -70,6 +72,16 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
         if (err.status === 403) this.modal.error('Sesion expirada. Cierra sesion y vuelve a entrar.');
         else this.modal.error('No se pudieron cargar las recetas');
       }
+    });
+  }
+
+  cargarPlatosEstrella() {
+    if (!this.adminId) return;
+    this.api.obtenerPlatosEstrellaAdmin(this.adminId).subscribe({
+      next: (res: any) => {
+        this.platosEstrella = res;
+      },
+      error: () => console.error('Error cargando platos estrella')
     });
   }
 
@@ -134,6 +146,67 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
 
   cancelarForm() {
     this.formVisible = false;
+  }
+
+  esPlatoEstrella(recetaId: string): boolean {
+    return this.platosEstrella.some((p: any) => {
+      // Suponiendo que el plato estrella tiene una referencia al ID de la receta
+      // o que el nombre coincide
+      return p.receta_id === recetaId || p.nombre === this.recetas.find(r => r.id === recetaId)?.nombre;
+    });
+  }
+
+  togglePlatoEstrella(receta: any) {
+    if (!this.adminId) return;
+
+    const esEstrella = this.esPlatoEstrella(receta.id);
+
+    if (esEstrella) {
+      // Eliminar de platos estrella
+      const platoEstrella = this.platosEstrella.find((p: any) => 
+        p.receta_id === receta.id || p.nombre === receta.nombre
+      );
+      
+      if (platoEstrella) {
+        // Actualización optimista: eliminar inmediatamente
+        this.platosEstrella = this.platosEstrella.filter((p: any) => p.id !== platoEstrella.id);
+        
+        this.api.eliminarPlatoEstrella(this.adminId, platoEstrella.id).subscribe({
+          next: () => {
+            // Ya está eliminado visualmente
+          },
+          error: () => {
+            // Si falla, recargar para sincronizar
+            this.cargarPlatosEstrella();
+            this.modal.error('Error al eliminar de platos estrella');
+          }
+        });
+      }
+    } else {
+      // Agregar a platos estrella
+      const plato = {
+        nombre: receta.nombre,
+        descripcion: receta.descripcion,
+        precio: receta.precio,
+        imagen: receta.imagen || '',
+        orden: this.platosEstrella.length + 1
+      };
+
+      this.api.crearPlatoEstrella(this.adminId, plato).subscribe({
+        next: (res: any) => {
+          // Agregar con el ID que retorna el servidor
+          this.platosEstrella.push({
+            id: res.id || res,
+            ...plato
+          });
+        },
+        error: () => {
+          // Si falla, recargar para sincronizar
+          this.cargarPlatosEstrella();
+          this.modal.error('Error al agregar a platos estrella');
+        }
+      });
+    }
   }
 
   imagenUrl(imagen: string): string {

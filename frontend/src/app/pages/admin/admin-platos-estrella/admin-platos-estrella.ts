@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api';
@@ -13,6 +13,7 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class AdminPlatosEstrellaComponent implements OnInit {
   @Input() adminId: string | null = null;
+  @Output() platosActualizados = new EventEmitter<any[]>();
 
   private api = inject(ApiService);
   private modal = inject(ModalService);
@@ -40,7 +41,10 @@ export class AdminPlatosEstrellaComponent implements OnInit {
   cargarPlatosEstrella() {
     if (!this.adminId) return;
     this.api.obtenerPlatosEstrellaAdmin(this.adminId).subscribe({
-      next: (res: any) => (this.platosEstrella = res),
+      next: (res: any) => {
+        this.platosEstrella = res;
+        this.platosActualizados.emit(res);
+      },
       error: (err) => {
         if (err.status === 403) this.modal.error('Sesion expirada. Cierra sesion y vuelve a entrar.');
         else this.modal.error('No se pudieron cargar los platos estrella');
