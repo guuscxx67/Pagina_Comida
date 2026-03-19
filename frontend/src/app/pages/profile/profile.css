@@ -15,6 +15,31 @@
 
 .profile-card {
   margin-bottom: 24px;
+  position: relative;
+  padding-top: 68px;
+}
+
+.btn-back-profile {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #efe3d3;
+  color: #6d5232;
+  box-shadow: 0 8px 18px rgba(139, 111, 71, 0.14);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-back-profile:hover {
+  background: #8b6f47;
+  color: #fffaf5;
+  transform: translateY(-1px);
 }
 
 .profile-header {

@@ -1,5 +1,9 @@
 <div class="profile-container" *ngIf="usuario">
   <div class="profile-card">
+    <button class="btn-back-profile" (click)="volverInicio()" aria-label="Regresar al inicio">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
     <div class="profile-header">
       <div>
         <p class="profile-eyebrow">Tu cuenta</p>
@@ -12,7 +16,7 @@
     <div class="profile-form">
       <label>
         <span>Nombre</span>
-        <input [(ngModel)]="nombre" placeholder="Nombre completo" type="text" />
+        <input [(ngModel)]="nombre" placeholder="Nombre completo" type="text" minlength="2" />
       </label>
 
       <label>
@@ -22,12 +26,23 @@
 
       <label>
         <span>Telefono</span>
-        <input [(ngModel)]="telefono" placeholder="Telefono" type="tel" />
+        <input
+          [(ngModel)]="telefono"
+          (input)="normalizarTelefono()"
+          placeholder="Telefono"
+          type="tel"
+          inputmode="numeric"
+          minlength="10"
+          maxlength="12" />
       </label>
 
       <label>
         <span>Nueva contrasena</span>
-        <input [(ngModel)]="nuevaPassword" placeholder="Deja vacio si no quieres cambiarla" type="password" />
+        <input
+          [(ngModel)]="nuevaPassword"
+          placeholder="Deja vacio si no quieres cambiarla"
+          type="password"
+          minlength="8" />
       </label>
     </div>
 
