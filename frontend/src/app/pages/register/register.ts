@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ApiService } from '../../services/api';
 import { ModalService } from '../../services/modal.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-register',
@@ -31,6 +32,9 @@ export class RegisterComponent {
   private api = inject(ApiService);
   private router = inject(Router);
   private modal = inject(ModalService);
+  private themeService = inject(ThemeService);
+
+  isDarkMode = false;
 
   modo: 'login' | 'registro' = 'login';
   cargando = false;
@@ -55,6 +59,16 @@ export class RegisterComponent {
   // 🔙 FUNCIÓN PARA REGRESAR AL HOME
   irHome() {
     this.router.navigate(['/home']);
+  }
+
+  ngOnInit() {
+    this.themeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+    });
+  }
+
+  toggleTheme() {
+    this.themeService.toggleDarkMode();
   }
 
   private obtenerMensajeError(error: any, respaldo: string) {

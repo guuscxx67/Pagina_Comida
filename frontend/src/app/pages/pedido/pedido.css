@@ -131,7 +131,7 @@
 }
 
 .menu-item {
-  background: white;
+  background: var(--bg-primary);
   border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   padding: 16px 18px;
@@ -199,7 +199,7 @@
   height: 32px;
   border-radius: 4px;
   border: 2px solid var(--color-terra-light);
-  background: white;
+  background: var(--bg-primary);
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
@@ -235,11 +235,11 @@
   text-align: center;
 }
 .summary-section {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 4px;
   padding: 26px 24px;
   border: 2px solid var(--color-terra-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 20px var(--shadow-light);
   align-self: start;
   position: sticky;
   top: 20px;
@@ -380,9 +380,9 @@
   gap: 14px;
   padding: 12px 14px;
   margin-bottom: 14px;
-  border: 1px solid #c9d9ea;
+  border: 1px solid var(--color-blue-light);
   border-radius: 10px;
-  background: #f1f7fc;
+  background: var(--bg-tertiary);
 }
 
 .favorite-address-label {
@@ -392,12 +392,12 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #2a4a6a;
+  color: var(--color-blue);
 }
 
 .favorite-address-banner p {
   margin: 0;
-  color: #35516d;
+  color: var(--text-secondary);
   font-size: 0.88rem;
 }
 
@@ -405,7 +405,7 @@
   border: none;
   border-radius: 999px;
   padding: 10px 14px;
-  background: #2a4a6a;
+  background: var(--color-blue);
   color: #fff;
   font-weight: 700;
   white-space: nowrap;
@@ -442,11 +442,12 @@
   border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   font-size: 0.85rem;
-  color: var(--accent-very-dark);
+  color: var(--text-primary);
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
   box-sizing: border-box;
+  background: var(--bg-primary);
 }
 
 .domicilio-fields .field-group input:focus {
@@ -493,13 +494,14 @@
   border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   font-size: 0.9rem;
-  color: var(--accent-very-dark);
+  color: var(--text-primary);
   resize: vertical;
   min-height: 80px;
   outline: none;
   font-family: inherit;
   box-sizing: border-box;
   transition: border-color 0.2s;
+  background: var(--bg-primary);
 }
 
 .notes-field textarea:focus {
