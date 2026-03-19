@@ -8,7 +8,7 @@
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 20px;
-  color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .tabs {
@@ -101,7 +101,7 @@
   border-radius: 4px;
   padding: 14px 16px;
   margin-bottom: 12px;
-  background: white;
+  background: var(--bg-primary);
 }
 
 .pedido-card.estado-pendiente  { border-left: 4px solid var(--color-orange); }
@@ -192,6 +192,7 @@
   font-size: 0.93rem;
   box-sizing: border-box;
   background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-card input[type=url] {
@@ -202,6 +203,7 @@
   font-size: 0.93rem;
   box-sizing: border-box;
   background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-card input[type=text]:focus,
@@ -233,12 +235,12 @@
   border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 14px;
-  background: white;
+  background: var(--bg-primary);
   transition: box-shadow 0.2s;
 }
 
 .receta-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .receta-card .receta-image {
@@ -996,14 +998,14 @@
 
 .chart-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-green), #4caf50);
+  background: linear-gradient(90deg, var(--color-green), var(--color-green-light));
   border-radius: 4px;
   min-width: 2px;
   transition: width 0.5s ease;
 }
 
 .chart-bar-mes {
-  background: linear-gradient(90deg, var(--color-blue), #3498db);
+  background: linear-gradient(90deg, var(--color-blue), var(--color-blue-light));
 }
 
 .chart-value {
@@ -1060,7 +1062,7 @@
 
 .cat-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-red), #d32f2f);
+  background: linear-gradient(90deg, var(--color-red), var(--color-red-light));
   border-radius: 4px;
   transition: width 0.5s ease;
 }
@@ -1112,7 +1114,7 @@
 
 .tipo-reporte-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-blue), #1976d2);
+  background: linear-gradient(90deg, var(--color-blue), var(--color-blue-light));
   border-radius: 4px;
   transition: width 0.5s ease;
 }

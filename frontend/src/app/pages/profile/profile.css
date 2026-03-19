@@ -14,6 +14,36 @@
   margin-bottom: 24px;
 }
 
+.profile-card {
+  position: relative;
+  padding-top: 68px;
+}
+
+/* Back button */
+.btn-back-profile {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  color: var(--accent-main);
+  box-shadow: 0 4px 12px var(--shadow-light);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-back-profile:hover {
+  background: var(--accent-main);
+  color: var(--bg-primary);
+  transform: translateY(-1px);
+}
+
 /* Header */
 .profile-header {
   display: flex;
@@ -214,6 +244,10 @@
     padding: 20px;
   }
 
+  .profile-card {
+    padding-top: 60px;
+  }
+
   .profile-actions {
     justify-content: stretch;
   }
@@ -233,6 +267,10 @@
   .orders-section {
     padding: 16px;
     border-radius: 8px;
+  }
+
+  .profile-card {
+    padding-top: 56px;
   }
 
   .profile-header h2 {

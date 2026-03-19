@@ -10,6 +10,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 import json
 import os
+import re
 import uuid
 from dotenv import load_dotenv
 
@@ -22,6 +23,9 @@ FRONTEND_PUBLIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '
 INSTANCE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
 LOCAL_AUTH_FILE = os.path.join(INSTANCE_DIR, 'auth_users.json')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+EMAIL_REGEX = re.compile(r'^[^\s@]+@[^\s@]+\.[^\s@]{2,}$')
+PHONE_REGEX = re.compile(r'^\d{10,12}$')
+PASSWORD_REGEX = re.compile(r'^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -123,6 +127,15 @@ def update_local_user(user_id, updates):
         return users[index]
 
     return None
+
+def is_valid_email(email):
+    return bool(EMAIL_REGEX.match(str(email).strip().lower()))
+
+def is_valid_phone(phone):
+    return bool(PHONE_REGEX.match(str(phone).strip()))
+
+def is_valid_password(password):
+    return bool(PASSWORD_REGEX.match(str(password)))
 
 # ── CORS manual (funciona con cualquier versión de Flask) ──────────────────
 @app.before_request
@@ -375,6 +388,18 @@ def actualizar_usuario(usuario_id):
 
     if not nombre or not email:
         return jsonify({'error': 'Nombre y email son obligatorios'}), 400
+
+    if len(nombre) < 2:
+        return jsonify({'error': 'El nombre debe tener al menos 2 caracteres'}), 400
+
+    if not is_valid_email(email):
+        return jsonify({'error': 'Ingresa un correo valido'}), 400
+
+    if not is_valid_phone(telefono):
+        return jsonify({'error': 'El telefono debe tener solo numeros y entre 10 y 12 digitos'}), 400
+
+    if password and not is_valid_password(password):
+        return jsonify({'error': 'La contrasena debe tener minimo 8 caracteres, una mayuscula, un numero y un caracter especial'}), 400
 
     existente = get_user_by_email(email)
     if existente:

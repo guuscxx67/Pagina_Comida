@@ -3,6 +3,10 @@
     <i class="fa-solid fa-arrow-left"></i>
   </button>
 
+  <button class="btn-theme-toggle" (click)="toggleTheme()" title="Cambiar tema">
+    <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+  </button>
+
   <div class="auth-side">
     <div class="auth-side-content">
       <img src="logo2.png" alt="Garnachas Tommy" class="auth-logo" />

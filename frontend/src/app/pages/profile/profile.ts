@@ -13,6 +13,10 @@ import { ModalService } from '../../services/modal.service';
   styleUrls: ['./profile.css'],
 })
 export class ProfileComponent implements OnInit {
+  private readonly emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  private readonly telefonoPattern = /^\d{10,12}$/;
+  private readonly passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
   public usuario: any = null;
   public pedidos: any[] = [];
   public nombre = '';
@@ -61,9 +65,31 @@ export class ProfileComponent implements OnInit {
 
     const nombre = this.nombre.trim();
     const email = this.email.trim();
+    const telefono = this.telefono.trim();
+    const password = this.nuevaPassword.trim();
 
-    if (!nombre || !email) {
-      this.modal.error('Nombre y correo son obligatorios');
+    if (!nombre || !email || !telefono) {
+      this.modal.error('Nombre, correo y telefono son obligatorios');
+      return;
+    }
+
+    if (nombre.length < 2) {
+      this.modal.error('El nombre debe tener al menos 2 caracteres');
+      return;
+    }
+
+    if (!this.emailPattern.test(email)) {
+      this.modal.error('Ingresa un correo valido');
+      return;
+    }
+
+    if (!this.telefonoPattern.test(telefono)) {
+      this.modal.error('El telefono debe tener solo numeros y entre 10 y 12 digitos');
+      return;
+    }
+
+    if (password && !this.passwordPattern.test(password)) {
+      this.modal.error('La contrasena debe tener minimo 8 caracteres, una mayuscula, un numero y un caracter especial');
       return;
     }
 
@@ -72,7 +98,7 @@ export class ProfileComponent implements OnInit {
     this.api.actualizarUsuario(this.usuario.id, {
       nombre,
       email,
-      telefono: this.telefono.trim(),
+      telefono,
       direccion_favorita: {
         calle: this.direccionFavorita.calle.trim(),
         numero_exterior: this.direccionFavorita.numero_exterior.trim(),
@@ -81,7 +107,7 @@ export class ProfileComponent implements OnInit {
         codigo_postal: this.direccionFavorita.codigo_postal.trim(),
         referencia: this.direccionFavorita.referencia.trim(),
       },
-      password: this.nuevaPassword.trim() || undefined,
+      password: password || undefined,
     }).subscribe({
       next: (res: any) => {
         localStorage.setItem('usuario', JSON.stringify(res));
@@ -102,6 +128,14 @@ export class ProfileComponent implements OnInit {
     this.usuario = null;
     this.pedidos = [];
     this.router.navigate(['/home']);
+  }
+
+  volverInicio() {
+    this.router.navigate(['/home']);
+  }
+
+  normalizarTelefono() {
+    this.telefono = this.telefono.replace(/\D/g, '').slice(0, 12);
   }
 
   private cargarFormulario() {
