@@ -1,28 +1,128 @@
 .profile-container {
-  max-width: 480px;
-  margin: 30px auto;
+  max-width: 960px;
+  margin: 30px auto 50px;
   padding: 0 16px;
 }
 
-.login-box {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.profile-card,
+.orders-section {
+  background: #fffaf5;
+  border: 1px solid #eadcc9;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(139, 111, 71, 0.08);
+  padding: 24px;
 }
 
-.login-box input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.profile-card {
+  margin-bottom: 24px;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.profile-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #b38a5c;
+}
+
+.profile-header h2 {
+  margin: 0;
+  color: #6d5232;
+}
+
+.profile-subtitle {
+  margin: 8px 0 0;
+  color: #8a7358;
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #6d5232;
+  font-weight: 600;
+}
+
+.profile-form input {
+  padding: 12px 14px;
+  border: 1px solid #d6c3ab;
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 500;
+}
+
+.profile-form input:focus {
+  outline: none;
+  border-color: #b38a5c;
+  box-shadow: 0 0 0 3px rgba(179, 138, 92, 0.18);
+}
+
+.profile-actions {
+  margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #8b6f47;
+  color: #fffaf5;
+}
+
+.btn-primary:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.btn-secondary {
+  background: #efe3d3;
+  color: #6d5232;
+}
+
+.orders-section h3 {
+  margin-top: 0;
+  color: #6d5232;
 }
 
 .pedido-card {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #eadcc9;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #ffffff;
 }
 
 button {
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+  }
+
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
 }
