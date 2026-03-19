@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DoCheck, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
@@ -10,19 +10,22 @@ import { ThemeService } from '../../services/theme.service';
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, DoCheck {
   private themeService = inject(ThemeService);
   usuario: any = null;
   menuAbierto = false;
   isDarkMode = false;
 
   ngOnInit() {
-    const u = localStorage.getItem('usuario');
-    if (u) this.usuario = JSON.parse(u);
+    this.sincronizarUsuario();
     
     this.themeService.darkMode$.subscribe(isDark => {
       this.isDarkMode = isDark;
     });
+  }
+
+  ngDoCheck() {
+    this.sincronizarUsuario();
   }
 
   toggleMenu() {
@@ -42,5 +45,10 @@ export class HeaderComponent implements OnInit {
 
   toggleTheme() {
     this.themeService.toggleDarkMode();
+  }
+
+  private sincronizarUsuario() {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    this.usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   }
 }

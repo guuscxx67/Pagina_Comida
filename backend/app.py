@@ -78,6 +78,14 @@ def create_local_user(nombre, email, password, telefono='', es_admin=False):
         'email': normalized_email,
         'password': bcrypt.generate_password_hash(password).decode(),
         'telefono': telefono,
+        'direccion_favorita': {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        },
         'es_admin': bool(es_admin),
         'fecha_creacion': datetime.utcnow().isoformat()
     }
@@ -102,6 +110,19 @@ def get_user_by_id(user_id):
         except:
             return None
     return find_local_user_by_id(user_id)
+
+def update_local_user(user_id, updates):
+    users = load_local_users()
+
+    for index, user in enumerate(users):
+        if str(user.get('id')) != str(user_id):
+            continue
+
+        users[index] = {**user, **updates}
+        save_local_users(users)
+        return users[index]
+
+    return None
 
 # ── CORS manual (funciona con cualquier versión de Flask) ──────────────────
 @app.before_request
@@ -157,6 +178,14 @@ def usuario_to_dict(u):
         'nombre': u.get('nombre', ''),
         'email': u.get('email', ''),
         'telefono': u.get('telefono', ''),
+        'direccion_favorita': u.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': u.get('es_admin', False),
     }
 
@@ -259,6 +288,15 @@ def register():
             'id': usuario['id'],
             'nombre': usuario['nombre'],
             'email': usuario['email'],
+            'telefono': usuario.get('telefono', ''),
+            'direccion_favorita': usuario.get('direccion_favorita', {
+                'calle': '',
+                'numero_exterior': '',
+                'numero_interior': '',
+                'colonia': '',
+                'codigo_postal': '',
+                'referencia': ''
+            }),
             'es_admin': usuario['es_admin']
         }), 201
 
@@ -267,6 +305,14 @@ def register():
         'email': email,
         'password': bcrypt.generate_password_hash(data['password']).decode(),
         'telefono': data.get('telefono', ''),
+        'direccion_favorita': {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        },
         'es_admin': bool(data.get('es_admin', False)),
         'fecha_creacion': datetime.utcnow()
     }
@@ -277,6 +323,15 @@ def register():
         'id': str(result.inserted_id),
         'nombre': usuario['nombre'],
         'email': usuario['email'],
+        'telefono': usuario.get('telefono', ''),
+        'direccion_favorita': usuario.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': usuario['es_admin']
     }), 201
 
@@ -292,8 +347,71 @@ def login():
         'id': str(usuario['_id']) if '_id' in usuario else str(usuario['id']),
         'nombre': usuario['nombre'],
         'email': usuario['email'],
+        'telefono': usuario.get('telefono', ''),
+        'direccion_favorita': usuario.get('direccion_favorita', {
+            'calle': '',
+            'numero_exterior': '',
+            'numero_interior': '',
+            'colonia': '',
+            'codigo_postal': '',
+            'referencia': ''
+        }),
         'es_admin': usuario['es_admin']
     }), 200
+
+@app.route('/api/usuarios/<usuario_id>', methods=['PUT'])
+def actualizar_usuario(usuario_id):
+    data = request.json or {}
+    usuario = get_user_by_id(usuario_id)
+
+    if not usuario:
+        return jsonify({'error': 'Usuario no encontrado'}), 404
+
+    nombre = str(data.get('nombre', '')).strip()
+    email = str(data.get('email', '')).strip().lower()
+    telefono = str(data.get('telefono', '')).strip()
+    password = str(data.get('password', '')).strip()
+    direccion = data.get('direccion_favorita') or {}
+
+    if not nombre or not email:
+        return jsonify({'error': 'Nombre y email son obligatorios'}), 400
+
+    existente = get_user_by_email(email)
+    if existente:
+        existente_id = str(existente['_id']) if '_id' in existente else str(existente.get('id'))
+        if existente_id != str(usuario_id):
+            return jsonify({'error': 'El correo ya esta registrado por otro usuario'}), 400
+
+    update_data = {
+        'nombre': nombre,
+        'email': email,
+        'telefono': telefono,
+        'direccion_favorita': {
+            'calle': str(direccion.get('calle', '')).strip(),
+            'numero_exterior': str(direccion.get('numero_exterior', '')).strip(),
+            'numero_interior': str(direccion.get('numero_interior', '')).strip(),
+            'colonia': str(direccion.get('colonia', '')).strip(),
+            'codigo_postal': str(direccion.get('codigo_postal', '')).strip(),
+            'referencia': str(direccion.get('referencia', '')).strip(),
+        }
+    }
+
+    if password:
+        update_data['password'] = bcrypt.generate_password_hash(password).decode()
+
+    if usuarios_col is None:
+        usuario_actualizado = update_local_user(usuario_id, update_data)
+        if not usuario_actualizado:
+            return jsonify({'error': 'Usuario no encontrado'}), 404
+        return jsonify(usuario_to_dict(usuario_actualizado)), 200
+
+    try:
+        usuarios_col.update_one({'_id': ObjectId(usuario_id)}, {'$set': update_data})
+        usuario_actualizado = usuarios_col.find_one({'_id': ObjectId(usuario_id)})
+    except:
+        return jsonify({'error': 'ID de usuario invalido'}), 400
+
+    return jsonify(usuario_to_dict(usuario_actualizado)), 200
 
 # ============ Routes — Pedidos ============
 
@@ -892,6 +1010,14 @@ if __name__ == '__main__':
                 'email': 'admin@test.com',
                 'password': bcrypt.generate_password_hash('123456').decode(),
                 'telefono': '',
+                'direccion_favorita': {
+                    'calle': '',
+                    'numero_exterior': '',
+                    'numero_interior': '',
+                    'colonia': '',
+                    'codigo_postal': '',
+                    'referencia': ''
+                },
                 'es_admin': True,
                 'fecha_creacion': datetime.utcnow()
             }

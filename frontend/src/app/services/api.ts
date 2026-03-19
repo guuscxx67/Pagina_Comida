@@ -18,6 +18,10 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
 
+  actualizarUsuario(usuarioId: string, datos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/usuarios/${usuarioId}`, datos);
+  }
+
   crearPedido(pedido: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/pedidos`, pedido);
   }

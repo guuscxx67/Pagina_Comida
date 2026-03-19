@@ -1,13 +1,16 @@
 .profile-container {
-  max-width: 480px;
-  margin: 30px auto;
+  max-width: 960px;
+  margin: 30px auto 50px;
   padding: 0 16px;
 }
 
-.login-box {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.profile-card,
+.orders-section {
+  background: #fffaf5;
+  border: 1px solid #eadcc9;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(139, 111, 71, 0.08);
+  padding: 24px;
 }
 
 .login-box input {
@@ -24,7 +27,22 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+}
 
 button {
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+  }
+
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .field-full {
+    grid-column: auto;
+  }
 }
