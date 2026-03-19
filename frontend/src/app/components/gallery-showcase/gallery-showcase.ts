@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { CarritoService } from '../../services/carrito.service';
 import { interval, Subscription } from 'rxjs';
 
 interface Plato {
@@ -26,6 +27,7 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   private api = inject(ApiService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private carrito = inject(CarritoService);
 
   platos: Plato[] = [];
   platosEstrella: Plato[] = [];
@@ -36,6 +38,10 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
   // Modal state
   modalVisible = false;
   platoSeleccionado: Plato | null = null;
+  
+  // Modal de selección de modo
+  modalModoVisible = false;
+  platoParaAgregar: Plato | null = null;
 
   get categoriasMenu(): string[] {
     return [...new Set(this.platos.map(p => p.categoria).filter((c): c is string => !!c))];
@@ -124,9 +130,47 @@ export class GalleryShowcaseComponent implements OnInit, OnDestroy {
 
   agregarAlCarrito(plato: Plato) {
     this.cerrarModal();
-    localStorage.setItem('platoSeleccionado', JSON.stringify(plato));
+    this.platoParaAgregar = plato;
+    this.modalModoVisible = true;
     this.cdr.detectChanges();
-    this.router.navigate(['/pedido/recoger']);
+  }
+
+  cerrarModalModo() {
+    this.modalModoVisible = false;
+    this.platoParaAgregar = null;
+    this.cdr.detectChanges();
+  }
+
+  agregarYNavegar(modo: 'reserva' | 'recoger' | 'domicilio') {
+    if (!this.platoParaAgregar) return;
+
+    // Validar login
+    const usuarioStr = localStorage.getItem('usuario');
+    if (!usuarioStr) {
+      alert('Debes estar registrado para hacer un pedido');
+      this.router.navigate(['/register']);
+      this.cerrarModalModo();
+      return;
+    }
+
+    // Agregar al carrito compartido
+    const itemAgregar = {
+      id: this.platoParaAgregar.id,
+      nombre: this.platoParaAgregar.nombre,
+      descripcion: this.platoParaAgregar.descripcion,
+      imagen: this.platoParaAgregar.imagen,
+      precio: this.platoParaAgregar.precio,
+      cantidad: 1,
+      categoria: this.platoParaAgregar.categoria
+    };
+    
+    console.log('Agregando al carrito:', itemAgregar);
+    this.carrito.agregarItem(itemAgregar);
+    
+    console.log('Carrito después de agregar:', this.carrito.obtenerItems());
+
+    this.cerrarModalModo();
+    this.router.navigate([`/pedido/${modo}`]);
   }
 
   imagenUrl(imagen: string): string {

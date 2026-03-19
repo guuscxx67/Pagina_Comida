@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api';
 import { ModalService } from '../../services/modal.service';
+import { CarritoService } from '../../services/carrito.service';
 
 interface MenuItem {
   id: string;
@@ -27,6 +28,7 @@ export class PedidoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
   private modal = inject(ModalService);
+  private carrito = inject(CarritoService);
 
   tipo: 'reserva' | 'recoger' | 'domicilio' = 'recoger';
   usuario: any = null;
@@ -75,6 +77,34 @@ export class PedidoComponent implements OnInit {
     this.api.obtenerRecetas().subscribe({
       next: (recetas: any[]) => {
         this.menu = recetas.map(r => ({ ...r, cantidad: 0 }));
+        
+        // Cargar items del carrito compartido
+        const itemsCarrito = this.carrito.obtenerItems();
+        console.log('Items en carrito:', itemsCarrito);
+        console.log('Menu IDs:', this.menu.map(m => ({ id: m.id, nombre: m.nombre })));
+        
+        itemsCarrito.forEach(itemCarrito => {
+          const menuItem = this.menu.find(m => String(m.id) === String(itemCarrito.id));
+          if (menuItem) {
+            console.log('Item encontrado:', menuItem.nombre, 'cantidad:', itemCarrito.cantidad);
+            menuItem.cantidad = itemCarrito.cantidad;
+          } else {
+            // Si no está en el menú, lo agregamos como un nuevo item
+            console.log('Item no encontrado en menu, agregando como nuevo:', itemCarrito.id);
+            this.menu.push({
+              id: itemCarrito.id,
+              nombre: itemCarrito.nombre,
+              descripcion: itemCarrito.descripcion,
+              precio: itemCarrito.precio,
+              categoria: itemCarrito.categoria || 'Otros',
+              cantidad: itemCarrito.cantidad
+            });
+          }
+        });
+        
+        // Limpiar carrito después de cargar
+        this.carrito.limpiarCarrito();
+        
         this.cargandoMenu = false;
         this.cdr.detectChanges();
       },
