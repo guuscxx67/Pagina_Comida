@@ -151,11 +151,10 @@
 }
 
 .pedido-card {
-  border: 1px solid #eadcc9;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 12px;
-  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 button {

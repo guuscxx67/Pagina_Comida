@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from './components/modal/modal';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
+import { ThemeService } from './services/theme.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -12,8 +13,9 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   private router = inject(Router);
+  private themeService = inject(ThemeService);
   showLayout = true;
 
   private readonly noLayoutRoutes = ['/register', '/admin'];
@@ -24,5 +26,9 @@ export class App {
     ).subscribe((event: NavigationEnd) => {
       this.showLayout = !this.noLayoutRoutes.some(route => event.urlAfterRedirects.startsWith(route));
     });
+  }
+
+  ngOnInit(): void {
+    // ThemeService se inicializa automáticamente
   }
 }

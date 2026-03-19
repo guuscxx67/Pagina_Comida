@@ -10,6 +10,11 @@
 
     <div class="navbar-collapse" [class.show]="menuAbierto" [class.collapse]="!menuAbierto">
       <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <button class="theme-toggle" (click)="toggleTheme()" title="Cambiar tema" type="button">
+            <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+          </button>
+        </li>
         <li class="nav-item" *ngIf="usuario">
           <div class="user-nav-group">
             <span class="nav-link user-greeting">Bienvenido, {{ usuario.nombre }}</span>

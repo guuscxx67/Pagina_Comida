@@ -1,1 +1,171 @@
+/* ========== DARK MODE THEME VARIABLES ========== */
+:root {
+  /* Light mode - Neutral & Primary */
+  --bg-primary: #ffffff;
+  --bg-secondary: #faf5ee;
+  --bg-tertiary: #f5ede2;
+  --bg-light: #f8f7f4;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #888888;
+  --text-light: #999999;
+  --border-color: #e0e0e0;
+  --border-light: #f0f0f0;
+  --header-bg: #e8e4e0;
+  
+  /* Brown/Gold Accent Colors */
+  --accent-dark: #6b4226;
+  --accent-main: #8B6F47;
+  --accent-light: #d4a574;
+  --accent-very-dark: #2c1a0e;
+  --accent-very-light: #e8d5be;
+  
+  /* Color-coded Status Colors */
+  --color-green: #2d5016;
+  --color-green-light: #f0f8ec;
+  --color-terra: #7a3a10;
+  --color-terra-light: #e4d5c0;
+  --color-blue: #2a4a6a;
+  --color-blue-light: #d6eaf8;
+  --color-red: #c0392b;
+  --color-red-light: #f9ebea;
+  --color-orange: #e65100;
+  --color-orange-light: #fff3e0;
+  
+  /* Shadows & Overlays */
+  --overlay-dark: rgba(0, 0, 0, 0.6);
+  --overlay-light: rgba(107, 66, 38, 0.85);
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.2);
+  
+  /* Admin Panel Colors */
+  --admin-bg: #f5f5f5;
+  --admin-border: #ddd;
+  --admin-text: #444;
+  
+  /* Card & Button Text Colors (for option cards) */
+  --card-text-primary: #ffffff;
+  --card-text-secondary: rgba(255, 255, 255, 0.85);
+  --card-heading: #000000;
+  
+  /* Option Card Background Colors */
+  --card-reserva-start: #2c3e2d;
+  --card-reserva-mid: #3e5e40;
+  --card-reserva-end: #547558;
+  --card-recoger-start: #4a3228;
+  --card-recoger-mid: #6b4f42;
+  --card-recoger-end: #8a6b5a;
+  --card-domicilio-start: #1a2a3a;
+  --card-domicilio-mid: #2a4a6a;
+  --card-domicilio-end: #3a6a8a;
+}
+
+[data-theme='dark'] {
+  /* Dark mode - Neutral & Primary */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --bg-light: #242424;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #888888;
+  --text-light: #777777;
+  --border-color: #404040;
+  --border-light: #555555;
+  --header-bg: #1f1f1f;
+  
+  /* Brown/Gold Accent Colors */
+  --accent-dark: #e8d5be;
+  --accent-main: #c19659;
+  --accent-light: #d4a574;
+  --accent-very-dark: #f0e8d8;
+  --accent-very-light: #8b6a3a;
+  
+  /* Color-coded Status Colors */
+  --color-green: #4a8c2d;
+  --color-green-light: #1a4d0a;
+  --color-terra: #b8653d;
+  --color-terra-light: #3a2515;
+  --color-blue: #4a8ac9;
+  --color-blue-light: #1a3a5a;
+  --color-red: #e74c3c;
+  --color-red-light: #5a1a1a;
+  --color-orange: #f39c12;
+  --color-orange-light: #4a2a0a;
+  
+  /* Shadows & Overlays */
+  --overlay-dark: rgba(0, 0, 0, 0.8);
+  --overlay-light: rgba(45, 45, 45, 0.95);
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-dark: rgba(0, 0, 0, 0.5);
+  
+  /* Admin Panel Colors */
+  --admin-bg: #242424;
+  --admin-border: #444;
+  --admin-text: #e0e0e0;
+  
+  /* Card & Button Text Colors (for option cards) */
+  --card-text-primary: #ffffff;
+  --card-text-secondary: rgba(255, 255, 255, 0.85);
+  --card-heading: #e0e0e0;
+  
+  /* Option Card Background Colors - Slightly lighter for dark mode */
+  --card-reserva-start: #3a5a3f;
+  --card-reserva-mid: #4a7a50;
+  --card-reserva-end: #5a9a60;
+  --card-recoger-start: #5a4a38;
+  --card-recoger-mid: #7a6a52;
+  --card-recoger-end: #9a8a6a;
+  --card-domicilio-start: #2a3a4a;
+  --card-domicilio-mid: #3a5a7a;
+  --card-domicilio-end: #4a7a9a;
+}
+
 /* You can add global styles to this file, and also import other style files */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========== THEME TOGGLE BUTTON ========== */
+.theme-toggle {
+  background: none;
+  border: 2px solid var(--accent-main);
+  color: var(--accent-main);
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.theme-toggle:hover {
+  background-color: var(--accent-main);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle i {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
