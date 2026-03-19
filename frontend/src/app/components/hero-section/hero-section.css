@@ -1,6 +1,6 @@
 .hero-section {
   position: relative;
-  background: #c8c8c8;
+  background: var(--bg-secondary);
   padding: 70px 0 110px;
   min-height: 520px;
   display: flex;
@@ -10,7 +10,7 @@
 
 .hero-section.with-image {
   background-image:
-    linear-gradient(135deg, rgba(200, 200, 200, 0.7) 0%, rgba(180, 180, 180, 0.7) 100%),
+    linear-gradient(135deg, var(--overlay-dark) 0%, var(--overlay-dark) 100%),
     url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=600&fit=crop');
   background-size: cover;
   background-position: center;
@@ -24,7 +24,7 @@
   left: 0;
   width: 100%;
   height: 80px;
-  background: #c8c8c8;
+  background: var(--bg-secondary);
   clip-path: polygon(0 100%, 100% 20%, 100% 100%);
   z-index: 3;
 }
@@ -64,7 +64,7 @@
 }
 
 .hero-section .hero-content .hero-left {
-  color: #333;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -75,14 +75,14 @@
   font-weight: 900;
   line-height: 1.15;
   margin: 0;
-  color: #2a2a2a;
+  color: var(--text-primary);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   letter-spacing: 0.5px;
 }
 
 .hero-section .hero-content .hero-left .hero-arrow {
   font-size: 2rem;
-  color: #444;
+  color: var(--admin-text);
   animation: slideRight 0.8s ease-in-out infinite;
 }
 
@@ -90,10 +90,10 @@
   display: inline-block;
   font-size: 1.7rem;
   font-weight: 700;
-  color: #2a2a2a;
+  color: var(--text-primary);
   margin: 0;
   background: rgba(0, 0, 0, 0.1);
-  border-left: 5px solid #888;
+  border-left: 5px solid var(--accent-light);
   padding: 6px 16px;
   border-radius: 0 4px 4px 0;
 }
@@ -126,7 +126,7 @@
 .hero-section .hero-content .hero-right .dish-container .dish-label {
   font-size: 1.4rem;
   font-weight: 900;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   letter-spacing: 2px;
@@ -163,7 +163,7 @@
 .hero-section .hero-content .hero-right .dish-container .dish-label-bottom {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #555;
+  color: var(--text-secondary);
   text-align: center;
   font-style: italic;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);

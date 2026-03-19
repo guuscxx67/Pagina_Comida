@@ -21,7 +21,7 @@
 }
 
 .modal-box {
-  background: #fff;
+  background: var(--bg-primary);
   border-radius: 4px;
   padding: 32px 28px 24px;
   max-width: 400px;
@@ -45,35 +45,35 @@
 }
 
 .exito .modal-icon {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--color-green-light);
+  color: var(--color-green-dark);
 }
 
 .error .modal-icon {
-  background: #fce4ec;
-  color: #c62828;
+  background: var(--color-red-light);
+  color: var(--color-red-dark);
 }
 
 .alerta .modal-icon {
-  background: #fff3e0;
-  color: #e65100;
+  background: var(--color-orange-light);
+  color: var(--color-orange-dark);
 }
 
 .confirmar .modal-icon {
-  background: #e3f2fd;
-  color: #1565c0;
+  background: var(--color-blue-light);
+  color: var(--color-blue-dark);
 }
 
 .modal-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin: 0 0 8px;
 }
 
 .modal-message {
   font-size: 0.95rem;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0 0 24px;
   line-height: 1.5;
 }
@@ -104,46 +104,46 @@
 }
 
 .btn-cancel {
-  background: #f0f0f0;
-  color: #555;
+  background: var(--border-light);
+  color: var(--text-secondary);
 }
 
 .btn-cancel:hover {
-  background: #e0e0e0;
+  background: var(--border-color);
 }
 
 .btn-accept.btn-exito {
-  background: #2e7d32;
-  color: #fff;
+  background: var(--color-green-dark);
+  color: var(--bg-primary);
 }
 
 .btn-accept.btn-exito:hover {
-  background: #1b5e20;
+  background: var(--color-green-dark);
 }
 
 .btn-accept.btn-error {
-  background: #c62828;
-  color: #fff;
+  background: var(--color-red-dark);
+  color: var(--bg-primary);
 }
 
 .btn-accept.btn-error:hover {
-  background: #b71c1c;
+  background: var(--color-red-dark);
 }
 
 .btn-accept.btn-alerta {
-  background: #1a1a1a;
-  color: #fff;
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .btn-accept.btn-alerta:hover {
-  background: #333;
+  background: var(--text-primary);
 }
 
 .btn-accept.btn-confirmar {
-  background: #1565c0;
-  color: #fff;
+  background: var(--color-blue-dark);
+  color: var(--bg-primary);
 }
 
 .btn-accept.btn-confirmar:hover {
-  background: #0d47a1;
+  background: var(--color-blue-dark);
 }

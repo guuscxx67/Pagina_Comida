@@ -12,12 +12,14 @@
 
 .login-box input {
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .pedido-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--admin-border);
   border-radius: 4px;
   padding: 10px;
   margin-bottom: 10px;

@@ -1,6 +1,6 @@
 .pedido-page {
   min-height: 100vh;
-  background-color: #faf5ee;
+  background-color: var(--bg-secondary);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
@@ -16,15 +16,15 @@
 }
 
 .pedido-header.header-reserva {
-  background: linear-gradient(135deg, #1a3a0f 0%, #2d5016 100%);
+  background: linear-gradient(135deg, var(--color-green-very-dark) 0%, var(--color-green) 100%);
 }
 
 .pedido-header.header-recoger {
-  background: linear-gradient(135deg, #4a1a04 0%, #7a3a10 100%);
+  background: linear-gradient(135deg, var(--color-terra-dark) 0%, var(--color-terra) 100%);
 }
 
 .pedido-header.header-domicilio {
-  background: linear-gradient(135deg, #1a2a3a 0%, #2a4a6a 100%);
+  background: linear-gradient(135deg, var(--color-blue-very-dark) 0%, var(--color-blue) 100%);
 }
 
 .pedido-header .btn-back {
@@ -86,24 +86,24 @@
 .section-title {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   margin: 0 0 20px;
   padding-bottom: 10px;
-  border-bottom: 3px solid #e4d5c0;
+  border-bottom: 3px solid var(--color-terra-light);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .loading-msg {
   text-align: center;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
   padding: 30px 0;
   font-size: 0.95rem;
 }
 
 .error-msg {
-  color: #c0392b;
-  background: #fdecea;
+  color: var(--color-red);
+  background: var(--color-red-light);
   border-radius: 4px;
   padding: 16px 24px;
   font-weight: 500;
@@ -114,9 +114,9 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #7a3a10;
+  color: var(--color-terra);
   margin: 22px 0 10px;
-  border-left: 3px solid #7a3a10;
+  border-left: 3px solid var(--color-terra);
   padding-left: 10px;
 }
 
@@ -132,7 +132,7 @@
 
 .menu-item {
   background: white;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   padding: 16px 18px;
   display: flex;
@@ -147,8 +147,8 @@
 }
 
 .menu-item.item-selected {
-  border-color: #2d5016;
-  background: #f0f8ec;
+  border-color: var(--color-green);
+  background: var(--color-green-light);
   box-shadow: 0 4px 14px rgba(45, 80, 22, 0.15);
 }
 
@@ -168,14 +168,14 @@
 .menu-item .item-nombre {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   line-height: 1.3;
 }
 
 .menu-item .item-desc {
   display: block;
   font-size: 0.78rem;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
   margin-top: 2px;
   line-height: 1.3;
 }
@@ -183,7 +183,7 @@
 .menu-item .item-precio {
   font-size: 1rem;
   font-weight: 700;
-  color: #7a3a10;
+  color: var(--color-terra);
   white-space: nowrap;
 }
 
@@ -198,7 +198,7 @@
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   background: white;
   font-size: 1.2rem;
   font-weight: 700;
@@ -208,12 +208,12 @@
   justify-content: center;
   line-height: 1;
   transition: all 0.15s;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
 }
 
 .menu-item .ctrl-btn:hover:not(:disabled) {
-  border-color: #2d5016;
-  background: #2d5016;
+  border-color: var(--color-green);
+  background: var(--color-green);
   color: white;
 }
 
@@ -223,14 +223,14 @@
 }
 
 .menu-item .ctrl-btn.ctrl-add:hover:not(:disabled) {
-  border-color: #2d5016;
-  background: #2d5016;
+  border-color: var(--color-green);
+  background: var(--color-green);
 }
 
 .menu-item .item-qty {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   min-width: 24px;
   text-align: center;
 }
@@ -238,7 +238,7 @@
   background: white;
   border-radius: 4px;
   padding: 26px 24px;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
   align-self: start;
   position: sticky;
@@ -248,7 +248,7 @@
 .summary-empty {
   text-align: center;
   padding: 30px 0;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
 }
 
 .summary-empty .empty-icon {
@@ -271,17 +271,17 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 7px 0;
-  border-bottom: 1px dashed #e4d5c0;
+  border-bottom: 1px dashed var(--color-terra-light);
   font-size: 0.93rem;
 }
 
-.summary-row .row-name  { color: #2c1a0e; flex: 1; }
-.summary-row .row-qty   { color: #6b4e3d; font-size: 0.85rem; margin-left: 4px; }
-.summary-row .row-price { font-weight: 600; color: #7a3a10; margin-left: 12px; }
+.summary-row .row-name  { color: var(--accent-very-dark); flex: 1; }
+.summary-row .row-qty   { color: var(--accent-very-dark); font-size: 0.85rem; margin-left: 4px; }
+.summary-row .row-price { font-weight: 600; color: var(--color-terra); margin-left: 12px; }
 
 .summary-divider {
   height: 2px;
-  background: #e4d5c0;
+  background: var(--color-terra-light);
   margin: 10px 0;
 }
 
@@ -291,26 +291,26 @@
   align-items: center;
   font-size: 1.1rem;
   font-weight: 800;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   padding: 4px 0;
 }
 
 .summary-total .total-amount {
   font-size: 1.4rem;
-  color: #2d5016;
+  color: var(--color-green);
 }
 
 
 .reserva-fields {
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 2px solid #e4d5c0;
+  border-top: 2px solid var(--color-terra-light);
 }
 
 .reserva-fields h3 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   margin: 0 0 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -331,35 +331,36 @@
 .reserva-fields .field-group label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .reserva-fields .field-group input {
   padding: 9px 12px;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   outline: none;
   transition: border-color 0.2s;
+  background: var(--bg-primary);
 }
 
 .reserva-fields .field-group input:focus {
-  border-color: #2d5016;
+  border-color: var(--color-green);
 }
 
 .domicilio-fields {
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 2px solid #e4d5c0;
+  border-top: 2px solid var(--accent-light);
 }
 
 .domicilio-fields h3 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   margin: 0 0 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -384,7 +385,7 @@
 .domicilio-fields .field-group label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -392,10 +393,10 @@
 .domicilio-fields .field-group input {
   width: 100%;
   padding: 8px 12px;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   font-size: 0.85rem;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
@@ -403,23 +404,23 @@
 }
 
 .domicilio-fields .field-group input:focus {
-  border-color: #2a4a6a;
+  border-color: var(--color-blue);
 }
 
 .domicilio-fields .field-group input::placeholder {
-  color: #9e7a67;
+  color: var(--text-secondary);
 }
 
 .notes-field {
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 2px solid #e4d5c0;
+  border-top: 2px solid var(--color-terra-light);
 }
 
 .notes-field h3 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   margin: 0 0 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -428,7 +429,7 @@
 .notes-field h3 .optional {
   font-weight: 400;
   font-size: 0.8rem;
-  color: #6b4e3d;
+  color: var(--accent-very-dark);
   text-transform: none;
   letter-spacing: 0;
 }
@@ -436,10 +437,10 @@
 .notes-field textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid #e4d5c0;
+  border: 2px solid var(--color-terra-light);
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #2c1a0e;
+  color: var(--accent-very-dark);
   resize: vertical;
   min-height: 80px;
   outline: none;
@@ -449,11 +450,11 @@
 }
 
 .notes-field textarea:focus {
-  border-color: #2d5016;
+  border-color: var(--color-green);
 }
 
 .notes-field textarea::placeholder {
-  color: #9e7a67;
+  color: var(--text-secondary);
 }
 
 .btn-confirmar {
@@ -473,15 +474,15 @@
 }
 
 .btn-confirmar.btn-reserva {
-  background: linear-gradient(135deg, #1a3a0f, #2d5016);
+  background: linear-gradient(135deg, var(--color-green-very-dark), var(--color-green));
 }
 
 .btn-confirmar.btn-recoger {
-  background: linear-gradient(135deg, #4a1a04, #7a3a10);
+  background: linear-gradient(135deg, var(--color-terra-dark), var(--color-terra));
 }
 
 .btn-confirmar.btn-domicilio {
-  background: linear-gradient(135deg, #1a2a3a, #2a4a6a);
+  background: linear-gradient(135deg, var(--color-blue-very-dark), var(--color-blue));
 }
 
 .btn-confirmar:hover:not(:disabled) {
