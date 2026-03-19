@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -9,13 +9,16 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, DoCheck {
   usuario: any = null;
   menuAbierto = false;
 
   ngOnInit() {
-    const u = localStorage.getItem('usuario');
-    if (u) this.usuario = JSON.parse(u);
+    this.sincronizarUsuario();
+  }
+
+  ngDoCheck() {
+    this.sincronizarUsuario();
   }
 
   toggleMenu() {
@@ -31,5 +34,10 @@ export class HeaderComponent implements OnInit {
     this.usuario = null;
     this.menuAbierto = false;
     window.location.href = '/home';
+  }
+
+  private sincronizarUsuario() {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    this.usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   }
 }

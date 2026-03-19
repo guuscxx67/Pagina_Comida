@@ -15,13 +15,13 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #8B6F47;
+  color: #8b6f47;
   font-weight: bold;
   font-size: 1.25rem;
 }
 
 .header .logo-brand:hover {
-  color: #A0826D;
+  color: #a0826d;
 }
 
 .header .logo-brand .logo-icon {
@@ -32,7 +32,7 @@
 .header .logo-brand .brand-text {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #8B6F47;
+  color: #8b6f47;
 }
 
 .header .navbar-nav {
@@ -49,21 +49,46 @@
 .header .navbar-nav .nav-item .user-greeting {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #8B6F47;
+  color: #8b6f47;
   cursor: default;
+}
+
+.header .navbar-nav .nav-item .user-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header .navbar-nav .nav-item .profile-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(139, 111, 71, 0.12);
+  color: #8b6f47;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.header .navbar-nav .nav-item .profile-link:hover {
+  background: #8b6f47;
+  color: #f7f1ea;
+  transform: translateY(-1px);
 }
 
 .header .navbar-nav .nav-item .cart-link {
   position: relative;
   display: flex;
   align-items: center;
-  color: #8B6F47;
+  color: #8b6f47;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .header .navbar-nav .nav-item .cart-link:hover {
-  color: #A0826D;
+  color: #a0826d;
 }
 
 .header .navbar-nav .nav-item .cart-link .cart-icon {
@@ -101,7 +126,6 @@
   }
 }
 
-/* Collapse behavior controlled by Angular */
 .header .navbar-collapse.collapse {
   display: none;
 }
@@ -149,7 +173,12 @@
   .header .navbar-nav .nav-item button {
     padding: 8px 0;
     font-size: 0.95rem;
-    color: #8B6F47;
+    color: #8b6f47;
+  }
+
+  .header .navbar-nav .nav-item .user-nav-group {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
