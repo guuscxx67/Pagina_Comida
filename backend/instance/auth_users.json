@@ -24,5 +24,22 @@
     "telefono": "7714066156",
     "es_admin": false,
     "fecha_creacion": "2026-03-18T15:47:12.572819"
+  },
+  {
+    "id": "752dea3fa9d2487b9c02b6a2f614a6ad",
+    "nombre": "eduardo",
+    "email": "eduardo1@gmail.com",
+    "password": "$2b$12$3iUWFVSRoknUJZn0qi1RAuEA0dVKoc8Pp0Ba7CP2ydVDrGg2aMMYS",
+    "telefono": "7714066156",
+    "direccion_favorita": {
+      "calle": "",
+      "numero_exterior": "",
+      "numero_interior": "",
+      "colonia": "",
+      "codigo_postal": "",
+      "referencia": ""
+    },
+    "es_admin": false,
+    "fecha_creacion": "2026-03-19T20:54:50.101719"
   }
 ]

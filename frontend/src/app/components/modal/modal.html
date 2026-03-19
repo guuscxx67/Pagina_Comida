@@ -1,5 +1,6 @@
 <div class="modal-overlay" *ngIf="visible" (click)="cancelar()">
   <div class="modal-box" [class]="data?.tipo" (click)="$event.stopPropagation()">
+    <button class="modal-close" type="button" aria-label="Cerrar mensaje" (click)="cancelar()">×</button>
     <div class="modal-icon">
       <span *ngIf="data?.tipo === 'exito'">&#10003;</span>
       <span *ngIf="data?.tipo === 'error'">&#10007;</span>
