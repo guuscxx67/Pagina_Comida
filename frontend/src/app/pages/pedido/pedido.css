@@ -390,14 +390,16 @@
 }
 
 .domicilio-fields .field-group input {
-  padding: 9px 12px;
+  width: 100%;
+  padding: 8px 12px;
   border: 2px solid #e4d5c0;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #2c1a0e;
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .domicilio-fields .field-group input:focus {

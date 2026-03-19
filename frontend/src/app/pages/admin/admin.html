@@ -43,6 +43,7 @@
 
   <app-admin-platos-estrella
     *ngIf="activeTab === 'platos-estrella'"
-    [adminId]="adminId">
+    [adminId]="adminId"
+    (platosActualizados)="onPlatosActualizados()">
   </app-admin-platos-estrella>
 </div>

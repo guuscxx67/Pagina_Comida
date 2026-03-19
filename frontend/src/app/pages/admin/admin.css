@@ -320,6 +320,8 @@
 .btn-cancelar    { background: #f9ebea; color: #922b21; }
 .btn-editar      { background: #eaf0fb; color: #1a5276; }
 .btn-toggle      { background: #f0f0f0; color: #444; }
+.btn-estrella    { background: #fef5e7; color: #af601a; font-size: 1.1rem; padding: 6px 8px; }
+.btn-estrella.active { background: #ffeaa7; color: #d4af37; }
 .btn-eliminar    { background: #f9ebea; color: #922b21; }
 .btn-guardar     { background: #c0392b; color: #fff; padding: 8px 20px; }
 .btn-cancelar-form { background: #e0e0e0; color: #444; padding: 8px 16px; }
@@ -561,6 +563,8 @@
 .menu-receta-precio {
   font-size: 0.95rem;
   font-weight: 700;
+  color: #c0392b;
+}
   color: #333;
   white-space: nowrap;
 }

@@ -66,6 +66,13 @@
     <p *ngIf="!r.disponible" class="no-disp-label">— No disponible —</p>
     <div class="receta-actions">
       <button class="btn btn-editar" (click)="editarReceta(r)">Editar</button>
+      <button 
+        class="btn btn-estrella" 
+        [class.active]="esPlatoEstrella(r.id)"
+        (click)="togglePlatoEstrella(r)"
+        [title]="esPlatoEstrella(r.id) ? 'Quitar de Platos Estrella' : 'Agregar a Platos Estrella'">
+        {{ esPlatoEstrella(r.id) ? '⭐' : '☆' }}
+      </button>
       <button class="btn btn-toggle" (click)="toggleDisponible(r)">
         {{ r.disponible ? 'Deshabilitar' : 'Habilitar' }}
       </button>
