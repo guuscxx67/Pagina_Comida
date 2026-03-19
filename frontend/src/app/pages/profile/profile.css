@@ -6,33 +6,196 @@
 
 .profile-card,
 .orders-section {
-  background: #fffaf5;
-  border: 1px solid #eadcc9;
-  border-radius: 20px;
-  box-shadow: 0 12px 28px rgba(139, 111, 71, 0.08);
-  padding: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow-light);
+  padding: 28px;
+  margin-bottom: 24px;
 }
 
-.login-box input {
-  padding: 8px;
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
-  background: var(--bg-primary);
+/* Header */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.profile-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-main);
+  margin: 0 0 4px;
+}
+
+.profile-header h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.profile-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.btn-secondary {
+  padding: 8px 18px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background: var(--border-color);
   color: var(--text-primary);
 }
 
-.pedido-card {
-  border: 1px solid var(--admin-border);
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+/* Form */
+.profile-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
-button {
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-form label span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.profile-form input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.93rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.profile-form input::placeholder {
+  color: var(--text-light);
+}
+
+.profile-form input:focus {
+  outline: none;
+  border-color: var(--accent-main);
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+/* Favorite address section */
+.favorite-address {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.favorite-address h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.favorite-address-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  margin: 0 0 18px;
+}
+
+/* Actions */
+.profile-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  padding: 10px 28px;
+  background: var(--accent-main);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
 }
 
+.btn-primary:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+/* Orders section */
+.orders-section h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.pedido-card {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--bg-primary);
+  transition: box-shadow 0.2s;
+}
+
+.pedido-card:hover {
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.pedido-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.orders-section > p {
+  text-align: center;
+  color: var(--text-light);
+  padding: 20px 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
@@ -44,5 +207,35 @@ button {
 
   .field-full {
     grid-column: auto;
+  }
+
+  .profile-card,
+  .orders-section {
+    padding: 20px;
+  }
+
+  .profile-actions {
+    justify-content: stretch;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 0 10px;
+    margin: 16px auto 30px;
+  }
+
+  .profile-card,
+  .orders-section {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .profile-header h2 {
+    font-size: 1.25rem;
   }
 }
