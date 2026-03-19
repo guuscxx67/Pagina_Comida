@@ -93,6 +93,15 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/admin/platos-estrella/${id}`, { params: { admin_id: adminId } });
   }
 
+  // Dashboard y Reportes
+  obtenerDashboard(adminId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/dashboard`, { params: { admin_id: adminId } });
+  }
+
+  obtenerReportes(adminId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/reportes`, { params: { admin_id: adminId } });
+  }
+
   // Imágenes
   obtenerImagenes(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/imagenes`);

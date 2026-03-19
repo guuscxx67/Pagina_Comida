@@ -1,0 +1,126 @@
+<div class="dashboard-container">
+  <div class="section-header">
+    <h3>panel de control</h3>
+    <button class="btn-refresh" (click)="cargarDashboard()">Actualizar</button>
+  </div>
+
+  <ng-container *ngIf="dashboard">
+    <!-- Tarjetas principales -->
+    <div class="stats-grid">
+      <div class="stat-card stat-ingresos">
+        <div class="stat-icon">$</div>
+        <div class="stat-info">
+          <span class="stat-value">${{ dashboard.ingresos_totales | number:'1.2-2' }}</span>
+          <span class="stat-label">Ingresos Totales</span>
+        </div>
+      </div>
+      <div class="stat-card stat-pedidos">
+        <div class="stat-icon">&#128230;</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ dashboard.total_pedidos }}</span>
+          <span class="stat-label">Total Pedidos</span>
+        </div>
+      </div>
+      <div class="stat-card stat-recetas">
+        <div class="stat-icon">&#127860;</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ dashboard.total_recetas }}</span>
+          <span class="stat-label">Recetas</span>
+          <span class="stat-sub">{{ dashboard.recetas_disponibles }} disponibles</span>
+        </div>
+      </div>
+      <div class="stat-card stat-usuarios">
+        <div class="stat-icon">&#128100;</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ dashboard.total_usuarios }}</span>
+          <span class="stat-label">Usuarios</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado de pedidos -->
+    <div class="dashboard-section">
+      <h4>Estado de Pedidos</h4>
+      <div class="estado-grid">
+        <div class="estado-item estado-pendiente">
+          <span class="estado-count">{{ dashboard.pedidos_pendientes }}</span>
+          <span class="estado-label">Pendientes</span>
+        </div>
+        <div class="estado-item estado-confirmado">
+          <span class="estado-count">{{ dashboard.pedidos_confirmados }}</span>
+          <span class="estado-label">Confirmados</span>
+        </div>
+        <div class="estado-item estado-completado">
+          <span class="estado-count">{{ dashboard.pedidos_completados }}</span>
+          <span class="estado-label">Completados</span>
+        </div>
+        <div class="estado-item estado-cancelado">
+          <span class="estado-count">{{ dashboard.pedidos_cancelados }}</span>
+          <span class="estado-label">Cancelados</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pedidos por tipo -->
+    <div class="dashboard-row">
+      <div class="dashboard-section dashboard-half">
+        <h4>Pedidos por Tipo</h4>
+        <div class="tipo-list">
+          <div class="tipo-item" *ngIf="dashboard.pedidos_por_tipo?.recogida">
+            <span class="tipo-label">Recogida</span>
+            <span class="tipo-count">{{ dashboard.pedidos_por_tipo.recogida }}</span>
+          </div>
+          <div class="tipo-item" *ngIf="dashboard.pedidos_por_tipo?.reserva">
+            <span class="tipo-label">Reserva</span>
+            <span class="tipo-count">{{ dashboard.pedidos_por_tipo.reserva }}</span>
+          </div>
+          <div class="tipo-item" *ngIf="dashboard.pedidos_por_tipo?.domicilio">
+            <span class="tipo-label">Domicilio</span>
+            <span class="tipo-count">{{ dashboard.pedidos_por_tipo.domicilio }}</span>
+          </div>
+          <div class="tipo-item" *ngIf="!dashboard.pedidos_por_tipo || (!dashboard.pedidos_por_tipo.recogida && !dashboard.pedidos_por_tipo.reserva && !dashboard.pedidos_por_tipo.domicilio)">
+            <span class="tipo-label" style="color:#999">Sin datos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top platos -->
+      <div class="dashboard-section dashboard-half">
+        <h4>Top Platos Vendidos</h4>
+        <div class="top-list" *ngIf="dashboard.top_platos?.length > 0; else noTop">
+          <div class="top-item" *ngFor="let plato of dashboard.top_platos; let i = index">
+            <span class="top-rank">#{{ i + 1 }}</span>
+            <span class="top-nombre">{{ plato._id || 'Sin nombre' }}</span>
+            <span class="top-cant">{{ plato.cantidad }} uds</span>
+            <span class="top-ingreso">${{ plato.ingresos | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        <ng-template #noTop>
+          <p class="empty-msg">Sin datos de ventas</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Ultimos pedidos -->
+    <div class="dashboard-section">
+      <h4>Ultimos Pedidos</h4>
+      <div *ngIf="dashboard.ultimos_pedidos?.length > 0; else noPedidos">
+        <div class="pedido-mini" *ngFor="let p of dashboard.ultimos_pedidos" [ngClass]="getEstadoClass(p.estado)">
+          <div class="pedido-mini-header">
+            <span class="pedido-mini-id">#{{ p.id?.substring(0, 8) }}</span>
+            <span class="tipo-badge-mini">{{ getTipoLabel(p.tipo) }}</span>
+            <span class="estado-badge-mini" [ngClass]="'badge-' + p.estado">{{ getEstadoLabel(p.estado) }}</span>
+            <span class="pedido-mini-total">${{ p.total | number:'1.2-2' }}</span>
+          </div>
+          <div class="pedido-mini-body">
+            <span class="pedido-mini-fecha">{{ formatFecha(p.fecha_pedido) }}</span>
+            <span class="pedido-mini-items">{{ p.items?.length || 0 }} items</span>
+          </div>
+        </div>
+      </div>
+      <ng-template #noPedidos>
+        <p class="empty-msg">No hay pedidos registrados</p>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

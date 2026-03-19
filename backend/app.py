@@ -711,6 +711,160 @@ def admin_subir_imagen():
     file.save(filepath)
     return jsonify({'filename': filename}), 201
 
+# ============ Routes — Admin Dashboard ============
+
+@app.route('/api/admin/dashboard', methods=['GET'])
+def admin_dashboard():
+    admin_id = request.args.get('admin_id')
+    try:
+        admin = get_user_by_id(admin_id)
+    except:
+        admin = None
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    total_pedidos = pedidos_col.count_documents({})
+    pedidos_pendientes = pedidos_col.count_documents({'estado': 'pendiente'})
+    pedidos_confirmados = pedidos_col.count_documents({'estado': 'confirmado'})
+    pedidos_completados = pedidos_col.count_documents({'estado': 'completado'})
+    pedidos_cancelados = pedidos_col.count_documents({'estado': 'cancelado'})
+
+    total_recetas = recetas_col.count_documents({})
+    recetas_disponibles = recetas_col.count_documents({'disponible': True})
+    total_usuarios = usuarios_col.count_documents({})
+    total_platos_estrella = platos_estrella_col.count_documents({})
+
+    # Ingresos totales (solo pedidos completados)
+    pipeline_ingresos = [
+        {'$match': {'estado': 'completado'}},
+        {'$group': {'_id': None, 'total': {'$sum': '$total'}}}
+    ]
+    resultado_ingresos = list(pedidos_col.aggregate(pipeline_ingresos))
+    ingresos_totales = resultado_ingresos[0]['total'] if resultado_ingresos else 0
+
+    # Pedidos por tipo
+    pipeline_tipos = [
+        {'$group': {'_id': '$tipo', 'count': {'$sum': 1}}}
+    ]
+    pedidos_por_tipo = {r['_id']: r['count'] for r in pedidos_col.aggregate(pipeline_tipos)}
+
+    # Ultimos 5 pedidos
+    ultimos_pedidos = list(pedidos_col.find().sort('fecha_pedido', -1).limit(5))
+
+    # Top 5 platos mas vendidos
+    pipeline_top = [
+        {'$match': {'estado': {'$in': ['completado', 'confirmado']}}},
+        {'$unwind': '$items'},
+        {'$group': {'_id': '$items.nombre', 'cantidad': {'$sum': '$items.cantidad'}, 'ingresos': {'$sum': {'$multiply': ['$items.precio', '$items.cantidad']}}}},
+        {'$sort': {'cantidad': -1}},
+        {'$limit': 5}
+    ]
+    top_platos = list(pedidos_col.aggregate(pipeline_top))
+
+    return jsonify({
+        'total_pedidos': total_pedidos,
+        'pedidos_pendientes': pedidos_pendientes,
+        'pedidos_confirmados': pedidos_confirmados,
+        'pedidos_completados': pedidos_completados,
+        'pedidos_cancelados': pedidos_cancelados,
+        'total_recetas': total_recetas,
+        'recetas_disponibles': recetas_disponibles,
+        'total_usuarios': total_usuarios,
+        'total_platos_estrella': total_platos_estrella,
+        'ingresos_totales': ingresos_totales,
+        'pedidos_por_tipo': pedidos_por_tipo,
+        'ultimos_pedidos': [pedido_to_dict(p) for p in ultimos_pedidos],
+        'top_platos': top_platos,
+    }), 200
+
+# ============ Routes — Admin Reportes ============
+
+@app.route('/api/admin/reportes', methods=['GET'])
+def admin_reportes():
+    admin_id = request.args.get('admin_id')
+    try:
+        admin = get_user_by_id(admin_id)
+    except:
+        admin = None
+    if not admin or not admin.get('es_admin', False):
+        return jsonify({'error': 'No autorizado'}), 403
+
+    # Ingresos por dia (ultimos 30 dias)
+    from datetime import timedelta
+    fecha_inicio = datetime.utcnow() - timedelta(days=30)
+
+    pipeline_diario = [
+        {'$match': {'estado': 'completado', 'fecha_pedido': {'$gte': fecha_inicio}}},
+        {'$group': {
+            '_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$fecha_pedido'}},
+            'ingresos': {'$sum': '$total'},
+            'cantidad': {'$sum': 1}
+        }},
+        {'$sort': {'_id': 1}}
+    ]
+    ingresos_diarios = list(pedidos_col.aggregate(pipeline_diario))
+
+    # Ingresos por categoria
+    pipeline_categoria = [
+        {'$match': {'estado': 'completado'}},
+        {'$unwind': '$items'},
+        {'$group': {
+            '_id': '$items.categoria',
+            'ingresos': {'$sum': {'$multiply': ['$items.precio', '$items.cantidad']}},
+            'cantidad': {'$sum': '$items.cantidad'}
+        }},
+        {'$sort': {'ingresos': -1}}
+    ]
+    ingresos_por_categoria = list(pedidos_col.aggregate(pipeline_categoria))
+
+    # Ingresos por tipo de pedido
+    pipeline_tipo = [
+        {'$match': {'estado': 'completado'}},
+        {'$group': {
+            '_id': '$tipo',
+            'ingresos': {'$sum': '$total'},
+            'cantidad': {'$sum': 1}
+        }},
+        {'$sort': {'ingresos': -1}}
+    ]
+    ingresos_por_tipo = list(pedidos_col.aggregate(pipeline_tipo))
+
+    # Resumen general
+    pipeline_total = [
+        {'$match': {'estado': 'completado'}},
+        {'$group': {
+            '_id': None,
+            'ingresos_totales': {'$sum': '$total'},
+            'total_pedidos': {'$sum': 1},
+            'ticket_promedio': {'$avg': '$total'}
+        }}
+    ]
+    resumen = list(pedidos_col.aggregate(pipeline_total))
+    resumen_data = resumen[0] if resumen else {'ingresos_totales': 0, 'total_pedidos': 0, 'ticket_promedio': 0}
+    if '_id' in resumen_data:
+        del resumen_data['_id']
+
+    # Ingresos por mes (ultimos 12 meses)
+    fecha_12m = datetime.utcnow() - timedelta(days=365)
+    pipeline_mensual = [
+        {'$match': {'estado': 'completado', 'fecha_pedido': {'$gte': fecha_12m}}},
+        {'$group': {
+            '_id': {'$dateToString': {'format': '%Y-%m', 'date': '$fecha_pedido'}},
+            'ingresos': {'$sum': '$total'},
+            'cantidad': {'$sum': 1}
+        }},
+        {'$sort': {'_id': 1}}
+    ]
+    ingresos_mensuales = list(pedidos_col.aggregate(pipeline_mensual))
+
+    return jsonify({
+        'resumen': resumen_data,
+        'ingresos_diarios': ingresos_diarios,
+        'ingresos_mensuales': ingresos_mensuales,
+        'ingresos_por_categoria': ingresos_por_categoria,
+        'ingresos_por_tipo': ingresos_por_tipo,
+    }), 200
+
 # ============ Health Check ============
 
 @app.route('/api/health', methods=['GET'])
