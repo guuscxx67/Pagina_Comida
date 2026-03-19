@@ -139,7 +139,8 @@
             (blur)="marcarCampoComoTocado('telefono')"
             [class.input-error]="campoInvalido('telefono')"
             placeholder="Telefono"
-            autocomplete="tel" />
+            autocomplete="tel"
+            maxlength="12" />
         </div>
         <small class="field-error" *ngIf="campoInvalido('telefono')">{{ obtenerMensajeErrorCampo('telefono') }}</small>
 

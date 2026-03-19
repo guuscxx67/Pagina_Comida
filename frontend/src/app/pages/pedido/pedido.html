@@ -121,7 +121,7 @@
             </div>
             <div class="field-group field-full">
               <label>Telefono de contacto *</label>
-              <input type="tel" [(ngModel)]="telefonoContacto" (input)="normalizarTelefonoContacto()" (blur)="marcarCampoComoTocado('telefonoContacto')" [class.input-error]="campoInvalido('telefonoContacto')" placeholder="Ej: 55 1234 5678" />
+              <input type="tel" [(ngModel)]="telefonoContacto" (input)="normalizarTelefonoContacto()" (blur)="marcarCampoComoTocado('telefonoContacto')" [class.input-error]="campoInvalido('telefonoContacto')" placeholder="Ej: 55 1234 5678" maxlength="12" />
               <small class="field-error" *ngIf="campoInvalido('telefonoContacto')">{{ obtenerMensajeErrorCampo('telefonoContacto') }}</small>
             </div>
           </div>
