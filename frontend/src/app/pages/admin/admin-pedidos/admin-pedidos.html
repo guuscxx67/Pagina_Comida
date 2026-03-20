@@ -11,14 +11,14 @@
     Reservas <span class="badge">{{ conteoReservas }}</span>
   </button>
   <button class="sub-tab" [class.active]="filtroTipo === 'recogida'" (click)="filtroTipo = 'recogida'">
-    Ordenes <span class="badge">{{ conteoOrdenes }}</span>
+    Órdenes <span class="badge">{{ conteoOrdenes }}</span>
   </button>
   <button class="sub-tab" [class.active]="filtroTipo === 'domicilio'" (click)="filtroTipo = 'domicilio'">
-    Envios <span class="badge">{{ conteoEnvios }}</span>
+    Envíos <span class="badge">{{ conteoEnvios }}</span>
   </button>
 </div>
 
-<p *ngIf="pedidosFiltrados.length === 0" class="empty-msg">No hay pedidos en esta categoria.</p>
+<p *ngIf="pedidosFiltrados.length === 0" class="empty-msg">No hay pedidos en esta categoría.</p>
 
 <div *ngFor="let p of pedidosFiltrados" class="card pedido-card" [class]="'estado-' + p.estado">
   <div class="card-header">
@@ -33,7 +33,7 @@
     </div>
     <p *ngIf="p.notas"><b>Notas:</b> {{ p.notas }}</p>
     <div *ngIf="p.direccion && p.tipo === 'domicilio'" class="direccion-info">
-      <p><b>Direccion:</b> {{ p.direccion.calle }} #{{ p.direccion.numero_exterior }}
+      <p><b>Dirección:</b> {{ p.direccion.calle }} #{{ p.direccion.numero_exterior }}
         <span *ngIf="p.direccion.numero_interior">, Int. {{ p.direccion.numero_interior }}</span>,
         {{ p.direccion.colonia }}
         <span *ngIf="p.direccion.codigo_postal">, CP {{ p.direccion.codigo_postal }}</span>

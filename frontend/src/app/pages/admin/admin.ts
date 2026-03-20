@@ -48,11 +48,9 @@ export class AdminComponent implements OnInit {
     this.recetas = recetas;
   }
 
-  onAgregarEnCategoria(categoria: string) {
-    this.activeTab = 'recetas';
-    setTimeout(() => {
-      this.recetasComp?.abrirFormNuevoEnCategoria(categoria);
-    });
+  onProductoActualizado() {
+    // Recargar recetas cuando se actualiza el menú
+    this.recetasComp?.cargarRecetas();
   }
 
   onEditarReceta(r: any) {
