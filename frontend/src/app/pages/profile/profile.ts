@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
   public telefono = '';
   public nuevaPassword = '';
   public guardando = false;
+  public cargandoPedidos = false;
   public camposTocados = {
     nombre: false,
     email: false,
@@ -63,6 +64,24 @@ export class ProfileComponent implements OnInit {
     this.api.obtenerPedidosUsuario(this.usuario.id).subscribe({
       next: (res: any) => (this.pedidos = res),
       error: () => {}
+    });
+  }
+
+  actualizarPedidos() {
+    if (!this.usuario) return;
+
+    this.cargandoPedidos = true;
+
+    this.api.obtenerPedidosUsuario(this.usuario.id).subscribe({
+      next: (res: any) => {
+        this.pedidos = res;
+        this.cargandoPedidos = false;
+        this.modal.exito('Pedidos actualizados correctamente');
+      },
+      error: () => {
+        this.cargandoPedidos = false;
+        this.modal.error('No se pudieron actualizar los pedidos');
+      }
     });
   }
 

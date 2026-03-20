@@ -168,4 +168,48 @@ body {
   justify-content: center;
 }
 
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6 {
+  color: #fff !important;
+}
+
+[data-theme='dark'] p,
+[data-theme='dark'] span,
+[data-theme='dark'] label,
+[data-theme='dark'] .section-title,
+[data-theme='dark'] .menu-categoria-title,
+[data-theme='dark'] .menu-producto-nombre,
+[data-theme='dark'] .menu-producto-price,
+[data-theme='dark'] .pedido-card,
+[data-theme='dark'] .summary-total,
+[data-theme='dark'] .total-amount,
+[data-theme='dark'] .row-name,
+[data-theme='dark'] .row-price {
+  color: #e0e0e0 !important;
+}
+
+[data-theme='dark'] .btn,
+[data-theme='dark'] .btn-primary,
+[data-theme='dark'] .btn-guardar,
+[data-theme='dark'] .btn-eliminar {
+  color: #fff !important;
+}
+
+[data-theme='dark'] input,
+[data-theme='dark'] textarea,
+[data-theme='dark'] select {
+  color: #fff !important;
+  background: #222 !important;
+  border-color: #555 !important;
+}
+
+[data-theme='dark'] .field-error,
+[data-theme='dark'] .input-error {
+  color: #ffbdbd !important;
+}
+
 
