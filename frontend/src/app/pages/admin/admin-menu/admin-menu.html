@@ -1,40 +1,103 @@
 <div class="section-header">
-  <h3>Secciones del Menu Principal</h3>
+  <h3>Gestionar Menú Principal</h3>
+  <button class="btn btn-guardar" (click)="abrirModalAgregar()" style="margin-left: auto;">
+    + Agregar Platillo
+  </button>
 </div>
 
-<div *ngFor="let cat of menuCategorias" class="menu-cat-block">
-  <div class="menu-cat-header">
-    <div class="menu-cat-title">
-      <h4>{{ cat.nombre }}</h4>
-      <span class="cat-count-badge">{{ cat.recetas.length }} platillo{{ cat.recetas.length !== 1 ? 's' : '' }}</span>
+<!-- Modal para seleccionar y organizar productos -->
+<div [class.hidden]="!modalVisible" class="modal-overlay-menu" (click)="cancelarModal()" (keydown.escape)="cancelarModal()">
+  <div class="modal-menu" (click)="$event.stopPropagation()">
+    
+    <div class="modal-menu-header">
+      <div>
+        <h4>Agregar Platillos a Menú</h4>
+        <p class="modal-menu-title">Selecciona uno o más productos y elige la categoría</p>
+      </div>
+      <button class="modal-menu-close" (click)="cancelarModal()">×</button>
     </div>
-    <button class="btn-nuevo-cat" (click)="onAgregarPlatillo(cat.nombre)">+ Agregar platillo</button>
-  </div>
 
-  <div *ngIf="cat.recetas.length === 0" class="cat-empty">
-    <p>Sin platillos en esta categoria. Esta seccion mostrara contenido estatico en la pagina.</p>
-    <button class="btn-nuevo-cat" (click)="onAgregarPlatillo(cat.nombre)">+ Agregar primero</button>
-  </div>
+    <div class="modal-menu-body">
+      
+      <!-- Sección de selección de productos -->
+      <div class="product-selection-section">
+        <h5>Selecciona Productos</h5>
+        <div class="product-selection-list">
+          <div *ngFor="let producto of productosDisponibles" class="producto-item">
+            <input 
+              type="checkbox" 
+              [id]="'checkbox-' + producto.id"
+              [checked]="selectedProductIds.has(producto.id)"
+              (change)="toggleProducto(producto.id)"
+            />
+            <div class="producto-info">
+              <div class="producto-nombre">{{ producto.nombre }}</div>
+              <div class="producto-details">
+                <span class="producto-price">${{ producto.precio }}</span>
+                <span *ngIf="producto.categoria">(Actualmente en: {{ producto.categoria }})</span>
+              </div>
+            </div>
+          </div>
 
-  <div *ngIf="cat.recetas.length > 0" class="menu-recetas-list">
-    <div *ngFor="let r of cat.recetas" class="menu-receta-row" [class.inactivo]="!r.disponible">
-      <div class="menu-receta-img">
-        <img *ngIf="r.imagen" [src]="imagenUrl(r.imagen)" [alt]="r.nombre" />
-        <div *ngIf="!r.imagen" class="no-img">Sin imagen</div>
+          <div *ngIf="productosDisponibles.length === 0" class="menu-categoria-empty">
+            No hay productos disponibles
+          </div>
+        </div>
       </div>
-      <div class="menu-receta-info">
-        <strong>{{ r.nombre }}</strong>
-        <span class="menu-receta-desc">{{ r.descripcion }}</span>
+
+      <!-- Sección de selector de categoría -->
+      <div class="categoria-selector-section">
+        <label for="categoria-select">Categoría del Menú *</label>
+        <select 
+          id="categoria-select"
+          class="categoria-selector-menu" 
+          [(ngModel)]="selectedCategory"
+        >
+          <option value="">-- Selecciona una categoría --</option>
+          <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
+        </select>
       </div>
-      <div class="menu-receta-precio">${{ r.precio }}</div>
-      <div class="menu-receta-estado">
-        <span [class]="r.disponible ? 'dot-verde' : 'dot-rojo'">
-          {{ r.disponible ? 'Activo' : 'Inactivo' }}
-        </span>
+
+      <!-- Resumen de selección -->
+      <div *ngIf="selectedProductIds.size > 0" class="selection-summary">
+        <p><strong>Seleccionados:</strong> {{ selectedProductIds.size }} producto{{ selectedProductIds.size !== 1 ? 's' : '' }}</p>
       </div>
-      <div class="menu-receta-btns">
-        <button class="btn btn-editar" (click)="onEditarReceta(r)">Editar</button>
-        <button class="btn btn-eliminar" (click)="eliminarReceta(r.id)"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="modal-menu-actions">
+      <button class="btn btn-cancel" (click)="cancelarModal()">Cancelar</button>
+      <button 
+        class="btn btn-guardar" 
+        (click)="confirmarAgregar()"
+        [disabled]="selectedProductIds.size === 0 || !selectedCategory"
+      >
+        Agregar a Menú
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Categorías del menú - Visualización -->
+<div class="menu-categorias-display">
+  <div *ngFor="let cat of menuCategorias" class="menu-categoria-group">
+    
+    <h3 class="menu-categoria-title">{{ cat.nombre }}</h3>
+
+    <div *ngIf="cat.productos.length === 0" class="menu-categoria-empty">
+      <p>Sin platillos en esta categoría</p>
+    </div>
+
+    <div *ngIf="cat.productos.length > 0">
+      <div *ngFor="let prod of cat.productos" class="menu-producto-item">
+        <div class="menu-producto-info">
+          <div class="menu-producto-nombre">{{ prod.nombre }}</div>
+          <div class="menu-producto-price">${{ prod.precio }}</div>
+        </div>
+        <div class="menu-producto-actions">
+          <button class="btn btn-eliminar" (click)="eliminarProductoDeCategoria(prod.id, cat.nombre)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
