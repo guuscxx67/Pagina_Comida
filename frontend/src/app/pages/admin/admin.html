@@ -3,7 +3,7 @@
     <h2>Panel del Administrador</h2>
     <div class="admin-header-actions">
       <button class="btn-home" routerLink="/home">Ir al Inicio</button>
-      <button class="btn-logout" (click)="cerrarSesion()">Cerrar sesion</button>
+      <button class="btn-logout" (click)="cerrarSesion()">Cerrar sesión</button>
     </div>
   </div>
   <div class="tabs">
@@ -14,7 +14,7 @@
       Productos <span class="badge">{{ recetas.length }}</span>
     </button>
     <button class="tab-btn" [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-      Menu
+      Menú
     </button>
     <button class="tab-btn" [class.active]="activeTab === 'pedidos'" (click)="activeTab = 'pedidos'">
       Pedidos
@@ -39,9 +39,7 @@
     *ngIf="activeTab === 'menu'"
     [adminId]="adminId"
     [recetas]="recetas"
-    (agregarEnCategoria)="onAgregarEnCategoria($event)"
-    (editarReceta)="onEditarReceta($event)"
-    (recetaEliminada)="onRecetaEliminada()">
+    (productoActualizado)="onProductoActualizado()">
   </app-admin-menu>
 
   <app-admin-pedidos

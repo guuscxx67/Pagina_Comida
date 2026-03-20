@@ -25,7 +25,7 @@
         <div class="stat-icon"><i class="fa-solid fa-utensils"></i></div>
         <div class="stat-info">
           <span class="stat-value">{{ dashboard.total_recetas }}</span>
-          <span class="stat-label">Recetas</span>
+          <span class="stat-label">Productos</span>
           <span class="stat-sub">{{ dashboard.recetas_disponibles }} disponibles</span>
         </div>
       </div>
@@ -103,7 +103,7 @@
 
     <!-- Ultimos pedidos -->
     <div class="dashboard-section">
-      <h4>Ultimos Pedidos</h4>
+      <h4>Últimos Pedidos</h4>
       <div *ngIf="dashboard.ultimos_pedidos?.length > 0; else noPedidos">
         <div class="pedido-mini" *ngFor="let p of dashboard.ultimos_pedidos" [ngClass]="getEstadoClass(p.estado)">
           <div class="pedido-mini-header">
@@ -180,11 +180,11 @@
 
       <div class="reporte-row">
         <div class="reporte-section reporte-half">
-          <h4>Ingresos por Categoria</h4>
+          <h4>Ingresos por Categoría</h4>
           <div *ngIf="reportes.ingresos_por_categoria?.length > 0; else noCat" class="cat-list">
             <div class="cat-item" *ngFor="let cat of reportes.ingresos_por_categoria">
               <div class="cat-info">
-                <span class="cat-nombre">{{ cat._id || 'Sin categoria' }}</span>
+                <span class="cat-nombre">{{ cat._id || 'Sin categoría' }}</span>
                 <span class="cat-cant">{{ cat.cantidad }} uds vendidas</span>
               </div>
               <div class="cat-bar-container">
@@ -194,7 +194,7 @@
             </div>
           </div>
           <ng-template #noCat>
-            <p class="empty-msg">Sin datos por categoria</p>
+            <p class="empty-msg">Sin datos por categoría</p>
           </ng-template>
         </div>
 
