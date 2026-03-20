@@ -105,8 +105,15 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
 
   guardarReceta() {
     if (!this.adminId) return;
-    if (!this.form.nombre.trim() || this.form.precio <= 0) {
-      this.modal.alerta('Nombre y precio son obligatorios y precio debe ser mayor a 0');
+    
+    // Validaciones
+    if (!this.form.nombre.trim()) {
+      this.modal.alerta('El nombre del producto es obligatorio');
+      return;
+    }
+    
+    if (this.form.precio <= 0) {
+      this.modal.alerta('El precio debe ser mayor a 0');
       return;
     }
 
@@ -116,36 +123,26 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
 
     accion.subscribe({
       next: () => {
+        this.modal.exito(this.editandoId ? 'Producto actualizado' : 'Producto creado');
         this.formVisible = false;
         this.cargarRecetas();
       },
       error: (err) => {
-        if (err.status === 403) this.modal.error('Sesion expirada. Cierra sesion y vuelve a entrar.');
+        if (err.status === 403) this.modal.error('Sesión expirada. Cierra sesión y vuelve a entrar.');
         else this.modal.error('Error al guardar la receta');
       }
     });
   }
 
-  async eliminarReceta(id: string) {
-    if (!this.adminId) return;
-    const ok = await this.modal.confirmar('Eliminar esta receta?');
-    if (!ok) return;
-    this.api.eliminarReceta(this.adminId, id).subscribe({
-      next: () => this.cargarRecetas(),
-      error: () => this.modal.error('Error al eliminar la receta')
-    });
-  }
-
-  toggleDisponible(r: any) {
-    if (!this.adminId) return;
-    this.api.actualizarReceta(this.adminId, r.id, { disponible: !r.disponible }).subscribe({
-      next: () => this.cargarRecetas(),
-      error: () => this.modal.error('Error al actualizar disponibilidad')
-    });
-  }
-
   cancelarForm() {
     this.formVisible = false;
+  }
+
+  cerrarModal(event: MouseEvent) {
+    // Cierra el modal solo si se hace clic fuera del contenido
+    if (event.target === event.currentTarget) {
+      this.cancelarForm();
+    }
   }
 
   esPlatoEstrella(recetaId: string): boolean {
@@ -207,6 +204,29 @@ export class AdminRecetasComponent implements OnInit, OnChanges {
         }
       });
     }
+  }
+
+  async eliminarReceta(id: string) {
+    if (!this.adminId) return;
+    const ok = await this.modal.confirmar('¿Estás seguro de que deseas eliminar este producto?');
+    if (!ok) return;
+    this.api.eliminarReceta(this.adminId, id).subscribe({
+      next: () => {
+        this.modal.exito('Producto eliminado');
+        this.cargarRecetas();
+      },
+      error: () => this.modal.error('Error al eliminar el producto')
+    });
+  }
+
+  toggleDisponible(r: any) {
+    if (!this.adminId) return;
+    this.api.actualizarReceta(this.adminId, r.id, { disponible: !r.disponible }).subscribe({
+      next: () => {
+        this.cargarRecetas();
+      },
+      error: () => this.modal.error('Error al actualizar disponibilidad')
+    });
   }
 
   imagenUrl(imagen: string): string {

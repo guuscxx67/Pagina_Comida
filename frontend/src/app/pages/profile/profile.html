@@ -8,9 +8,9 @@
       <div>
         <p class="profile-eyebrow">Tu cuenta</p>
         <h2>Mi perfil editable</h2>
-        <p class="profile-subtitle">Actualiza tu informacion personal cuando lo necesites.</p>
+        <p class="profile-subtitle">Actualiza tu información personal cuando lo necesites.</p>
       </div>
-      <button class="btn-secondary" (click)="cerrarSesion()">Cerrar sesion</button>
+      <button class="btn-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
     </div>
 
     <div class="profile-form">
@@ -38,13 +38,13 @@
       </label>
 
       <label>
-        <span>Telefono</span>
+        <span>Teléfono</span>
         <input
           [(ngModel)]="telefono"
           (input)="normalizarTelefono()"
           (blur)="marcarCampoComoTocado('telefono')"
           [class.input-error]="campoInvalido('telefono')"
-          placeholder="Telefono"
+          placeholder="Teléfono"
           type="tel"
           inputmode="numeric"
           minlength="10"
@@ -66,8 +66,8 @@
     </div>
 
     <div class="favorite-address">
-      <h3>Direccion favorita para domicilio</h3>
-      <p class="favorite-address-subtitle">Se usara como sugerencia automatica cuando hagas un pedido a domicilio.</p>
+      <h3>Dirección favorita para domicilio</h3>
+      <p class="favorite-address-subtitle">Se usará como sugerencia automática cuando hagas un pedido a domicilio.</p>
 
       <div class="profile-form">
         <label>
@@ -91,7 +91,7 @@
         </label>
 
         <label>
-          <span>Codigo postal</span>
+          <span>Código postal</span>
           <input [(ngModel)]="direccionFavorita.codigo_postal" placeholder="Ej: 12345" type="text" maxlength="5" />
         </label>
 
@@ -115,6 +115,6 @@
       <p><b>Pedido #{{ p.id }}</b> - {{ p.tipo }} - <span>{{ p.estado }}</span></p>
       <p>Total: ${{ p.total }}</p>
     </div>
-    <p *ngIf="pedidos.length === 0">No tienes pedidos aun.</p>
+    <p *ngIf="pedidos.length === 0">No tienes pedidos aún.</p>
   </div>
 </div>

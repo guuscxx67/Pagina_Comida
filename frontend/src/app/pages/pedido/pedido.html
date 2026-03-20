@@ -4,7 +4,7 @@
       <button class="btn-back" (click)="volver()"><i class="fa-solid fa-arrow-left"></i> Volver</button>
       <div class="header-text">
         <h1>{{ tipo === 'reserva' ? 'Reserva tu Platillo' : tipo === 'domicilio' ? 'Pedido a Domicilio' : 'Ordenar para Recoger' }}</h1>
-        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipacion' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tu llegues' }}</p>
+        <p>{{ tipo === 'reserva' ? 'Aparta tu lugar con anticipación' : tipo === 'domicilio' ? 'Te lo llevamos hasta tu puerta' : 'Listo cuando tu llegues' }}</p>
       </div>
       <div class="header-user" *ngIf="usuario">
         Hola, <strong>{{ usuario.nombre }}</strong>
@@ -16,7 +16,7 @@
     <div class="menu-section">
       <h2 class="section-title">Selecciona tus platillos</h2>
 
-      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menu...</div>
+      <div *ngIf="cargandoMenu" class="loading-msg">Cargando menú...</div>
 
       <div *ngIf="!cargandoMenu && menu.length === 0" class="loading-msg">
         No hay platillos disponibles por el momento.
@@ -80,14 +80,14 @@
         </div>
 
         <div class="domicilio-fields" *ngIf="tipo === 'domicilio'">
-          <h3>Direccion de entrega</h3>
+          <h3>Dirección de entrega</h3>
           <div class="favorite-address-banner" *ngIf="direccionFavoritaDisponible">
             <div>
-              <span class="favorite-address-label">Direccion favorita</span>
+              <span class="favorite-address-label">Dirección favorita</span>
               <p>{{ direccionFavoritaTexto }}</p>
             </div>
             <button type="button" class="favorite-address-btn" (click)="usarDireccionFavorita()">
-              Usar esta direccion
+              Usar esta dirección
             </button>
           </div>
           <div class="address-grid">
@@ -111,7 +111,7 @@
               <small class="field-error" *ngIf="campoInvalido('colonia')">{{ obtenerMensajeErrorCampo('colonia') }}</small>
             </div>
             <div class="field-group">
-              <label>Codigo Postal</label>
+              <label>Código Postal</label>
               <input type="text" [(ngModel)]="codigoPostal" (input)="normalizarCodigoPostal()" (blur)="marcarCampoComoTocado('codigoPostal')" [class.input-error]="campoInvalido('codigoPostal')" placeholder="Ej: 12345" maxlength="5" />
               <small class="field-error" *ngIf="campoInvalido('codigoPostal')">{{ obtenerMensajeErrorCampo('codigoPostal') }}</small>
             </div>
@@ -120,7 +120,7 @@
               <input type="text" [(ngModel)]="referencia" placeholder="Ej: Casa azul frente al parque" />
             </div>
             <div class="field-group field-full">
-              <label>Telefono de contacto *</label>
+              <label>Teléfono de contacto *</label>
               <input type="tel" [(ngModel)]="telefonoContacto" (input)="normalizarTelefonoContacto()" (blur)="marcarCampoComoTocado('telefonoContacto')" [class.input-error]="campoInvalido('telefonoContacto')" placeholder="Ej: 55 1234 5678" maxlength="12" />
               <small class="field-error" *ngIf="campoInvalido('telefonoContacto')">{{ obtenerMensajeErrorCampo('telefonoContacto') }}</small>
             </div>
