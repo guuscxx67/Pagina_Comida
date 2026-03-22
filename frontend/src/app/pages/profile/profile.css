@@ -286,6 +286,47 @@
   color: #999;
 }
 
+/* Estados de pedidos */
+.estado-pendiente {
+  color: #e65100;
+  font-weight: 600;
+}
+
+.estado-confirmado {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.estado-completado {
+  color: #2d7a3e;
+  font-weight: 600;
+}
+
+.estado-entregado {
+  color: #388e3c;
+  font-weight: 600;
+}
+
+.estado-cancelado {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.estado-recogida {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.estado-reserva {
+  color: #5e35b1;
+  font-weight: 600;
+}
+
+.estado-domicilio {
+  color: #1976d2;
+  font-weight: 600;
+}
+
 .orders-section > p {
   text-align: center;
   color: var(--text-light);

@@ -522,7 +522,7 @@ def actualizar_pedido(pedido_id):
 @app.route('/api/pedidos/usuario/<usuario_id>', methods=['GET'])
 def obtener_pedidos_usuario(usuario_id):
     pedidos = list(pedidos_col.find({'usuario_id': str(usuario_id)}, {
-        '_id': 1, 'tipo': 1, 'estado': 1, 'total': 1, 'fecha_pedido': 1, 'items': 1
+        '_id': 1, 'tipo': 1, 'estado': 1, 'total': 1, 'fecha_pedido': 1, 'items': 1, 'notas': 1, 'direccion': 1
     }).sort('fecha_pedido', -1).limit(100))
     return jsonify([pedido_to_dict(p) for p in pedidos]), 200
 
