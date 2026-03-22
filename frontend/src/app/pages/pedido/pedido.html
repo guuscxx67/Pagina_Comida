@@ -150,6 +150,14 @@
           <span *ngIf="enviando">Enviando...</span>
         </button>
 
+        <button
+          class="btn-cancelar"
+          (click)="cancelarPedido()"
+          [disabled]="enviando"
+        >
+          <i class="fa-solid fa-times"></i> Cancelar
+        </button>
+
       </div>
     </div>
 

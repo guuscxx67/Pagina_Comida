@@ -5,15 +5,16 @@
       <span *ngIf="data?.tipo === 'exito'">&#10003;</span>
       <span *ngIf="data?.tipo === 'error'">&#10007;</span>
       <span *ngIf="data?.tipo === 'alerta'">!</span>
-      <span *ngIf="data?.tipo === 'confirmar'">?</span>
+      <i *ngIf="data?.tipo === 'confirmar'" class="fa-solid fa-triangle-exclamation"></i>
     </div>
     <h3 class="modal-title">{{ data?.titulo }}</h3>
     <p class="modal-message">{{ data?.mensaje }}</p>
     <div class="modal-actions">
       <button *ngIf="data?.tipo === 'confirmar'" class="btn-modal btn-cancel" (click)="cancelar()">
-        {{ data?.textoCancelar || 'No' }}
+        <i class="fa-solid fa-xmark"></i> {{ data?.textoCancelar || 'No' }}
       </button>
       <button class="btn-modal btn-accept" [class]="'btn-' + data?.tipo" (click)="aceptar()">
+        <i *ngIf="data?.tipo === 'confirmar'" class="fa-solid fa-check"></i>
         {{ data?.tipo === 'confirmar' ? (data?.textoConfirmar || 'Si') : 'Aceptar' }}
       </button>
     </div>

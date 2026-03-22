@@ -112,14 +112,26 @@
   <div class="orders-section">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
       <h3 style="margin: 0;">Mis pedidos</h3>
-      <button class="btn-primary" (click)="actualizarPedidos()" [disabled]="cargandoPedidos">
-        <i class="fa-solid fa-rotate-right" [class.fa-spin]="cargandoPedidos"></i>
-        {{ cargandoPedidos ? 'Actualizando...' : 'Actualizar' }}
+      <button class="btn-primary" (click)="actualizarPedidos()">
+        <i class="fa-solid fa-rotate-right"></i>
+        Actualizar
       </button>
     </div>
     <div *ngFor="let p of pedidos" class="pedido-card">
-      <p><b>Pedido #{{ p.id }}</b> - {{ p.tipo }} - <span>{{ p.estado }}</span></p>
-      <p>Total: ${{ p.total }}</p>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1;">
+          <p><b>Pedido #{{ p.id }}</b> - {{ p.tipo }} - <span>{{ p.estado }}</span></p>
+          <p>Total: ${{ p.total }}</p>
+        </div>
+        <button 
+          class="btn-cancelar-pedido" 
+          (click)="cancelarPedido(p.id)"
+          [disabled]="p.estado === 'cancelado' || p.estado === 'entregado'"
+          [title]="p.estado === 'cancelado' || p.estado === 'entregado' ? 'No se puede cancelar este pedido' : 'Cancelar pedido'"
+        >
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
     </div>
     <p *ngIf="pedidos.length === 0">No tienes pedidos aún.</p>
   </div>

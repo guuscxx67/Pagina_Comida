@@ -407,6 +407,16 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.codigoPostal = this.codigoPostal.replace(/\D/g, '').slice(0, 5);
   }
 
+  cancelarPedido() {
+    this.modal.confirmar('¿Deseas cancelar el pedido? Los cambios no guardados se perderán.').then((confirmado) => {
+      if (confirmado) {
+        this.limpiarEstadoGuardado();
+        this.modal.exito('Pedido cancelado');
+        this.volver();
+      }
+    });
+  }
+
   private aplicarDireccionFavoritaSiExiste() {
     const direccion = this.obtenerDireccionFavorita();
     this.direccionFavoritaDisponible = !!direccion;

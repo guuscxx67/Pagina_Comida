@@ -76,11 +76,26 @@ export class ProfileComponent implements OnInit {
       next: (res: any) => {
         this.pedidos = res;
         this.cargandoPedidos = false;
-        this.modal.exito('Pedidos actualizados correctamente');
       },
       error: () => {
         this.cargandoPedidos = false;
         this.modal.error('No se pudieron actualizar los pedidos');
+      }
+    });
+  }
+
+  cancelarPedido(pedidoId: string) {
+    this.modal.confirmar('¿Estás seguro de que deseas cancelar este pedido? Esta acción no se puede deshacer.').then((confirmado) => {
+      if (confirmado) {
+        this.api.cancelarPedido(pedidoId).subscribe({
+          next: () => {
+            this.modal.exito('Pedido cancelado correctamente');
+            this.actualizarPedidos();
+          },
+          error: () => {
+            this.modal.error('No se pudo cancelar el pedido. Intenta nuevamente o contacta con soporte.');
+          }
+        });
       }
     });
   }

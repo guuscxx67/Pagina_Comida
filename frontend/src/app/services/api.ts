@@ -38,6 +38,10 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/pedidos/usuario/${usuarioId}`);
   }
 
+  cancelarPedido(pedidoId: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/pedidos/${pedidoId}/cancelar`, {});
+  }
+
   obtenerPedidosAdmin(adminId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/pedidos`, { params: { admin_id: adminId } });
   }

@@ -567,6 +567,40 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.btn-cancelar {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #d32f2f;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #d32f2f;
+  cursor: pointer;
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+  text-shadow: none;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background: #d32f2f;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(211, 47, 47, 0.3);
+}
+
+.btn-cancelar:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-cancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 @media (max-width: 900px) {
   .pedido-body {
     grid-template-columns: 1fr;
