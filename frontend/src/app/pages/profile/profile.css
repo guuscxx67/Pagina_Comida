@@ -386,3 +386,31 @@
     font-size: 1.25rem;
   }
 }
+
+/* Dark mode styles */
+[data-theme='dark'] .btn-back-profile {
+  color: var(--accent-very-dark);
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .btn-back-profile:hover {
+  background: var(--accent-main);
+  color: var(--bg-primary);
+}
+
+[data-theme='dark'] .btn-primary i {
+  color: #fff;
+}
+
+[data-theme='dark'] .btn-cancelar-pedido {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+[data-theme='dark'] .pedido-card i {
+  color: var(--accent-light);
+}
+
+[data-theme='dark'] .profile-form input.input-error {
+  background: #3a2a2a;
+}
