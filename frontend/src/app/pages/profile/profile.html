@@ -110,10 +110,65 @@
   </div>
 
   <div class="orders-section">
-    <h3>Mis pedidos</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h3 style="margin: 0;">Mis pedidos</h3>
+      <button class="btn-primary" (click)="actualizarPedidos()">
+        <i class="fa-solid fa-rotate-right"></i>
+        Actualizar
+      </button>
+    </div>
     <div *ngFor="let p of pedidos" class="pedido-card">
-      <p><b>Pedido #{{ p.id }}</b> - {{ p.tipo }} - <span>{{ p.estado }}</span></p>
-      <p>Total: ${{ p.total }}</p>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div style="flex: 1;">
+          <p style="margin: 0 0 4px 0;"><b>Pedido #{{ p.id.slice(0, 8) }}</b></p>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">
+            {{ p.tipo | uppercase }} - <span [ngClass]="'estado-' + p.estado">{{ p.estado | uppercase }}</span>
+          </p>
+        </div>
+        <button 
+          class="btn-cancelar-pedido" 
+          (click)="cancelarPedido(p.id)"
+          [disabled]="p.estado === 'cancelado' || p.estado === 'entregado'"
+          [title]="p.estado === 'cancelado' || p.estado === 'entregado' ? 'No se puede cancelar este pedido' : 'Cancelar pedido'"
+        >
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem;">
+        <p style="margin: 0 0 8px 0;"><b>Platillos:</b></p>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li *ngFor="let item of p.items" style="margin: 4px 0;">
+            {{ item.nombre }} <span style="color: var(--text-secondary);">x{{ item.cantidad }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <p style="margin: 0 0 4px 0; font-size: 0.85rem; color: var(--text-secondary);">
+            <i class="fa-solid fa-calendar" style="margin-right: 6px;"></i>{{ p.fecha_pedido | date: 'short' }}
+          </p>
+          <p style="margin: 0; font-size: 1.1rem; font-weight: 700;">Total: ${{ p.total }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="p.direccion && p.tipo === 'domicilio'" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); font-size: 0.9rem;">
+        <p style="margin: 0 0 4px 0;"><b><i class="fa-solid fa-location-dot" style="margin-right: 8px;"></i>Entrega:</b></p>
+        <p style="margin: 0; color: var(--text-secondary);">
+          {{ p.direccion.calle }} #{{ p.direccion.numero_exterior }}
+          <span *ngIf="p.direccion.numero_interior">, Int. {{ p.direccion.numero_interior }}</span>
+        </p>
+        <p style="margin: 0; color: var(--text-secondary);">
+          {{ p.direccion.colonia }}
+          <span *ngIf="p.direccion.codigo_postal">, CP {{ p.direccion.codigo_postal }}</span>
+        </p>
+      </div>
+
+      <div *ngIf="p.notas" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); font-size: 0.9rem;">
+        <p style="margin: 0 0 4px 0;"><b><i class="fa-solid fa-note-sticky" style="margin-right: 8px;"></i>Notas:</b></p>
+        <p style="margin: 0; color: var(--text-secondary); font-style: italic;">{{ p.notas }}</p>
+      </div>
     </div>
     <p *ngIf="pedidos.length === 0">No tienes pedidos aún.</p>
   </div>

@@ -181,6 +181,10 @@ platos_estrella_col = db['platos_estrella'] if db is not None else None
 if usuarios_col is not None:
     usuarios_col.create_index('email', unique=True)
 
+if pedidos_col is not None:
+    pedidos_col.create_index('usuario_id')
+    pedidos_col.create_index('fecha_pedido')
+
 # Helper functions
 def usuario_to_dict(u):
     """Convierte un documento Usuario de MongoDB a dict"""
@@ -517,8 +521,30 @@ def actualizar_pedido(pedido_id):
 
 @app.route('/api/pedidos/usuario/<usuario_id>', methods=['GET'])
 def obtener_pedidos_usuario(usuario_id):
-    pedidos = list(pedidos_col.find({'usuario_id': str(usuario_id)}).sort('fecha_pedido', -1))
+    pedidos = list(pedidos_col.find({'usuario_id': str(usuario_id)}, {
+        '_id': 1, 'tipo': 1, 'estado': 1, 'total': 1, 'fecha_pedido': 1, 'items': 1, 'notas': 1, 'direccion': 1
+    }).sort('fecha_pedido', -1).limit(100))
     return jsonify([pedido_to_dict(p) for p in pedidos]), 200
+
+@app.route('/api/pedidos/<pedido_id>/cancelar', methods=['PUT'])
+def cancelar_pedido(pedido_id):
+    try:
+        pedido = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    except:
+        return jsonify({'error': 'ID de pedido inválido'}), 400
+
+    if not pedido:
+        return jsonify({'error': 'Pedido no encontrado'}), 404
+
+    estado_actual = pedido.get('estado', '')
+    
+    if estado_actual in ['entregado', 'cancelado', 'completado']:
+        return jsonify({'error': f'No se puede cancelar un pedido {estado_actual}'}), 400
+
+    pedidos_col.update_one({'_id': ObjectId(pedido_id)}, {'$set': {'estado': 'cancelado', 'fecha_cancelacion': datetime.now()}})
+
+    pedido_actualizado = pedidos_col.find_one({'_id': ObjectId(pedido_id)})
+    return jsonify(pedido_to_dict(pedido_actualizado)), 200
 
 # ============ Routes — Recetas (público) ============
 

@@ -330,6 +330,11 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.api.crearPedido(pedido).subscribe({
       next: async (res: any) => {
         let mensaje = `Pedido #${res.id.slice(0, 8)} creado con exito!`;
+        
+        // Agregar detalles del pedido
+        const detalles = this.itemsSeleccionados.map(i => `  • ${i.nombre} x${i.cantidad}`).join('\n');
+        mensaje += `\n\nDetalles del pedido:\n${detalles}\n\nTotal: $${this.total}`;
+        
         if (this.tipo === 'domicilio') {
           mensaje += `\n\nTu pedido sera enviado a:\n${this.calle.trim()} #${this.numeroExterior.trim()}, Col. ${this.colonia.trim()}\n\nTe contactaremos al ${this.telefonoContacto.trim()}`;
         }
@@ -405,6 +410,16 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   normalizarCodigoPostal() {
     this.codigoPostal = this.codigoPostal.replace(/\D/g, '').slice(0, 5);
+  }
+
+  cancelarPedido() {
+    this.modal.confirmar('¿Deseas cancelar el pedido? Los cambios no guardados se perderán.').then((confirmado) => {
+      if (confirmado) {
+        this.limpiarEstadoGuardado();
+        this.modal.exito('Pedido cancelado');
+        this.volver();
+      }
+    });
   }
 
   private aplicarDireccionFavoritaSiExiste() {

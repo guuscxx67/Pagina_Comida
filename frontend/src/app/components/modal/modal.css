@@ -55,14 +55,14 @@
 
 /* Icono circular */
 .modal-icon {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
-  font-size: 1.6rem;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
@@ -82,8 +82,8 @@
 }
 
 .confirmar .modal-icon {
-  background: var(--color-blue-light);
-  color: var(--color-blue-dark);
+  background: #fff3cd;
+  color: #b88600;
 }
 
 .modal-title {
@@ -100,25 +100,31 @@
   line-height: 1.5;
 }
 
-/* Botones */
 .modal-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn-modal {
-  padding: 11px 28px;
+  padding: 12px 24px;
   border: none;
   border-radius: 4px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+  justify-content: center;
 }
 
 .btn-modal:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-modal:active {
@@ -126,46 +132,104 @@
 }
 
 .btn-cancel {
-  background: var(--border-light);
-  color: var(--text-secondary);
+  background: #e8e8e8;
+  color: #333;
+  border: 1px solid #d0d0d0;
+  flex: 1;
 }
 
 .btn-cancel:hover {
-  background: var(--border-color);
+  background: #d0d0d0;
+  color: #222;
+  border-color: #b0b0b0;
 }
 
 .btn-accept.btn-exito {
-  background: var(--color-green-dark);
-  color: var(--bg-primary);
+  background: #2d7a3e;
+  color: white;
+  flex: 1;
 }
 
 .btn-accept.btn-exito:hover {
-  background: var(--color-green-dark);
+  background: #1b4924;
 }
 
 .btn-accept.btn-error {
-  background: var(--color-red-dark);
-  color: var(--bg-primary);
+  background: #c62828;
+  color: white;
+  flex: 1;
 }
 
 .btn-accept.btn-error:hover {
-  background: var(--color-red-dark);
+  background: #b71c1c;
 }
 
 .btn-accept.btn-alerta {
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: #e65100;
+  color: white;
+  flex: 1;
 }
 
 .btn-accept.btn-alerta:hover {
-  background: var(--text-primary);
+  background: #d84315;
 }
 
 .btn-accept.btn-confirmar {
-  background: var(--color-blue-dark);
-  color: var(--bg-primary);
+  background: #2d7a3e;
+  color: white;
+  flex: 1;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .btn-accept.btn-confirmar:hover {
-  background: var(--color-blue-dark);
+  background: #1b4924;
+}
+
+.btn-modal i {
+  font-size: 1rem;
+}
+
+/* Estilos para modo oscuro */
+[data-theme='dark'] .btn-cancel {
+  background: #3a3a3a;
+  color: #e0e0e0;
+  border-color: #555;
+}
+
+[data-theme='dark'] .btn-cancel:hover {
+  background: #4a4a4a;
+  color: #fff;
+  border-color: #666;
+}
+
+[data-theme='dark'] .btn-accept.btn-confirmar {
+  background: #3a8c4d;
+  color: #fff;
+}
+
+[data-theme='dark'] .btn-accept.btn-confirmar:hover {
+  background: #2d7a3e;
+}
+
+[data-theme='dark'] .btn-accept.btn-exito {
+  background: #3a8c4d;
+}
+
+[data-theme='dark'] .btn-accept.btn-exito:hover {
+  background: #2d7a3e;
+}
+
+/* Estilos para modo claro (default) */
+[data-theme='light'] .btn-accept.btn-confirmar,
+[data-theme=''] .btn-accept.btn-confirmar,
+.btn-accept.btn-confirmar {
+  background: #2d7a3e;
+  color: white;
+}
+
+[data-theme='light'] .btn-accept.btn-confirmar:hover,
+[data-theme=''] .btn-accept.btn-confirmar:hover,
+.btn-accept.btn-confirmar:hover {
+  background: #1b4924;
 }

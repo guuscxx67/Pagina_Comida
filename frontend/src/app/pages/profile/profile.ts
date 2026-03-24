@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
   public telefono = '';
   public nuevaPassword = '';
   public guardando = false;
+  public cargandoPedidos = false;
   public camposTocados = {
     nombre: false,
     email: false,
@@ -63,6 +64,39 @@ export class ProfileComponent implements OnInit {
     this.api.obtenerPedidosUsuario(this.usuario.id).subscribe({
       next: (res: any) => (this.pedidos = res),
       error: () => {}
+    });
+  }
+
+  actualizarPedidos() {
+    if (!this.usuario) return;
+
+    this.cargandoPedidos = true;
+
+    this.api.obtenerPedidosUsuario(this.usuario.id).subscribe({
+      next: (res: any) => {
+        this.pedidos = res;
+        this.cargandoPedidos = false;
+      },
+      error: () => {
+        this.cargandoPedidos = false;
+        this.modal.error('No se pudieron actualizar los pedidos');
+      }
+    });
+  }
+
+  cancelarPedido(pedidoId: string) {
+    this.modal.confirmar('¿Estás seguro de que deseas cancelar este pedido? Esta acción no se puede deshacer.').then((confirmado) => {
+      if (confirmado) {
+        this.api.cancelarPedido(pedidoId).subscribe({
+          next: () => {
+            this.modal.exito('Pedido cancelado correctamente');
+            this.actualizarPedidos();
+          },
+          error: () => {
+            this.modal.error('No se pudo cancelar el pedido. Intenta nuevamente o contacta con soporte.');
+          }
+        });
+      }
     });
   }
 

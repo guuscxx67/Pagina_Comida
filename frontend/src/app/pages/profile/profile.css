@@ -252,6 +252,81 @@
   color: var(--text-primary);
 }
 
+.btn-cancelar-pedido {
+  background: transparent;
+  border: 2px solid #d32f2f;
+  color: #d32f2f;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.btn-cancelar-pedido:hover:not(:disabled) {
+  background: #d32f2f;
+  color: white;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.btn-cancelar-pedido:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.btn-cancelar-pedido:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #999;
+}
+
+/* Estados de pedidos */
+.estado-pendiente {
+  color: #e65100;
+  font-weight: 600;
+}
+
+.estado-confirmado {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.estado-completado {
+  color: #2d7a3e;
+  font-weight: 600;
+}
+
+.estado-entregado {
+  color: #388e3c;
+  font-weight: 600;
+}
+
+.estado-cancelado {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.estado-recogida {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.estado-reserva {
+  color: #5e35b1;
+  font-weight: 600;
+}
+
+.estado-domicilio {
+  color: #1976d2;
+  font-weight: 600;
+}
+
 .orders-section > p {
   text-align: center;
   color: var(--text-light);
@@ -310,4 +385,32 @@
   .profile-header h2 {
     font-size: 1.25rem;
   }
+}
+
+/* Dark mode styles */
+[data-theme='dark'] .btn-back-profile {
+  color: var(--accent-very-dark);
+  background: var(--bg-tertiary);
+}
+
+[data-theme='dark'] .btn-back-profile:hover {
+  background: var(--accent-main);
+  color: var(--bg-primary);
+}
+
+[data-theme='dark'] .btn-primary i {
+  color: #fff;
+}
+
+[data-theme='dark'] .btn-cancelar-pedido {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+[data-theme='dark'] .pedido-card i {
+  color: var(--accent-light);
+}
+
+[data-theme='dark'] .profile-form input.input-error {
+  background: #3a2a2a;
 }
