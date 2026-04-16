@@ -1078,5 +1078,7 @@ if __name__ == '__main__':
         ensure_local_admin()
         print('Auth local habilitada: admin@test.com / 123456')
 
-    print('Backend ejecutandose en http://localhost:5000')
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    print(f'Backend ejecutandose en http://0.0.0.0:{port}')
+    app.run(host='0.0.0.0', port=port, debug=debug)
